@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Yoga Practice Builder</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./styles/main.css">
+        <script type="module" src="./scripts/app.js" async defer></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        
+
+        <header>
+            <h1>Yoga Practice Builder</h1>
+            <button id="sign-in-button">Sign In</button>
+            <nav>
+                <a href="#">Home</a>
+                <a href="#">Postures</a>
+                <a href="#">Practices</a>
+                <a href="#">New Practice</a>
+            </nav>
+        </header>
+        <main>
+            <div id="landing-container">
+                <div id="logged-in-user-message-container"></div>
+                <div id="not-logged-in-user-message-container"></div>
+            </div>
+            <div id="sign-in-and-up-container">
+                <h3>Sign In</h3>
+                <form id="sign-in-form">
+                    <input type="text" name="email" placeholder="email" />
+                    <input type="text" name="password" placeholder="password" />
+                    <input type="submit" value="Sign In" />
+                </form>
+
+                <h3>Sign Up</h3>
+                <form id="sign-up-form">
+                    <input type="text" name="name" placeholder="name" />
+                    <input type="text" name="email" placeholder="email" />
+                    <input type="text" name="password" placeholder="password" />
+                    <input type="submit" value="Sign Up" />
+                </form>
+            </div>
+            <div id="practice-builder-container"></div>
+
+
+
+        </main>
+        <footer>
+            <p>Created by <a href="http://yoga.andrewsquier.com" target="_blank">Andrew Squier Yoga</a></p>
+        </footer>
+        
+    </body>
+</html>
