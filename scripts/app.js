@@ -7,9 +7,12 @@ import {
 
 
 /*----- DOM Elements -----*/
-
+const signInButton = document.querySelector("#sign-in-button")
 const signInForm = document.querySelector("#sign-in-form")
 const signUpForm = document.querySelector("#sign-up-form")
+const landingContainer = document.querySelector("#landing-container")
+const signInAndUpContainer = document.querySelector("#sign-in-and-up-container")
+const homeButton = document.querySelector("#home-button")
 
 
 
@@ -26,6 +29,17 @@ const signUpForm = document.querySelector("#sign-up-form")
 
 
 /*----- Event Listeners -----*/
+
+
+signInButton.addEventListener("click", (event) => {
+    landingContainer.classList.add("hide")
+    signInAndUpContainer.classList.remove("hide")
+})
+
+homeButton.addEventListener("click", (event) => {
+    landingContainer.classList.remove("hide")
+    signInAndUpContainer.classList.add("hide")
+})
 
 signUpForm.addEventListener("submit", (event) => {
     event.preventDefault()

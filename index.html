@@ -23,7 +23,7 @@
             <h1>Yoga Practice Builder</h1>
             <button id="sign-in-button">Sign In</button>
             <nav>
-                <a href="#">Home</a>
+                <a id="home-button" href="#">Home</a>
                 <a href="#">Postures</a>
                 <a href="#">Practices</a>
                 <a href="#">New Practice</a>
@@ -31,10 +31,23 @@
         </header>
         <main>
             <div id="landing-container">
-                <div id="logged-in-user-message-container"></div>
-                <div id="not-logged-in-user-message-container"></div>
-            </div>
-            <div id="sign-in-and-up-container">
+
+                <div id="logged-in-user-message-container" class="hide">
+                    <h2>Welcome [User]!</h2>
+                    <div>Most Recently Posted Practice</div>
+                    <div>Number of built practices and link to list</div>
+                    <div>Number of know postures, link to list, link to add more postures</div>
+
+
+                </div>
+                <div id="not-logged-in-user-message-container">
+                    <h2>Welcome to the Practice Builder!</h2>
+                    <p><a href="#">Create an account</a> to take full advantage of all this app has to offer!</p>
+                    <div>[Most Recently Posted Practice]</div>
+                </div>
+
+            </div> 
+            <div id="sign-in-and-up-container" class="hide">
                 <h3>Sign In</h3>
                 <form id="sign-in-form">
                     <input type="text" name="email" placeholder="email" />

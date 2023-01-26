@@ -1,0 +1,47 @@
+html {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(88, 88, 88);
+}
+body {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: rgb(149, 149, 211);
+    text-align: center;
+}
+
+
+
+header {
+    display: grid;
+}
+header h1 {
+    margin-bottom: 0;
+}
+#sign-in-button {
+    max-width: 58px;
+    max-height: 21px;
+    align-self: flex-end;
+    justify-self: flex-end;
+    margin-bottom: 5px;
+}
+nav {
+    display: flex;
+    justify-content: space-around;
+    background-color: rgb(160, 160, 160);
+}
+nav a {
+    text-decoration: none;
+    color: rgb(62, 62, 160);
+}
+nav a:hover {
+    color: rgb(93, 93, 217);
+}
+
+
+
+
+
+.hide {
+    display: none;
+}
