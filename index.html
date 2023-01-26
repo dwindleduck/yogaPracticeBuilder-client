@@ -23,13 +23,14 @@
             <h1>Yoga Practice Builder</h1>
             <button id="sign-in-button">Sign In</button>
             <nav>
-                <a id="home-button" href="#">Home</a>
-                <a href="#">Postures</a>
-                <a href="#">Practices</a>
-                <a href="#">New Practice</a>
+                <a id="nav-home-button" href="">Home</a>
+                <a id="nav-postures-button" href="#">Postures</a>
+                <a id="nav-practices-button" href="#">Practices</a>
+                <a id="nav-new-practice-button" href="#">New Practice</a>
             </nav>
         </header>
         <main>
+            <div id="message-container"></div>
             <div id="landing-container">
 
                 <div id="logged-in-user-message-container" class="hide">
@@ -50,19 +51,21 @@
             <div id="sign-in-and-up-container" class="hide">
                 <h3>Sign In</h3>
                 <form id="sign-in-form">
-                    <input type="text" name="email" placeholder="email" />
-                    <input type="text" name="password" placeholder="password" />
+                    <input type="text" name="email" placeholder="email" required/>
+                    <input type="text" name="password" placeholder="password" required/>
                     <input type="submit" value="Sign In" />
                 </form>
 
                 <h3>Sign Up</h3>
                 <form id="sign-up-form">
-                    <input type="text" name="name" placeholder="name" />
-                    <input type="text" name="email" placeholder="email" />
-                    <input type="text" name="password" placeholder="password" />
+                    <input type="text" name="name" placeholder="name" required/>
+                    <input type="text" name="email" placeholder="email" required/>
+                    <input type="text" name="password" placeholder="password" required/>
                     <input type="submit" value="Sign Up" />
                 </form>
             </div>
+            <div id="postures-container"></div>
+            <div id="practices-container"></div>
             <div id="practice-builder-container"></div>
 
 

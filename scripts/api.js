@@ -18,3 +18,7 @@ export const signIn = (data) => {
         body: JSON.stringify(data)
     })
 }
+
+export const indexPostures = () => {
+    return fetch("http://localhost:8000/postures")
+}

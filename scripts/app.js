@@ -2,8 +2,15 @@
 
 import { 
     signUp,
-    signIn
+    signIn,
+    indexPostures
 } from "./api.js"
+import {
+    onSignUpSuccess,
+    onSignInSuccess,
+    onFailure,
+    onIndexPosturesSuccess
+} from "./ui.js"
 
 
 /*----- DOM Elements -----*/
@@ -12,9 +19,13 @@ const signInForm = document.querySelector("#sign-in-form")
 const signUpForm = document.querySelector("#sign-up-form")
 const landingContainer = document.querySelector("#landing-container")
 const signInAndUpContainer = document.querySelector("#sign-in-and-up-container")
-const homeButton = document.querySelector("#home-button")
+const navHomeButton = document.querySelector("#nav-home-button")
+const navPosturesButton = document.querySelector("#nav-postures-button")
+const navPracticesButton = document.querySelector("#nav-practices-button")
+const navPracticeButton = document.querySelector("#nav-practice-button")
 
-
+const posturesContainer = document.querySelector("#postures-container")
+const practicesContainer = document.querySelector("#practices-container")
 
 
 
@@ -36,10 +47,6 @@ signInButton.addEventListener("click", (event) => {
     signInAndUpContainer.classList.remove("hide")
 })
 
-homeButton.addEventListener("click", (event) => {
-    landingContainer.classList.remove("hide")
-    signInAndUpContainer.classList.add("hide")
-})
 
 signUpForm.addEventListener("submit", (event) => {
     event.preventDefault()
@@ -51,8 +58,8 @@ signUpForm.addEventListener("submit", (event) => {
         }
     }
     signUp(studentData)
-    .then(console.log)
-    .catch(console.error)
+    .then(onSignUpSuccess)
+    .catch(onFailure)
 })
 
 signInForm.addEventListener("submit", (event) => {
@@ -64,6 +71,23 @@ signInForm.addEventListener("submit", (event) => {
         }
     }
     signIn(studentData)
-    .then(console.log)
-    .catch(console.error)
+    .then(onSignInSuccess)
+    .catch(onFailure)
 })
+
+navHomeButton.addEventListener("click", (event) => {
+    landingContainer.classList.remove("hide")
+    signInAndUpContainer.classList.add("hide")
+})
+
+navPosturesButton.addEventListener("click", (event => {
+    signInAndUpContainer.classList.add("hide")
+    landingContainer.classList.remove("hide")
+
+    indexPostures()
+        .then((res) => res.json())
+        .then((res) => {
+            onIndexPosturesSuccess(res.postures)
+        })
+        .catch(onFailure)
+}))
