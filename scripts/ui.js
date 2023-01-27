@@ -8,6 +8,7 @@ import {
 } from "./app.js"
 import { showStudent } from "./api.js"
 
+/*----- DOM Elements -----*/
 const landingContainer = document.querySelector("#landing-container")
 const signInAndUpContainer = document.querySelector("#sign-in-and-up-container")
 const signInForm = document.querySelector("#sign-in-form")
@@ -16,11 +17,15 @@ const messageContainer = document.querySelector("#message-container")
 const loggedInUserMessageContainer = document.querySelector("#logged-in-user-message-container")
 const notLoggedInUserMessageContainer = document.querySelector("#not-logged-in-user-message-container")
 
-
 const posturesContainer = document.querySelector("#postures-container")
 const practicesContainer = document.querySelector("#practices-container")
 const practiceBuilderContainer = document.querySelector("#practice-builder-container")
 
+
+
+/*--------------------*/
+/*----- Fuctions -----*/
+/*--------------------*/
 
 export const clearBody = () => {
     messageContainer.innerHTML = ""
@@ -31,13 +36,19 @@ export const clearBody = () => {
     practiceBuilderContainer.classList.add("hide")
 }
 
-
 export const onFailure = (error) => {
     messageContainer.innerHTML = `
         <h3>You've got an error!</h3>
         <p>${error}</p>
     `
 }
+
+
+
+
+/*----------------------*/
+/*----- Sign In/Up -----*/
+/*----------------------*/
 
 export const onSignUpSuccess = () => {
     messageContainer.innerText = "Thanks for creating an account! Please sign in with the password you just created"
@@ -68,6 +79,12 @@ export const onSignInSuccess = (userToken) => {
         })
         .catch(onFailure)
 }
+
+
+
+/*--------------------*/
+/*----- Postures -----*/
+/*--------------------*/
 
 export const onIndexPosturesSuccess = (postures) => {
     clearBody()
@@ -143,7 +160,9 @@ export const onShowPostureSuccess = (posture) => {
 
 
 
-
+/*---------------------*/
+/*----- Practices -----*/
+/*---------------------*/
 export const onIndexPracticesSuccess = (practices) => {
     clearBody()
     const title = document.createElement("h2")

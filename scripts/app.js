@@ -8,7 +8,8 @@ import {
     showPostureById,
     showPracticeById,
     indexKnownPostures,
-    updateKnownPostures
+    updateKnownPostures,
+    indexBuiltPractices
 } from "./api.js"
 import {
     onSignUpSuccess,
@@ -29,13 +30,10 @@ const signUpForm = document.querySelector("#sign-up-form")
 const landingContainer = document.querySelector("#landing-container")
 const signInAndUpContainer = document.querySelector("#sign-in-and-up-container")
 const navHomeButton = document.querySelector("#nav-home-button")
-const navPosturesButton = document.querySelector("#nav-postures-button")
 const navPracticesButton = document.querySelector("#nav-practices-button")
+const navFindPracticesButton = document.querySelector("#nav-find-practices-button")
 const navNewPracticeButton = document.querySelector("#nav-new-practice-button")
-
-
-
-/*----- functions -----*/
+const navPosturesButton = document.querySelector("#nav-postures-button")
 
 
 
@@ -45,7 +43,6 @@ const navNewPracticeButton = document.querySelector("#nav-new-practice-button")
 
 
 
-/*----- Event Listeners -----*/
 
 /*----------------------*/
 /*----- Sign In/Up -----*/
@@ -90,19 +87,6 @@ signInForm.addEventListener("submit", (event) => {
 })
 
 
-/*---------------*/
-/*----- Nav -----*/
-/*---------------*/
-
-navHomeButton.addEventListener("click", (event) => {
-    event.preventDefault()
-    clearBody()
-    landingContainer.classList.remove("hide")
-    //IF user is logged in......
-    //show 
-})
-
-
 /*--------------------*/
 /*----- Postures -----*/
 /*--------------------*/
@@ -139,10 +123,7 @@ export const showKnownPostures = () => {
     .catch(onFailure)
 }
 
-navPosturesButton.addEventListener("click", (event) => {
-    //event.preventDefault()
-    showAllPostures()
-})
+
 
 //might need to get the whole posture, not just ID...
 export const addPostureToKnown = (postureData) => {
@@ -157,12 +138,11 @@ export const addPostureToKnown = (postureData) => {
             } else {
                 console.log("ok add it to known")
 
-                knownPostures.push(postureData)
-
+            
                 console.log(knownPostures)
                // console.log(JSON.stringify(knownPostures))
-
-                updateKnownPostures(knownPostures)
+               updateKnownPostures(postureData)
+                // updateKnownPostures(knownPostures)
                     .then(console.log)//update the dom
                     .catch(onFailure)
             }
@@ -175,15 +155,7 @@ export const addPostureToKnown = (postureData) => {
 /*---------------------*/
 /*----- Practices -----*/
 /*---------------------*/
-navPracticesButton.addEventListener("click", (event) => {
-    //event.preventDefault()
-    indexPractices()
-        .then((res) => res.json())
-        .then((res) => {
-            onIndexPracticesSuccess(res.practices)
-        })
-        .catch(onFailure)
-})
+
 
 //MOVE THIS TO UI.JS
 export const showPracticeDetails = (event) => {
@@ -198,3 +170,48 @@ export const showPracticeDetails = (event) => {
         })
         .catch(onFailure)
 }
+
+
+const showPractices = () => {
+    indexPractices()
+    .then((res) => res.json())
+    .then((res) => {
+        onIndexPracticesSuccess(res.practices)
+    })
+    .catch(onFailure)
+}
+
+const showBuiltPractices = () => {
+    indexBuiltPractices()
+    .then((res) => res.json())
+    .then((res) => {
+        onIndexPracticesSuccess(res.practices)
+    })
+    .catch(onFailure)
+}
+
+/*---------------*/
+/*----- Nav -----*/
+/*---------------*/
+
+navHomeButton.addEventListener("click", (event) => {
+    event.preventDefault()
+    clearBody()
+    landingContainer.classList.remove("hide")
+    //IF user is logged in......
+    //show 
+})
+
+
+
+navPracticesButton.addEventListener("click", (event) => {
+    showBuiltPractices()
+})
+
+navFindPracticesButton.addEventListener("click", (event) => {
+    showPractices()
+})
+
+navPosturesButton.addEventListener("click", (event) => {
+    showAllPostures()
+})
