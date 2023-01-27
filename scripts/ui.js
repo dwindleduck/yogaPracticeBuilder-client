@@ -33,7 +33,7 @@ export const clearBody = () => {
     signInAndUpContainer.classList.add("hide")
     posturesContainer.innerHTML = ""
     practicesContainer.innerHTML = ""
-    practiceBuilderContainer.classList.add("hide")
+    practiceBuilderContainer.innerHTML = ""
 }
 
 export const onFailure = (error) => {
@@ -65,7 +65,6 @@ export const onSignInSuccess = (userToken) => {
     showStudent()
         .then(res => res.json())
         .then(res => {
-            console.log(res.student)
             loggedInUserMessageContainer.innerHTML = `
                 <h2>Welcome ${res.student.name}!</h2>
                 <div>Most Recently Posted Practice</div>
@@ -208,7 +207,28 @@ export const onShowPracticeSuccess = (practice) => {
         `
         div.appendChild(addToSequence)
     })
-
-
     practicesContainer.appendChild(div)
 }
+
+export const showCreatePracticeForm = () => {
+    clearBody()
+    const title = document.createElement("h2")
+    title.innerText = "Create a New Practice"
+    practiceBuilderContainer.appendChild(title)
+
+    const createPracticeForm = document.createElement("div")
+    createPracticeForm.innerHTML = `
+        <form id="create-new-practice-form">
+            <input type="text" name="name" placeholder="name" />
+            <input type="text" name="description" placeholder="description" />
+            <input type="text" name="style" placeholder="style" />
+            <input type="submit" value="Save this Practice" />
+        </form>
+    `
+    practiceBuilderContainer.appendChild(createPracticeForm)
+}
+
+
+
+
+

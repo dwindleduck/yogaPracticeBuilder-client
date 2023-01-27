@@ -93,3 +93,15 @@ export const showPracticeById = (id) => {
         },
     })
 }
+
+export const createPractice = (data) => {
+    return fetch(`http://localhost:8000/practices`, {
+        method: "POST",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${store.userToken}`
+        },
+        body: JSON.stringify(data)
+    })
+}

@@ -9,7 +9,8 @@ import {
     showPracticeById,
     indexKnownPostures,
     updateKnownPostures,
-    indexBuiltPractices
+    indexBuiltPractices,
+    createPractice
 } from "./api.js"
 import {
     onSignUpSuccess,
@@ -19,7 +20,8 @@ import {
     onIndexPracticesSuccess,
     clearBody,
     onShowPostureSuccess,
-    onShowPracticeSuccess
+    onShowPracticeSuccess,
+    showCreatePracticeForm
 } from "./ui.js"
 
 
@@ -80,7 +82,7 @@ signInForm.addEventListener("submit", (event) => {
     signIn(studentData)
         .then((res) => res.json())
         .then(res => {
-            console.log(res) //returning the token
+            //res has the token
             onSignInSuccess(res.token)
         })
         .catch(onFailure)
@@ -190,6 +192,33 @@ const showBuiltPractices = () => {
     .catch(onFailure)
 }
 
+const showCreatePractice = () => {
+    //need to show the form
+    showCreatePracticeForm()
+    const form = document.querySelector("#create-new-practice-form")
+    form.addEventListener("submit", (event) => {
+        event.preventDefault()
+
+        const practiceData = {
+            practice: {
+                name: event.target["name"].value,
+                description: event.target["description"].value,
+                style: event.target["style"].value,
+			},
+        }
+        createPractice(practiceData)
+        .then((res) => res.json())
+        .then((res) => {
+            console.log(res)
+        // onIndexPracticesSuccess(res.practices)
+        })
+        .catch(onFailure)
+    })
+   
+}
+
+
+
 /*---------------*/
 /*----- Nav -----*/
 /*---------------*/
@@ -202,8 +231,6 @@ navHomeButton.addEventListener("click", (event) => {
     //show 
 })
 
-
-
 navPracticesButton.addEventListener("click", (event) => {
     showBuiltPractices()
 })
@@ -214,4 +241,7 @@ navFindPracticesButton.addEventListener("click", (event) => {
 
 navPosturesButton.addEventListener("click", (event) => {
     showAllPostures()
+})
+navNewPracticeButton.addEventListener("click", (event) => {
+    showCreatePractice()
 })
