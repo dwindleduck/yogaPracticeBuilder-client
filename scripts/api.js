@@ -1,3 +1,5 @@
+import { store } from './store.js'
+
 export const signUp = (data) => {
     return fetch("http://localhost:8000/sign-up", {
         method: 'POST',
@@ -21,4 +23,23 @@ export const signIn = (data) => {
 
 export const indexPostures = () => {
     return fetch("http://localhost:8000/postures")
+}
+
+export const showPostureById = (id) => {
+    return fetch(`http://localhost:8000/postures/${id}`, { 
+        headers: {
+            'Authorization': `Bearer ${store.userToken}`,
+        },
+    })
+}
+
+export const indexPractices = () => {
+    return fetch("http://localhost:8000/practices")
+}
+export const showPracticeById = (id) => {
+    return fetch(`http://localhost:8000/practices/${id}`, { 
+        headers: {
+            'Authorization': `Bearer ${store.userToken}`,
+        },
+    })
 }

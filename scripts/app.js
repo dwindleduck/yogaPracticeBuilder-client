@@ -3,13 +3,20 @@
 import { 
     signUp,
     signIn,
-    indexPostures
+    indexPostures,
+    indexPractices,
+    showPostureById,
+    showPracticeById
 } from "./api.js"
 import {
     onSignUpSuccess,
     onSignInSuccess,
     onFailure,
-    onIndexPosturesSuccess
+    onIndexPosturesSuccess,
+    onIndexPracticesSuccess,
+    clearBody,
+    onShowPostureSuccess,
+    onShowPracticeSuccess
 } from "./ui.js"
 
 
@@ -22,10 +29,7 @@ const signInAndUpContainer = document.querySelector("#sign-in-and-up-container")
 const navHomeButton = document.querySelector("#nav-home-button")
 const navPosturesButton = document.querySelector("#nav-postures-button")
 const navPracticesButton = document.querySelector("#nav-practices-button")
-const navPracticeButton = document.querySelector("#nav-practice-button")
-
-const posturesContainer = document.querySelector("#postures-container")
-const practicesContainer = document.querySelector("#practices-container")
+const navNewPracticeButton = document.querySelector("#nav-new-practice-button")
 
 
 
@@ -43,7 +47,7 @@ const practicesContainer = document.querySelector("#practices-container")
 
 
 signInButton.addEventListener("click", (event) => {
-    landingContainer.classList.add("hide")
+    clearBody()
     signInAndUpContainer.classList.remove("hide")
 })
 
@@ -58,9 +62,10 @@ signUpForm.addEventListener("submit", (event) => {
         }
     }
     signUp(studentData)
-    .then(onSignUpSuccess)
-    .catch(onFailure)
-})
+        .then((res) => res.json())
+        .then(res => onSignUpSuccess())
+        .catch(onFailure)
+    })
 
 signInForm.addEventListener("submit", (event) => {
     event.preventDefault()
@@ -71,23 +76,72 @@ signInForm.addEventListener("submit", (event) => {
         }
     }
     signIn(studentData)
-    .then(onSignInSuccess)
-    .catch(onFailure)
+        .then((res) => res.json())
+        .then(res => {
+            console.log(res) //returning the token
+            onSignInSuccess(res.token)
+        })
+        .catch(onFailure)
 })
+
+
+
 
 navHomeButton.addEventListener("click", (event) => {
+    event.preventDefault()
+    clearBody()
     landingContainer.classList.remove("hide")
-    signInAndUpContainer.classList.add("hide")
+    //IF user is logged in......
+    //show 
 })
 
-navPosturesButton.addEventListener("click", (event => {
-    signInAndUpContainer.classList.add("hide")
-    landingContainer.classList.remove("hide")
 
+
+
+
+export const showPostureDetails = (event) => {
+    event.preventDefault()
+    const id = event.target.getAttribute("data-id")
+    if (!id) return
+    showPostureById(id)
+        .then((res) => res.json())
+        .then((res) => {
+            console.log(res)
+            onShowPostureSuccess(res.posture)
+        })
+        .catch(onFailure)
+}
+
+navPosturesButton.addEventListener("click", (event) => {
+    event.preventDefault()
     indexPostures()
         .then((res) => res.json())
         .then((res) => {
             onIndexPosturesSuccess(res.postures)
         })
         .catch(onFailure)
-}))
+
+      
+})
+
+navPracticesButton.addEventListener("click", (event) => {
+    event.preventDefault()
+    indexPractices()
+        .then((res) => res.json())
+        .then((res) => {
+            onIndexPracticesSuccess(res.practices)
+        })
+        .catch(onFailure)
+})
+export const showPracticeDetails = (event) => {
+    event.preventDefault()
+    const id = event.target.getAttribute("data-id")
+    if (!id) return
+    showPracticeById(id)
+        .then((res) => res.json())
+        .then((res) => {
+            console.log(res)
+            onShowPracticeSuccess(res.practice)
+        })
+        .catch(onFailure)
+}
