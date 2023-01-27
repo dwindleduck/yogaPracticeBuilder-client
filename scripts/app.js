@@ -7,7 +7,8 @@ import {
     indexPractices,
     showPostureById,
     showPracticeById,
-    indexKnownPostures
+    indexKnownPostures,
+    updateKnownPostures
 } from "./api.js"
 import {
     onSignUpSuccess,
@@ -142,6 +143,33 @@ navPosturesButton.addEventListener("click", (event) => {
     //event.preventDefault()
     showAllPostures()
 })
+
+//might need to get the whole posture, not just ID...
+export const addPostureToKnown = (postureData) => {
+    indexKnownPostures()
+        .then((res) => res.json())
+        .then((res) => {
+            const knownPostures = res.postures
+            console.log(knownPostures)
+            console.log(postureData)
+            if (knownPostures.filter(posture => posture._id === postureData._id).length > 0){
+                console.log("You already know this posture!")
+            } else {
+                console.log("ok add it to known")
+
+                knownPostures.push(postureData)
+
+                console.log(knownPostures)
+               // console.log(JSON.stringify(knownPostures))
+
+                updateKnownPostures(knownPostures)
+                    .then(console.log)//update the dom
+                    .catch(onFailure)
+            }
+        })
+        .catch(onFailure)
+}
+
 
 
 /*---------------------*/

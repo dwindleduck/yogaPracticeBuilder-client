@@ -3,7 +3,8 @@ import {
     showPostureDetails,
     showPracticeDetails,
     showAllPostures,
-    showKnownPostures
+    showKnownPostures,
+    addPostureToKnown
 } from "./app.js"
 import { showStudent } from "./api.js"
 
@@ -92,23 +93,33 @@ export const onIndexPosturesSuccess = (postures) => {
     posturesContainer.appendChild(knownButton)
 
     postures.forEach(posture => {
-        const div = document.createElement('div')
-        const btn = document.createElement("button")
-        btn.textContent = "Details"
-        btn.classList.add("btn")
-        btn.setAttribute("data-id", posture._id)
-        btn.addEventListener("click", event => {
+        const infoButton = document.createElement('div')
+        infoButton.innerHTML = `
+        <h3>${posture.name}</h3>
+        <h4>${posture.translation}</h4>
+        <p>${posture.description}</p>
+        <img />
+        `
+        posturesContainer.appendChild(infoButton)
+
+        const detailsButton = document.createElement("button")
+        detailsButton.textContent = "Details"
+        // details.classList.add("btn")
+        detailsButton.setAttribute("data-id", posture._id)
+        detailsButton.addEventListener("click", event => {
             showPostureDetails(event)
         })
+        posturesContainer.appendChild(detailsButton)
 
-        div.innerHTML = `
-            <h3>${posture.name}</h3>
-            <h4>${posture.translation}</h4>
-            <p>${posture.description}</p>
-            <img />
-        `
-        posturesContainer.appendChild(div)
-        posturesContainer.appendChild(btn)
+        const knownButton = document.createElement("button")
+        knownButton.textContent = "Add to Known"
+        knownButton.setAttribute("data-id", posture._id)
+        knownButton.addEventListener("click", event => {
+            //add this posture to knownPostures
+            addPostureToKnown(posture)
+        })
+        posturesContainer.appendChild(knownButton)
+
     })
 }
 

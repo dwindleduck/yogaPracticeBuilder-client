@@ -28,6 +28,19 @@ export const showStudent = () => {
     })
 }
 
+export const updateKnownPostures = (data) => {
+    return fetch(`http://localhost:8000/student/updateKnown`, {
+        method: "PATCH",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${store.userToken}`,
+        },
+        body: JSON.stringify(data)
+    })
+
+}
+
 
 
 
