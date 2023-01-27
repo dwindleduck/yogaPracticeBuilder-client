@@ -6,7 +6,8 @@ import {
     indexPostures,
     indexPractices,
     showPostureById,
-    showPracticeById
+    showPracticeById,
+    indexKnownPostures
 } from "./api.js"
 import {
     onSignUpSuccess,
@@ -45,6 +46,9 @@ const navNewPracticeButton = document.querySelector("#nav-new-practice-button")
 
 /*----- Event Listeners -----*/
 
+/*----------------------*/
+/*----- Sign In/Up -----*/
+/*----------------------*/
 
 signInButton.addEventListener("click", (event) => {
     clearBody()
@@ -65,7 +69,7 @@ signUpForm.addEventListener("submit", (event) => {
         .then((res) => res.json())
         .then(res => onSignUpSuccess())
         .catch(onFailure)
-    })
+})
 
 signInForm.addEventListener("submit", (event) => {
     event.preventDefault()
@@ -85,7 +89,9 @@ signInForm.addEventListener("submit", (event) => {
 })
 
 
-
+/*---------------*/
+/*----- Nav -----*/
+/*---------------*/
 
 navHomeButton.addEventListener("click", (event) => {
     event.preventDefault()
@@ -96,11 +102,12 @@ navHomeButton.addEventListener("click", (event) => {
 })
 
 
-
-
-
+/*--------------------*/
+/*----- Postures -----*/
+/*--------------------*/
+//MOVE THIS TO UI.JS
 export const showPostureDetails = (event) => {
-    event.preventDefault()
+    //event.preventDefault()
     const id = event.target.getAttribute("data-id")
     if (!id) return
     showPostureById(id)
@@ -112,20 +119,36 @@ export const showPostureDetails = (event) => {
         .catch(onFailure)
 }
 
-navPosturesButton.addEventListener("click", (event) => {
-    event.preventDefault()
+
+
+export const showAllPostures = () => {
     indexPostures()
         .then((res) => res.json())
         .then((res) => {
             onIndexPosturesSuccess(res.postures)
         })
         .catch(onFailure)
+}
+export const showKnownPostures = () => {
+    indexKnownPostures()
+    .then((res) => res.json())
+    .then((res) => {
+        onIndexPosturesSuccess(res.postures)
+    })
+    .catch(onFailure)
+}
 
-      
+navPosturesButton.addEventListener("click", (event) => {
+    //event.preventDefault()
+    showAllPostures()
 })
 
+
+/*---------------------*/
+/*----- Practices -----*/
+/*---------------------*/
 navPracticesButton.addEventListener("click", (event) => {
-    event.preventDefault()
+    //event.preventDefault()
     indexPractices()
         .then((res) => res.json())
         .then((res) => {
@@ -133,14 +156,16 @@ navPracticesButton.addEventListener("click", (event) => {
         })
         .catch(onFailure)
 })
+
+//MOVE THIS TO UI.JS
 export const showPracticeDetails = (event) => {
-    event.preventDefault()
+    //event.preventDefault()
     const id = event.target.getAttribute("data-id")
     if (!id) return
     showPracticeById(id)
         .then((res) => res.json())
         .then((res) => {
-            console.log(res)
+            console.log(res.practice)
             onShowPracticeSuccess(res.practice)
         })
         .catch(onFailure)

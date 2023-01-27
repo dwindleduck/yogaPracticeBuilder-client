@@ -1,5 +1,11 @@
 import { store } from "./store.js"
-import {showPostureDetails, showPracticeDetails} from "./app.js"
+import {
+    showPostureDetails,
+    showPracticeDetails,
+    showAllPostures,
+    showKnownPostures
+} from "./app.js"
+import { showStudent } from "./api.js"
 
 const landingContainer = document.querySelector("#landing-container")
 const signInAndUpContainer = document.querySelector("#sign-in-and-up-container")
@@ -42,8 +48,24 @@ export const onSignInSuccess = (userToken) => {
     store.userToken = userToken
     messageContainer.innerText = "Signed In!"
     landingContainer.classList.remove("hide")
-    loggedInUserMessageContainer.classList.remove("hide")
     notLoggedInUserMessageContainer.classList.add("hide")
+    loggedInUserMessageContainer.classList.remove("hide")
+    showStudent()
+        .then(res => res.json())
+        .then(res => {
+            console.log(res.student)
+            loggedInUserMessageContainer.innerHTML = `
+                <h2>Welcome ${res.student.name}!</h2>
+                <div>Most Recently Posted Practice</div>
+                <div>Number of built practices and link to list</div>
+                <div>
+                <p>You know ${res.student.knownPostures.length} postures</p>
+                <p>See your list</p>
+                <p>Add more postures from the library</p>
+                </div>
+            `
+        })
+        .catch(onFailure)
 }
 
 export const onIndexPosturesSuccess = (postures) => {
@@ -51,6 +73,23 @@ export const onIndexPosturesSuccess = (postures) => {
     const title = document.createElement("h2")
     title.innerText = "Postures"
     posturesContainer.appendChild(title)
+
+ //have buttons inactive if on that page
+
+    //button for All that calls showAllPostures
+    const allButton = document.createElement("button")
+    allButton.textContent = "All"
+    allButton.addEventListener("click", event => {
+        showAllPostures()
+    })
+    posturesContainer.appendChild(allButton)
+    //button for Known that calls indexKnownPostures
+    const knownButton = document.createElement("button")
+    knownButton.textContent = "Known"
+    knownButton.addEventListener("click", event => {
+        showKnownPostures()
+    })
+    posturesContainer.appendChild(knownButton)
 
     postures.forEach(posture => {
         const div = document.createElement('div')
@@ -128,8 +167,18 @@ export const onShowPracticeSuccess = (practice) => {
         <h3>${practice.name}</h3>
         <p>${practice.description}</p>
         <p>${practice.style}</p>
-        <p>${practice.sequence}</p>
         <img />
+        <h4>Sequence</h4>
     `
+    practice.sequence.forEach(posture => {
+        const addToSequence = document.createElement('div')
+        addToSequence.innerHTML = `
+            <h3>${posture.name}</h3>
+            <p>${posture.translation}</p>
+        `
+        div.appendChild(addToSequence)
+    })
+
+
     practicesContainer.appendChild(div)
 }

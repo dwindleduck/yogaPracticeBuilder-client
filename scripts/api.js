@@ -20,6 +20,16 @@ export const signIn = (data) => {
         body: JSON.stringify(data)
     })
 }
+export const showStudent = () => {
+    return fetch(`http://localhost:8000/student`, { 
+        headers: {
+            'Authorization': `Bearer ${store.userToken}`,
+        },
+    })
+}
+
+
+
 
 export const indexPostures = () => {
     return fetch("http://localhost:8000/postures")
@@ -32,6 +42,16 @@ export const showPostureById = (id) => {
         },
     })
 }
+
+export const indexKnownPostures = () => {
+    return fetch(`http://localhost:8000/known`, { 
+        headers: {
+            'Authorization': `Bearer ${store.userToken}`,
+        },
+    })
+}
+
+
 
 export const indexPractices = () => {
     return fetch("http://localhost:8000/practices")
