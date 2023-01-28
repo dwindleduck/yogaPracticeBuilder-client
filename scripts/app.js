@@ -21,7 +21,9 @@ import {
     clearBody,
     onShowPostureSuccess,
     onShowPracticeSuccess,
-    showCreatePracticeForm
+    showCreatePracticeForm,
+    onIndexBuiltPracticesSuccess,
+    showEditForm
 } from "./ui.js"
 
 
@@ -167,7 +169,6 @@ export const showPracticeDetails = (event) => {
     showPracticeById(id)
         .then((res) => res.json())
         .then((res) => {
-            console.log(res.practice)
             onShowPracticeSuccess(res.practice)
         })
         .catch(onFailure)
@@ -187,7 +188,7 @@ const showBuiltPractices = () => {
     indexBuiltPractices()
     .then((res) => res.json())
     .then((res) => {
-        onIndexPracticesSuccess(res.practices)
+        onIndexBuiltPracticesSuccess(res.practices)
     })
     .catch(onFailure)
 }
@@ -209,10 +210,11 @@ const showCreatePractice = () => {
         createPractice(practiceData)
         .then((res) => res.json())
         .then((res) => {
-            console.log(res)
-        // onIndexPracticesSuccess(res.practices)
+            console.log(res) //returning the created Practice
+            showEditForm(res)
         })
         .catch(onFailure)
+
     })
    
 }
