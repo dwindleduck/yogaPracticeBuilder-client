@@ -23,7 +23,8 @@ import {
     onShowPracticeSuccess,
     showCreatePracticeForm,
     onIndexBuiltPracticesSuccess,
-    showEditForm
+    showEditForm,
+    onIndexKnownPosturesSuccess
 } from "./ui.js"
 
 
@@ -102,7 +103,7 @@ export const showPostureDetails = (event) => {
     showPostureById(id)
         .then((res) => res.json())
         .then((res) => {
-            console.log(res)
+            // console.log(res)
             onShowPostureSuccess(res.posture)
         })
         .catch(onFailure)
@@ -118,11 +119,12 @@ export const showAllPostures = () => {
         })
         .catch(onFailure)
 }
-export const showKnownPostures = () => {
+export const showKnownPostures = (isEditing) => {
     indexKnownPostures()
     .then((res) => res.json())
     .then((res) => {
-        onIndexPosturesSuccess(res.postures)
+        //onIndexPosturesSuccess(res.postures)
+        onIndexKnownPosturesSuccess(res.postures, isEditing)
     })
     .catch(onFailure)
 }

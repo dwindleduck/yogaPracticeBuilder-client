@@ -6,9 +6,10 @@ import {
     showKnownPostures,
     addPostureToKnown
 } from "./app.js"
-import { showStudent } from "./api.js"
+import { showPracticeById, showStudent } from "./api.js"
 
 /*----- DOM Elements -----*/
+const pageTitleContainer = document.querySelector("#page-title-container")
 const landingContainer = document.querySelector("#landing-container")
 const signInAndUpContainer = document.querySelector("#sign-in-and-up-container")
 const signInForm = document.querySelector("#sign-in-form")
@@ -17,6 +18,7 @@ const messageContainer = document.querySelector("#message-container")
 const loggedInUserMessageContainer = document.querySelector("#logged-in-user-message-container")
 const notLoggedInUserMessageContainer = document.querySelector("#not-logged-in-user-message-container")
 
+const sequenceContainer = document.querySelector("#sequence-container")
 const posturesContainer = document.querySelector("#postures-container")
 const practicesContainer = document.querySelector("#practices-container")
 const practiceBuilderContainer = document.querySelector("#practice-builder-container")
@@ -35,6 +37,9 @@ export const clearBody = () => {
     posturesContainer.innerHTML = ""
     practicesContainer.innerHTML = ""
     practiceBuilderContainer.innerHTML = ""
+    pageTitleContainer.innerHTML = ""
+    editPracticeContainer.innerHTML = ""
+    sequenceContainer.innerHTML = ""
 }
 
 export const onFailure = (error) => {
@@ -86,29 +91,34 @@ export const onSignInSuccess = (userToken) => {
 /*----- Postures -----*/
 /*--------------------*/
 
-export const onIndexPosturesSuccess = (postures) => {
+const writePageTitle = (pageTitle) => {
     clearBody()
     const title = document.createElement("h2")
-    title.innerText = "Postures"
-    posturesContainer.appendChild(title)
+    title.innerText = pageTitle
+    pageTitleContainer.appendChild(title)
 
- //have buttons inactive if on that page
+ //...have buttons inactive if on that page
+    
+    if(pageTitle === "Postures") {
+        //button for All that calls showAllPostures
+        const allButton = document.createElement("button")
+        allButton.textContent = "All"
+        allButton.addEventListener("click", event => {
+            showAllPostures()
+        })
+        pageTitleContainer.appendChild(allButton)
+        //button for Known that calls indexKnownPostures
+        const knownButton = document.createElement("button")
+        knownButton.textContent = "Known"
+        knownButton.addEventListener("click", event => {
+            showKnownPostures()
+        })
+        pageTitleContainer.appendChild(knownButton)
+    }
+}
 
-    //button for All that calls showAllPostures
-    const allButton = document.createElement("button")
-    allButton.textContent = "All"
-    allButton.addEventListener("click", event => {
-        showAllPostures()
-    })
-    posturesContainer.appendChild(allButton)
-    //button for Known that calls indexKnownPostures
-    const knownButton = document.createElement("button")
-    knownButton.textContent = "Known"
-    knownButton.addEventListener("click", event => {
-        showKnownPostures()
-    })
-    posturesContainer.appendChild(knownButton)
-
+export const onIndexPosturesSuccess = (postures) => {
+    writePageTitle("Postures")
     postures.forEach(posture => {
         const info = document.createElement('div')
         info.innerHTML = `
@@ -139,17 +149,45 @@ export const onIndexPosturesSuccess = (postures) => {
     })
 }
 
-// export const onIndexKnownPosturesSuccess = (postures) => {
-//     postures.forEach(posture => {
-//         const info = document.createElement('div')
-//         info.innerHTML = `
-//         <h3>${posture.name}</h3>
-//         <h4>${posture.translation}</h4>
-//         <p>${posture.description}</p>
-//         <img />
-//         `
-//     })
-// }
+export const onIndexKnownPosturesSuccess = (postures, isEditing) => {
+    posturesContainer.innerHTML = ""
+
+    postures.forEach(posture => {
+        const postureInfo = document.createElement('div')
+        postureInfo.innerHTML = `
+        <h3>${posture.name}</h3>
+        <h4>${posture.translation}</h4>
+        <p>${posture.description}</p>
+        <img />
+        `
+        posturesContainer.appendChild(postureInfo)
+        
+        if(isEditing) {
+            //add to sequence button
+            const addToSequenceButton = document.createElement("button")
+            addToSequenceButton.textContent = "Add to Sequence"
+            addToSequenceButton.setAttribute("data-id", posture._id)
+            // addToSequenceButton.setAttribute("data-event", "add-to-sequence")
+            addToSequenceButton.addEventListener("click", event => {
+                //
+
+                console.log(`adding ${event.target.getAttribute("data-id")} to sequence`)
+
+            })
+            posturesContainer.appendChild(addToSequenceButton)
+        }
+
+
+        //Details Button
+        const detailsButton = document.createElement("button")
+        detailsButton.textContent = "Details"
+        detailsButton.setAttribute("data-id", posture._id)
+        detailsButton.addEventListener("click", event => {
+            showPostureDetails(event)
+        })
+        posturesContainer.appendChild(detailsButton)
+    })
+}
 
 export const onShowPostureSuccess = (posture) => {
     clearBody()
@@ -242,7 +280,7 @@ export const onIndexBuiltPracticesSuccess = (practices) => {
         editButton.textContent = "Edit"
         editButton.setAttribute("data-id", practice._id)
         editButton.addEventListener("click", event => {
-            //showEditPage(event)
+            //showEditForm(event)
             console.log("edit button clicked")
             showEditForm(practice)
         })
@@ -296,12 +334,32 @@ export const showCreatePracticeForm = () => {
     practiceBuilderContainer.appendChild(createPracticeForm)
 }
 
-const showSequence = () => {
+const showSequence = (practiceId) => {
+    showPracticeById(practiceId)
+        .then(res => res.json())
+        .then(res => {
 
-    const sequenceContainer = document.createElement("div")
+            const sequence = res.practice.sequence
 
+            for(let i=0; i<sequence.length; i++) {
+               
+                //name
+                const name = document.createElement("h3")
+                name.innerText = sequence[i].name
+                sequenceContainer.appendChild(name)
+                //details button
+                const detailsButton = document.createElement("button")
+                detailsButton.textContent = "Details"
+                detailsButton.setAttribute("data-id", sequence[i]._id)
+                detailsButton.addEventListener("click", event => {
+                    showPostureDetails(event)
+                })
+                sequenceContainer.appendChild(detailsButton)
+            
+            }
+        })
+        .catch(onFailure)
 }  
-//const showKnownPostures
 
 export const showEditForm = (practice) => {
     clearBody()
@@ -321,7 +379,9 @@ export const showEditForm = (practice) => {
     `
 
     //show practice.sequence
+    showSequence(practice._id)
     //show users known postures
+    showKnownPostures(true) //expecting isEditing = true
 
 }
 
@@ -359,15 +419,15 @@ editPracticeContainer.addEventListener('click', (event) => {
         // deleteCharacter(id)
 		// 	.then(onDeleteCharacterSuccess)
 		// 	.catch(onFailure)
-	} //else if (buttonAction === "edit"){
-	// 	console.log("button clicked")
-	// 	updateForm.style.display = "block"
-	// }
-
-
-    //IF click a known posture
+	} else if (buttonAction === "add-to-sequence"){
+		 //IF click a known posture
         //add posture to practice.sequence
         //show updated sequence
+        console.log("add-to-sequence button clicked")
+	 }
+
+
+   
 
 
 })
