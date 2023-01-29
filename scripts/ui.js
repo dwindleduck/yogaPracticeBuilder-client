@@ -6,7 +6,7 @@ import {
     showKnownPostures,
     addPostureToKnown
 } from "./app.js"
-import { showPracticeById, showStudent, updatePractice } from "./api.js"
+import { showPracticeById, showStudent, updatePractice,deletePractice } from "./api.js"
 
 /*----- DOM Elements -----*/
 const pageTitleContainer = document.querySelector("#page-title-container")
@@ -186,7 +186,7 @@ export const onIndexKnownPosturesSuccess = (postures, practiceId, sequence, isEd
                 //call api fetch 
                 updatePractice(practiceId, practiceData)
                     .then(() => {
-                        console.log("need to update dom with the updated sequence")
+                        //update the dom
                         showSequence(practiceId)
                     })
                     .catch(onFailure)
@@ -300,8 +300,8 @@ export const onIndexBuiltPracticesSuccess = (practices) => {
         editButton.textContent = "Edit"
         editButton.setAttribute("data-id", practice._id)
         editButton.addEventListener("click", event => {
-            //showEditForm(event)
-            showEditForm(practice)
+            console.log(practice._id)
+            showEditForm(practice._id)
         })
         practicesContainer.appendChild(editButton)
 
@@ -355,10 +355,11 @@ export const showCreatePracticeForm = () => {
 
 const showSequence = (practiceId) => {
     
-    sequenceContainer.innerHTML = ""
     
+    sequenceContainer.innerHTML = ""
+
     const theSequence = []
-    //console.log(`practiceId: ${practiceId}`)
+    console.log(`practiceId: ${practiceId}`)
 
     showPracticeById(practiceId)
         .then(res => res.json())
@@ -391,35 +392,44 @@ const showSequence = (practiceId) => {
     return theSequence
 }  
 
-export const showEditForm = (practice) => {
-    clearBody()
-    const title = document.createElement("h2")
-    title.innerText = practice.name
-    editPracticeContainer.appendChild(title)
-
-    editPracticeContainer.innerHTML += `
-        <button data-event="delete" data-id="${practice._id}">Delete this Practice</button>
+//export const showEditForm = (practice) => {
+export const showEditForm = (practiceId) => {
     
-        <form id="editForm" data-id="${practice._id}">
-            <input type="submit" value="Save" />
-            <input type="text" name="name" value="${practice.name}" />
-            <input type="text" name="style" value="${practice.style}" />
-            <textarea name="description" value="${practice.description}"></textarea>
-        </form>
-    `
 
-    //show practice.sequence
-    //returns the sequence
-    //console.log(showSequence(practice._id))
-    const sequence = showSequence(practice._id)
-    //console.log(sequence)
+    showPracticeById(practiceId)
+        .then(res => res.json())
+        .then(res => {
+            
 
+            console.log(res.practice)
+            
+            clearBody()
 
-    //show users known postures
-    showKnownPostures(practice._id, sequence, true) //expecting isEditing = true
-
-
-
+            const title = document.createElement("h2")
+            title.innerText = res.practice.name
+            editPracticeContainer.appendChild(title)
+        
+            editPracticeContainer.innerHTML += `
+                <button data-event="delete" data-id="${res.practice._id}">Delete this Practice</button>
+            
+                <form id="editForm" data-id="${res.practice._id}">
+                    <input type="submit" value="Save" />
+                    <input type="text" name="name" value="${res.practice.name}" />
+                    <input type="text" name="style" value="${res.practice.style}" />
+                    <textarea name="description" value="${res.practice.description}"></textarea>
+                </form>
+            `
+            //show practice.sequence
+            //returns the sequence
+            //console.log(showSequence(practice._id))
+            //console.log(practice._id)
+            const sequence = showSequence(res.practice._id)
+            //console.log(sequence)
+        
+            //show users known postures
+            showKnownPostures(res.practice._id, sequence, true) //expecting isEditing = true
+        })
+        .catch(onFailure)
 }
 
 
@@ -441,9 +451,9 @@ editPracticeContainer.addEventListener("submit", (event) => {
 		},
 	}
 	if (!id) return
-	// updateCharacter(characterData, id)
-	// 	.then(onUpdateCharacterSuccess)
-	// 	.catch(onFailure)
+    updatePractice(id, practiceData)
+		.then(showEditForm(id))//needs a practiceId
+		.catch(onFailure)
 
 })
 
@@ -453,17 +463,10 @@ editPracticeContainer.addEventListener('click', (event) => {
 
 	if (buttonAction === "delete" && id) {
 		console.log("clicked delete button")
-        // deleteCharacter(id)
-		// 	.then(onDeleteCharacterSuccess)
-		// 	.catch(onFailure)
+        deletePractice(id)
+			.then(console.log)
+			.catch(onFailure)
 	} 
-    // else if (buttonAction === "add-to-sequence"){
-	// 	 //IF click a known posture
-    //     //add posture to practice.sequence
-    //     //show updated sequence
-    //     console.log("add-to-sequence button clicked")
-	//  }
-
 
    
 

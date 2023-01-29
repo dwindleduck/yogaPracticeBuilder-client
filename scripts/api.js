@@ -117,3 +117,12 @@ export const updatePractice = (id, data) => {
         body: JSON.stringify(data)
     })
 }
+
+export const deletePractice = (id) => {
+    return fetch(`http://localhost:8000/practices/${id}`, {
+        headers: {
+            'Authorization': `Bearer ${store.userToken}`,
+        },
+        method: 'DELETE'
+    })
+}

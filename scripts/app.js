@@ -213,7 +213,7 @@ const showCreatePractice = () => {
         .then((res) => res.json())
         .then((res) => {
             console.log(res) //returning the created Practice
-            showEditForm(res)
+            showEditForm(res._id)
         })
         .catch(onFailure)
 
