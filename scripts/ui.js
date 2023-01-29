@@ -43,10 +43,17 @@ export const clearBody = () => {
 }
 
 export const onFailure = (error) => {
+    //console.log(error)
     messageContainer.innerHTML = `
         <h3>You've got an error!</h3>
         <p>${error}</p>
     `
+}
+export const onSignInFailure = () => {
+    messageContainer.innerHTML = `
+    <h3>Oh no!</h3>
+    <p>Your email or password are incorrect, please try again</p>
+`
 }
 
 
@@ -64,7 +71,7 @@ export const onSignUpSuccess = () => {
 export const onSignInSuccess = (userToken) => {
     clearBody()
     store.userToken = userToken
-    messageContainer.innerText = "Signed In!"
+    // messageContainer.innerText = "Signed In!"
     landingContainer.classList.remove("hide")
     notLoggedInUserMessageContainer.classList.add("hide")
     loggedInUserMessageContainer.classList.remove("hide")
@@ -72,13 +79,8 @@ export const onSignInSuccess = (userToken) => {
         .then(res => res.json())
         .then(res => {
             loggedInUserMessageContainer.innerHTML = `
-                <h2>Welcome ${res.student.name}!</h2>
-                <div>Most Recently Posted Practice</div>
-                <div>Number of built practices and link to list</div>
-                <div>
-                <p>You know ${res.student.knownPostures.length} postures</p>
-                <p>See your list</p>
-                <p>Add more postures from the library</p>
+                <h2>Welcome, ${res.student.name}!</h2>
+                <p>You know ${res.student.knownPostures.length} postures!</p>
                 </div>
             `
         })
@@ -300,7 +302,7 @@ export const onIndexBuiltPracticesSuccess = (practices) => {
         editButton.textContent = "Edit"
         editButton.setAttribute("data-id", practice._id)
         editButton.addEventListener("click", event => {
-            console.log(practice._id)
+            //console.log(practice._id)
             showEditForm(practice._id)
         })
         practicesContainer.appendChild(editButton)
@@ -359,7 +361,7 @@ const showSequence = (practiceId) => {
     sequenceContainer.innerHTML = ""
 
     const theSequence = []
-    console.log(`practiceId: ${practiceId}`)
+    //console.log(`practiceId: ${practiceId}`)
 
     showPracticeById(practiceId)
         .then(res => res.json())
@@ -401,7 +403,7 @@ export const showEditForm = (practiceId) => {
         .then(res => {
             
 
-            console.log(res.practice)
+            //console.log(res.practice)
             
             clearBody()
 
@@ -462,9 +464,9 @@ editPracticeContainer.addEventListener('click', (event) => {
 	const buttonAction = event.target.getAttribute("data-event")
 
 	if (buttonAction === "delete" && id) {
-		console.log("clicked delete button")
+		//console.log("clicked delete button")
         deletePractice(id)
-			.then(console.log)
+			.then(console.log)//direct back to my practices
 			.catch(onFailure)
 	} 
 

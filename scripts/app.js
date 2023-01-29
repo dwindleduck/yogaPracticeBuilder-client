@@ -24,12 +24,13 @@ import {
     showCreatePracticeForm,
     onIndexBuiltPracticesSuccess,
     showEditForm,
-    onIndexKnownPosturesSuccess
+    onIndexKnownPosturesSuccess,
+    onSignInFailure
 } from "./ui.js"
 
 
 /*----- DOM Elements -----*/
-const signInButton = document.querySelector("#sign-in-button")
+const signInButtons = document.querySelectorAll(".sign-in-button")
 const signInForm = document.querySelector("#sign-in-form")
 const signUpForm = document.querySelector("#sign-up-form")
 const landingContainer = document.querySelector("#landing-container")
@@ -53,9 +54,13 @@ const navPosturesButton = document.querySelector("#nav-postures-button")
 /*----- Sign In/Up -----*/
 /*----------------------*/
 
-signInButton.addEventListener("click", (event) => {
-    clearBody()
-    signInAndUpContainer.classList.remove("hide")
+signInButtons.forEach(button => {
+    button.addEventListener("click", (event) => {
+        event.preventDefault()
+        clearBody()
+        signInAndUpContainer.classList.remove("hide")
+    })
+
 })
 
 
@@ -88,7 +93,7 @@ signInForm.addEventListener("submit", (event) => {
             //res has the token
             onSignInSuccess(res.token)
         })
-        .catch(onFailure)
+        .catch(onSignInFailure)
 })
 
 
@@ -137,15 +142,15 @@ export const addPostureToKnown = (postureData) => {
         .then((res) => res.json())
         .then((res) => {
             const knownPostures = res.postures
-            console.log(knownPostures)
-            console.log(postureData)
+            //console.log(knownPostures)
+            //console.log(postureData)
             if (knownPostures.filter(posture => posture._id === postureData._id).length > 0){
                 console.log("You already know this posture!")
             } else {
-                console.log("ok add it to known")
+                //console.log("ok add it to known")
 
             
-                console.log(knownPostures)
+                //console.log(knownPostures)
                // console.log(JSON.stringify(knownPostures))
                updateKnownPostures(postureData)
                 // updateKnownPostures(knownPostures)
@@ -212,7 +217,7 @@ const showCreatePractice = () => {
         createPractice(practiceData)
         .then((res) => res.json())
         .then((res) => {
-            console.log(res) //returning the created Practice
+            //console.log(res) //returning the created Practice
             showEditForm(res._id)
         })
         .catch(onFailure)
