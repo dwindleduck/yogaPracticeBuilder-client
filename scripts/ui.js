@@ -219,6 +219,25 @@ export const onIndexKnownPosturesSuccess = (postures, practiceId, sequence, isEd
         detailsButton.textContent = "Details"
         detailsButton.setAttribute("data-id", posture._id)
         detailsButton.addEventListener("click", event => {
+          if(isEditing) {
+                editPracticeContainer.classList.add("hide")
+                sequenceContainer.classList.add("hide")
+                posturesContainer.classList.add("hide")
+            
+                //create a button to go back...
+                const keepEditing = document.createElement("button")
+                keepEditing.textContent = "Keep Editing"
+                messageContainer.appendChild(keepEditing)
+                keepEditing.addEventListener("click", () => {
+                    messageContainer.innerHTML = ""
+                    detailsContainer.innerHTML = ""
+                    detailsContainer.classList.add("hide")
+                    editPracticeContainer.classList.remove("hide")
+                    sequenceContainer.classList.remove("hide")
+                    posturesContainer.classList.remove("hide")
+                })
+            
+            }
             showPostureDetails(event)
         })
         posturesContainer.appendChild(detailsButton)
@@ -268,6 +287,7 @@ export const onIndexPracticesSuccess = (practices) => {
         detailsButton.textContent = "Details"
         detailsButton.setAttribute("data-id", practice._id)
         detailsButton.addEventListener("click", event => {
+
             showPracticeDetails(event)
         })
         practicesContainer.appendChild(detailsButton)
@@ -386,6 +406,9 @@ const showSequence = (practiceId) => {
             res.practice.sequence.forEach(posture => {
                 theSequence.push(posture)
             })
+
+            
+
             //console.log(`theSequence: ${theSequence}`)
             for(let i=0; i<theSequence.length; i++) {
                
@@ -398,8 +421,25 @@ const showSequence = (practiceId) => {
                 detailsButton.textContent = "Details"
                 detailsButton.setAttribute("data-id", theSequence[i]._id)
                 detailsButton.addEventListener("click", event => {
+                    editPracticeContainer.classList.add("hide")
+                    sequenceContainer.classList.add("hide")
+                    posturesContainer.classList.add("hide")
+                    //detailsContainer.classList.remove("hide")
+                    //create a button to go back...
+                    const keepEditing = document.createElement("button")
+                    keepEditing.textContent = "Keep Editing"
+                    messageContainer.appendChild(keepEditing)
+                    keepEditing.addEventListener("click", () => {
+                        messageContainer.innerHTML = ""
+                        detailsContainer.innerHTML = ""
+                        detailsContainer.classList.add("hide")
+                        editPracticeContainer.classList.remove("hide")
+                        sequenceContainer.classList.remove("hide")
+                        posturesContainer.classList.remove("hide")
+                    })
                     showPostureDetails(event)
                 })
+                
                 sequenceContainer.appendChild(detailsButton)
             
             }
