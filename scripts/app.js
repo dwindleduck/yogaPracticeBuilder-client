@@ -119,12 +119,12 @@ export const showAllPostures = () => {
         })
         .catch(onFailure)
 }
-export const showKnownPostures = (isEditing) => {
+export const showKnownPostures = (practiceId, sequence, isEditing) => {
     indexKnownPostures()
     .then((res) => res.json())
     .then((res) => {
         //onIndexPosturesSuccess(res.postures)
-        onIndexKnownPosturesSuccess(res.postures, isEditing)
+        onIndexKnownPosturesSuccess(res.postures, practiceId, sequence, isEditing)
     })
     .catch(onFailure)
 }

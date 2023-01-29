@@ -6,7 +6,7 @@ import {
     showKnownPostures,
     addPostureToKnown
 } from "./app.js"
-import { showPracticeById, showStudent } from "./api.js"
+import { showPracticeById, showStudent, updatePractice } from "./api.js"
 
 /*----- DOM Elements -----*/
 const pageTitleContainer = document.querySelector("#page-title-container")
@@ -149,7 +149,7 @@ export const onIndexPosturesSuccess = (postures) => {
     })
 }
 
-export const onIndexKnownPosturesSuccess = (postures, isEditing) => {
+export const onIndexKnownPosturesSuccess = (postures, practiceId, sequence, isEditing) => {
     posturesContainer.innerHTML = ""
 
     postures.forEach(posture => {
@@ -163,15 +163,35 @@ export const onIndexKnownPosturesSuccess = (postures, isEditing) => {
         posturesContainer.appendChild(postureInfo)
         
         if(isEditing) {
-            //add to sequence button
+            //button to add posture to sequence 
             const addToSequenceButton = document.createElement("button")
             addToSequenceButton.textContent = "Add to Sequence"
             addToSequenceButton.setAttribute("data-id", posture._id)
             // addToSequenceButton.setAttribute("data-event", "add-to-sequence")
             addToSequenceButton.addEventListener("click", event => {
-                //
+                //add posture to sequence
+                const selectedPostureId = event.target.getAttribute("data-id")
 
-                console.log(`adding ${event.target.getAttribute("data-id")} to sequence`)
+         
+                const updatedSequence = sequence
+                updatedSequence.push(posture)
+
+                const practiceData = {
+                    practice: {
+                        sequence: updatedSequence
+                    }
+                }
+                //console.log(practiceData)
+
+                //call api fetch 
+                updatePractice(practiceId, practiceData)
+                    .then(() => {
+                        console.log("need to update dom with the updated sequence")
+                        showSequence(practiceId)
+                    })
+                    .catch(onFailure)
+
+                
 
             })
             posturesContainer.appendChild(addToSequenceButton)
@@ -281,7 +301,6 @@ export const onIndexBuiltPracticesSuccess = (practices) => {
         editButton.setAttribute("data-id", practice._id)
         editButton.addEventListener("click", event => {
             //showEditForm(event)
-            console.log("edit button clicked")
             showEditForm(practice)
         })
         practicesContainer.appendChild(editButton)
@@ -335,30 +354,41 @@ export const showCreatePracticeForm = () => {
 }
 
 const showSequence = (practiceId) => {
+    
+    sequenceContainer.innerHTML = ""
+    
+    const theSequence = []
+    //console.log(`practiceId: ${practiceId}`)
+
     showPracticeById(practiceId)
         .then(res => res.json())
         .then(res => {
-
-            const sequence = res.practice.sequence
-
-            for(let i=0; i<sequence.length; i++) {
+            //console.log(res.practice.sequence)
+            res.practice.sequence.forEach(posture => {
+                theSequence.push(posture)
+            })
+            //console.log(`theSequence: ${theSequence}`)
+            for(let i=0; i<theSequence.length; i++) {
                
                 //name
                 const name = document.createElement("h3")
-                name.innerText = sequence[i].name
+                name.innerText = theSequence[i].name
                 sequenceContainer.appendChild(name)
                 //details button
                 const detailsButton = document.createElement("button")
                 detailsButton.textContent = "Details"
-                detailsButton.setAttribute("data-id", sequence[i]._id)
+                detailsButton.setAttribute("data-id", theSequence[i]._id)
                 detailsButton.addEventListener("click", event => {
                     showPostureDetails(event)
                 })
                 sequenceContainer.appendChild(detailsButton)
             
             }
+            
         })
         .catch(onFailure)
+    //console.log(`before return${theSequence}`)
+    return theSequence
 }  
 
 export const showEditForm = (practice) => {
@@ -379,9 +409,16 @@ export const showEditForm = (practice) => {
     `
 
     //show practice.sequence
-    showSequence(practice._id)
+    //returns the sequence
+    //console.log(showSequence(practice._id))
+    const sequence = showSequence(practice._id)
+    //console.log(sequence)
+
+
     //show users known postures
-    showKnownPostures(true) //expecting isEditing = true
+    showKnownPostures(practice._id, sequence, true) //expecting isEditing = true
+
+
 
 }
 
@@ -419,12 +456,13 @@ editPracticeContainer.addEventListener('click', (event) => {
         // deleteCharacter(id)
 		// 	.then(onDeleteCharacterSuccess)
 		// 	.catch(onFailure)
-	} else if (buttonAction === "add-to-sequence"){
-		 //IF click a known posture
-        //add posture to practice.sequence
-        //show updated sequence
-        console.log("add-to-sequence button clicked")
-	 }
+	} 
+    // else if (buttonAction === "add-to-sequence"){
+	// 	 //IF click a known posture
+    //     //add posture to practice.sequence
+    //     //show updated sequence
+    //     console.log("add-to-sequence button clicked")
+	//  }
 
 
    

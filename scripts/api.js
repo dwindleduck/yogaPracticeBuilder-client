@@ -105,3 +105,15 @@ export const createPractice = (data) => {
         body: JSON.stringify(data)
     })
 }
+
+export const updatePractice = (id, data) => {
+    return fetch(`http://localhost:8000/practices/${id}`, {
+        method: "PATCH",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${store.userToken}`,
+        },
+        body: JSON.stringify(data)
+    })
+}
