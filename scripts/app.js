@@ -25,7 +25,8 @@ import {
     onIndexBuiltPracticesSuccess,
     showEditForm,
     onIndexKnownPosturesSuccess,
-    onSignInFailure
+    onSignInFailure,
+    onUnauthorized
 } from "./ui.js"
 
 
@@ -111,7 +112,7 @@ export const showPostureDetails = (event) => {
             // console.log(res)
             onShowPostureSuccess(res.posture)
         })
-        .catch(onFailure)
+        .catch(onUnauthorized)
 }
 
 
@@ -131,7 +132,7 @@ export const showKnownPostures = (practiceId, sequence, isEditing) => {
         //onIndexPosturesSuccess(res.postures)
         onIndexKnownPosturesSuccess(res.postures, practiceId, sequence, isEditing)
     })
-    .catch(onFailure)
+    .catch(onUnauthorized)
 }
 
 
@@ -158,7 +159,7 @@ export const addPostureToKnown = (postureData) => {
                     .catch(onFailure)
             }
         })
-        .catch(onFailure)
+        .catch(onUnauthorized)
 }
 
 
@@ -178,7 +179,7 @@ export const showPracticeDetails = (event) => {
         .then((res) => {
             onShowPracticeSuccess(res.practice)
         })
-        .catch(onFailure)
+        .catch(onUnauthorized)
 }
 
 
@@ -191,13 +192,13 @@ const showPractices = () => {
     .catch(onFailure)
 }
 
-const showBuiltPractices = () => {
+export const showBuiltPractices = () => {
     indexBuiltPractices()
     .then((res) => res.json())
     .then((res) => {
         onIndexBuiltPracticesSuccess(res.practices)
     })
-    .catch(onFailure)
+    .catch(onUnauthorized)
 }
 
 const showCreatePractice = () => {
@@ -220,7 +221,7 @@ const showCreatePractice = () => {
             //console.log(res) //returning the created Practice
             showEditForm(res._id)
         })
-        .catch(onFailure)
+        .catch(onUnauthorized)
 
     })
    

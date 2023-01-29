@@ -4,7 +4,8 @@ import {
     showPracticeDetails,
     showAllPostures,
     showKnownPostures,
-    addPostureToKnown
+    addPostureToKnown,
+    showBuiltPractices
 } from "./app.js"
 import { showPracticeById, showStudent, updatePractice,deletePractice } from "./api.js"
 
@@ -25,6 +26,7 @@ const practiceBuilderContainer = document.querySelector("#practice-builder-conta
 
 const editPracticeContainer = document.querySelector("#edit-practice-container")
 
+const detailsContainer = document.querySelector("#details-container")
 
 /*--------------------*/
 /*----- Fuctions -----*/
@@ -34,12 +36,14 @@ export const clearBody = () => {
     messageContainer.innerHTML = ""
     landingContainer.classList.add("hide")
     signInAndUpContainer.classList.add("hide")
+    posturesContainer.classList.remove("hide")
     posturesContainer.innerHTML = ""
     practicesContainer.innerHTML = ""
     practiceBuilderContainer.innerHTML = ""
     pageTitleContainer.innerHTML = ""
     editPracticeContainer.innerHTML = ""
     sequenceContainer.innerHTML = ""
+    detailsContainer.classList.add("hide")
 }
 
 export const onFailure = (error) => {
@@ -49,11 +53,20 @@ export const onFailure = (error) => {
         <p>${error}</p>
     `
 }
-export const onSignInFailure = () => {
+export const onSignInFailure = (error) => {
     messageContainer.innerHTML = `
-    <h3>Oh no!</h3>
-    <p>Your email or password are incorrect, please try again</p>
-`
+        <h3>Oh no!</h3>
+        <p>Your email or password are incorrect, please try again</p>
+    `
+}
+export const onUnauthorized = (error) => {
+    clearBody()
+    messageContainer.innerHTML = `
+    <p>Only registered users can do that!</p>    
+    <p>Please sign in or create an account to continue</p>
+    `
+    signInAndUpContainer.classList.remove("hide")
+    //back button
 }
 
 
@@ -152,6 +165,7 @@ export const onIndexPosturesSuccess = (postures) => {
 }
 
 export const onIndexKnownPosturesSuccess = (postures, practiceId, sequence, isEditing) => {
+    posturesContainer.classList.remove("hide")
     posturesContainer.innerHTML = ""
 
     postures.forEach(posture => {
@@ -212,8 +226,10 @@ export const onIndexKnownPosturesSuccess = (postures, practiceId, sequence, isEd
 }
 
 export const onShowPostureSuccess = (posture) => {
-    clearBody()
-
+    //clearBody()
+    posturesContainer.classList.add("hide")
+    detailsContainer.classList.remove("hide")
+    detailsContainer.innerHTML = ""
     const div = document.createElement('div')
     div.innerHTML = `
         <h3>${posture.name}</h3>
@@ -223,7 +239,7 @@ export const onShowPostureSuccess = (posture) => {
         <img />
     `
     //<p>${posture.instructions}</p>
-    posturesContainer.appendChild(div)
+    detailsContainer.appendChild(div)
 }
 
 
@@ -466,7 +482,7 @@ editPracticeContainer.addEventListener('click', (event) => {
 	if (buttonAction === "delete" && id) {
 		//console.log("clicked delete button")
         deletePractice(id)
-			.then(console.log)//direct back to my practices
+			.then(showBuiltPractices)//direct back to my practices
 			.catch(onFailure)
 	} 
 
