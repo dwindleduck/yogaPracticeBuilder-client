@@ -210,6 +210,7 @@ const showCreatePractice = () => {
 
         const practiceData = {
             practice: {
+                
                 name: event.target["name"].value,
                 description: event.target["description"].value,
                 style: event.target["style"].value,
@@ -218,8 +219,9 @@ const showCreatePractice = () => {
         createPractice(practiceData)
         .then((res) => res.json())
         .then((res) => {
-            //console.log(res) //returning the created Practice
-            showEditForm(res._id)
+            //console.log(res.practice._id) //returning the created Practice
+            
+            showEditForm(res.practice._id)
         })
         .catch(onUnauthorized)
 

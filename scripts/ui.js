@@ -522,7 +522,8 @@ export const showEditForm = (practiceId) => {
             //console.log(res.practice)
             
             //clearBody()
-
+            practiceBuilderContainer.innerHTML = ""
+            editPracticeContainer.innerHTML = ""
             editPracticeContainer.classList.remove("hide")
             posturesContainer.classList.remove("hide")
             sequenceContainer.classList.remove("hide")
