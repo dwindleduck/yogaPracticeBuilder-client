@@ -149,7 +149,14 @@ const writePageTitle = (pageTitle) => {
 
 export const onIndexPosturesSuccess = (postures) => {
     writePageTitle("Postures")
+
+    
+
     postures.forEach(posture => {
+        const postureWrapper = document.createElement("div")
+        postureWrapper.classList.add("posture-wrapper")
+    
+
         const info = document.createElement('div')
         info.innerHTML = `
         <h3>${posture.name}</h3>
@@ -157,7 +164,7 @@ export const onIndexPosturesSuccess = (postures) => {
         <p>${posture.description}</p>
         <img />
         `
-        posturesContainer.appendChild(info)
+        postureWrapper.appendChild(info)
 
         const detailsButton = document.createElement("button")
         detailsButton.textContent = "Details"
@@ -166,7 +173,7 @@ export const onIndexPosturesSuccess = (postures) => {
             messageContainer.innerHTML = ""
             showPostureDetails(event)
         })
-        posturesContainer.appendChild(detailsButton)
+        postureWrapper.appendChild(detailsButton)
 
         const knownButton = document.createElement("button")
         knownButton.textContent = "Add to Known"
@@ -176,8 +183,9 @@ export const onIndexPosturesSuccess = (postures) => {
             //add this posture to knownPostures
             addPostureToKnown(posture)
         })
-        posturesContainer.appendChild(knownButton)
+        postureWrapper.appendChild(knownButton)
 
+        posturesContainer.appendChild(postureWrapper)
     })
 }
 
@@ -193,12 +201,16 @@ export const onIndexKnownPosturesSuccess = (postures, practiceId, sequence, isEd
 
         const sectionTitle = document.createElement("h3")
         sectionTitle.innerText = "Known Postures"
+        sectionTitle.classList.add("section-title")
         posturesContainer.appendChild(sectionTitle)
     }
 
 
 
     postures.forEach(posture => {
+        const postureWrapper = document.createElement("div")
+        postureWrapper.classList.add("posture-wrapper")
+
         const postureInfo = document.createElement('div')
         postureInfo.innerHTML = `
         <h3>${posture.name}</h3>
@@ -206,7 +218,7 @@ export const onIndexKnownPosturesSuccess = (postures, practiceId, sequence, isEd
         <p>${posture.description}</p>
         <img />
         `
-        posturesContainer.appendChild(postureInfo)
+        postureWrapper.appendChild(postureInfo)
         
         if(isEditing) {
             //button to add posture to sequence 
@@ -241,7 +253,7 @@ export const onIndexKnownPosturesSuccess = (postures, practiceId, sequence, isEd
                 
 
             })
-            posturesContainer.appendChild(addToSequenceButton)
+            postureWrapper.appendChild(addToSequenceButton)
         }
 
 
@@ -273,7 +285,8 @@ export const onIndexKnownPosturesSuccess = (postures, practiceId, sequence, isEd
             }
             showPostureDetails(event)
         })
-        posturesContainer.appendChild(detailsButton)
+        postureWrapper.appendChild(detailsButton)
+        posturesContainer.appendChild(postureWrapper)
     })
 }
 
@@ -509,6 +522,7 @@ const showSequence = (practiceId) => {
             
             const sectionTitle = document.createElement("h3")
             sectionTitle.innerText = "Sequence"
+            sectionTitle.classList.add("section-title")
             sequenceContainer.appendChild(sectionTitle)
 
             res.practice.sequence.forEach(posture => {
@@ -517,13 +531,14 @@ const showSequence = (practiceId) => {
 
             
 
-            //console.log(`theSequence: ${theSequence}`)
             for(let i=0; i<theSequence.length; i++) {
-               
+                const sequenceWrapper = document.createElement("div")
+                sequenceWrapper.classList.add("sequence-wrapper")
                 //name
                 const name = document.createElement("h4")
                 name.innerText = theSequence[i].name
-                sequenceContainer.appendChild(name)
+                //sequenceContainer.appendChild(name)
+                sequenceWrapper.appendChild(name)
                 //details button
                 const detailsButton = document.createElement("button")
                 detailsButton.textContent = "Details"
@@ -549,7 +564,9 @@ const showSequence = (practiceId) => {
                     showPostureDetails(event)
                 })
                 
-                sequenceContainer.appendChild(detailsButton)
+                sequenceWrapper.appendChild(detailsButton)
+
+                sequenceContainer.appendChild(sequenceWrapper)
             
             }
             
