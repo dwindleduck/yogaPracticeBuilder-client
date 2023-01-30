@@ -47,9 +47,11 @@ header h1 {
     justify-self: flex-end;
     margin-bottom: 5px;
 }
+#message-container {
+    display: flex;
+}
 .back-button {
     color: #692b9d;
-    text-align: left;
 }
 nav {
     display: flex;
@@ -81,43 +83,30 @@ nav a:hover {
 
 
 #editor-wrapper.editing {
-    /* display: grid;
-    grid-template-columns: 1fr 3fr; */
     display: flex;
-
 }
 #sequence-container.editing {
-    /* width: 50%; */
 }
-
-
 #postures-container.editing {
-    /* width: 50%; */
-    align-self: flex-start;
+    align-self: flex-start; /* this stopped the stretching */
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
 }
-
 #postures-container {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 3px;
-    /* display: flex;
-    flex-wrap: wrap; */
-    
 }
 .section-title {
     grid-column: 1 / span 3;
 }
 #postures-container div{
-    /* max-width: 100px; */
     
 }
 .posture-wrapper {
     background-color: #AFD7F7;
     padding: 5px;
 }
-
 #sequence-container{
     
 }
