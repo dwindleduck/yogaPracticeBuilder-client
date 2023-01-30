@@ -10,6 +10,10 @@ import {
 import { showPracticeById, showStudent, updatePractice,deletePractice } from "./api.js"
 
 /*----- DOM Elements -----*/
+
+const signInButton = document.querySelector("#sign-in-button")
+const signOutButton = document.querySelector("#sign-out-button")
+
 const pageTitleContainer = document.querySelector("#page-title-container")
 const landingContainer = document.querySelector("#landing-container")
 const signInAndUpContainer = document.querySelector("#sign-in-and-up-container")
@@ -25,6 +29,8 @@ const practicesContainer = document.querySelector("#practices-container")
 const practiceBuilderContainer = document.querySelector("#practice-builder-container")
 
 const editPracticeContainer = document.querySelector("#edit-practice-container")
+
+const editorWrapper = document.querySelector("#editor-wrapper")
 
 const detailsContainer = document.querySelector("#details-container")
 
@@ -44,6 +50,9 @@ export const clearBody = () => {
     editPracticeContainer.innerHTML = ""
     sequenceContainer.innerHTML = ""
     detailsContainer.classList.add("hide")
+    posturesContainer.classList.remove("editing")
+    sequenceContainer.classList.remove("editing")
+    editorWrapper.classList.remove("editing")
 }
 
 export const onFailure = (error) => {
@@ -85,6 +94,10 @@ export const onSignInSuccess = (userToken) => {
     clearBody()
     store.userToken = userToken
     // messageContainer.innerText = "Signed In!"
+
+    signInButton.classList.add("hide")
+    signOutButton.classList.remove("hide")
+
     landingContainer.classList.remove("hide")
     notLoggedInUserMessageContainer.classList.add("hide")
     loggedInUserMessageContainer.classList.remove("hide")
@@ -99,6 +112,7 @@ export const onSignInSuccess = (userToken) => {
         })
         .catch(onFailure)
 }
+
 
 
 
@@ -165,8 +179,16 @@ export const onIndexPosturesSuccess = (postures) => {
 }
 
 export const onIndexKnownPosturesSuccess = (postures, practiceId, sequence, isEditing) => {
+    //Maybe add to "selectFromKnownPostures" container instead of posturesContainer???
     posturesContainer.classList.remove("hide")
     posturesContainer.innerHTML = ""
+
+    if(isEditing) {
+        editorWrapper.classList.add("editing")
+        posturesContainer.classList.add("editing")
+        sequenceContainer.classList.add("editing")
+    }
+
 
     postures.forEach(posture => {
         const postureInfo = document.createElement('div')

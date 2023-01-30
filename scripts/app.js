@@ -1,5 +1,6 @@
 //Command Center for Client Side
 
+import {store} from "./store.js"
 import { 
     signUp,
     signIn,
@@ -32,6 +33,9 @@ import {
 
 /*----- DOM Elements -----*/
 const signInButtons = document.querySelectorAll(".sign-in-button")
+const signInButton = document.querySelector("#sign-in-button")
+const signOutButton = document.querySelector("#sign-out-button")
+
 const signInForm = document.querySelector("#sign-in-form")
 const signUpForm = document.querySelector("#sign-up-form")
 const landingContainer = document.querySelector("#landing-container")
@@ -61,6 +65,14 @@ signInButtons.forEach(button => {
         clearBody()
         signInAndUpContainer.classList.remove("hide")
     })
+
+})
+signOutButton.addEventListener("click", () => {
+    signInButton.classList.remove("hide")
+    signOutButton.classList.add("hide")
+    store.userToken = ""
+    clearBody()
+    signInAndUpContainer.classList.remove("hide")
 
 })
 

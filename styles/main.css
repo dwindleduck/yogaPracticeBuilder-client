@@ -25,6 +25,13 @@ header h1 {
     justify-self: flex-end;
     margin-bottom: 5px;
 }
+#sign-out-button  {
+    max-width: 70px;
+    max-height: 21px;
+    align-self: flex-end;
+    justify-self: flex-end;
+    margin-bottom: 5px;
+}
 nav {
     display: flex;
     justify-content: space-around;
@@ -38,8 +45,16 @@ nav a:hover {
     color: rgb(93, 93, 217);
 }
 
-
-
+#editor-wrapper.editing {
+    display: flex;
+    justify-content: space-around;
+}
+#sequence-container.editing {
+    /* width: 50%; */
+}
+#postures-container.editing {
+    /* width: 50%; */
+}
 
 
 .hide {
