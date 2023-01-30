@@ -244,16 +244,20 @@ navHomeButton.addEventListener("click", (event) => {
 })
 
 navPracticesButton.addEventListener("click", (event) => {
+    event.preventDefault()
     showBuiltPractices()
 })
 
 navFindPracticesButton.addEventListener("click", (event) => {
+    event.preventDefault()
     showPractices()
 })
 
 navPosturesButton.addEventListener("click", (event) => {
+    event.preventDefault()
     showAllPostures()
 })
 navNewPracticeButton.addEventListener("click", (event) => {
+    event.preventDefault()
     showCreatePractice()
 })
