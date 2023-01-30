@@ -272,6 +272,7 @@ export const onIndexPracticesSuccess = (practices) => {
     clearBody()
     const title = document.createElement("h2")
     title.innerText = "Practices"
+    practicesContainer.classList.remove("hide")
     practicesContainer.appendChild(title)
 
     practices.forEach(practice => {
@@ -287,6 +288,22 @@ export const onIndexPracticesSuccess = (practices) => {
         detailsButton.textContent = "Details"
         detailsButton.setAttribute("data-id", practice._id)
         detailsButton.addEventListener("click", event => {
+            practicesContainer.classList.add("hide")
+            /////////////
+            //need a button for back to Find a Practice
+
+            const backToFindPractice = document.createElement("button")
+            backToFindPractice.textContent = "Back"
+            messageContainer.appendChild(backToFindPractice)
+            backToFindPractice.addEventListener("click", () => {
+                practicesContainer.classList.remove("hide")
+                detailsContainer.classList.add("hide")
+                detailsContainer.innerHTML = ""
+                messageContainer.innerHTML = ""
+
+            })
+
+
 
             showPracticeDetails(event)
         })
@@ -308,6 +325,8 @@ export const onIndexBuiltPracticesSuccess = (practices) => {
     clearBody()
     const title = document.createElement("h2")
     title.innerText = "My Practices"
+    //maybe this should go in the pageTitleContainer
+    practicesContainer.classList.remove("hide")
     practicesContainer.appendChild(title)
 
 //button for my built practices
@@ -329,6 +348,24 @@ export const onIndexBuiltPracticesSuccess = (practices) => {
         detailsButton.textContent = "Details"
         detailsButton.setAttribute("data-id", practice._id)
         detailsButton.addEventListener("click", event => {
+            //keep practicesContainer as is, but hide it
+            practicesContainer.classList.add("hide")
+
+            //button for "Back to My Practices"
+            //??show messageContainer
+
+            const backToMyPractices = document.createElement("button")
+            backToMyPractices.textContent = "Back to My Practices"
+            messageContainer.appendChild(backToMyPractices)
+            backToMyPractices.addEventListener("click", () => {
+                practicesContainer.classList.remove("hide")
+                detailsContainer.classList.add("hide")
+                detailsContainer.innerHTML = ""
+                messageContainer.innerHTML = ""
+
+            })
+
+
             showPracticeDetails(event)
         })
         practicesContainer.appendChild(detailsButton)
@@ -339,6 +376,22 @@ export const onIndexBuiltPracticesSuccess = (practices) => {
         editButton.setAttribute("data-id", practice._id)
         editButton.addEventListener("click", event => {
             //console.log(practice._id)
+
+            practicesContainer.classList.add("hide")
+
+            const backToMyPractices = document.createElement("button")
+            backToMyPractices.textContent = "Back to My Practices"
+            messageContainer.appendChild(backToMyPractices)
+            backToMyPractices.addEventListener("click", () => {
+                practicesContainer.classList.remove("hide")
+                editPracticeContainer.classList.add("hide")
+                posturesContainer.classList.add("hide")
+                sequenceContainer.classList.add("hide")
+                editPracticeContainer.innerHTML = ""
+                messageContainer.innerHTML = ""
+
+            })
+
             showEditForm(practice._id)
         })
         practicesContainer.appendChild(editButton)
@@ -348,7 +401,12 @@ export const onIndexBuiltPracticesSuccess = (practices) => {
 }
 
 export const onShowPracticeSuccess = (practice) => {
-    clearBody()
+    //clearBody()
+    //do the same thing I did to onShowPostureSuccess
+    //practicesContainer.classList.add("hide")
+    detailsContainer.innerHTML = ""
+    
+
 
     const div = document.createElement('div')
     div.innerHTML = `
@@ -366,7 +424,9 @@ export const onShowPracticeSuccess = (practice) => {
         `
         div.appendChild(addToSequence)
     })
-    practicesContainer.appendChild(div)
+    
+    detailsContainer.appendChild(div)
+    detailsContainer.classList.remove("hide")
 }
 
 
@@ -461,7 +521,12 @@ export const showEditForm = (practiceId) => {
 
             //console.log(res.practice)
             
-            clearBody()
+            //clearBody()
+
+            editPracticeContainer.classList.remove("hide")
+            posturesContainer.classList.remove("hide")
+            sequenceContainer.classList.remove("hide")
+
 
             const title = document.createElement("h2")
             title.innerText = res.practice.name
