@@ -1,7 +1,18 @@
+/*
+    Color Palette
+    html gray - rgb(88, 88, 88)
+    body lite purple - rgb(149, 149, 211)
+    link dark purple - #692b9d
+    nav link dark purple - rgb(62, 62, 160)
+    nav link hover lite purple- rgb(93, 93, 217)
+    blue - #AFD7F7
+
+*/
 html {
     width: 100vw;
     height: 100vh;
     background-color: rgb(88, 88, 88);
+    font-family: sans-serif;
 }
 body {
     max-width: 800px;
@@ -9,7 +20,11 @@ body {
     background-color: rgb(149, 149, 211);
     text-align: center;
 }
+a {
+    text-decoration: none;
+    color: #692b9d;
 
+}
 
 
 header {
@@ -32,10 +47,16 @@ header h1 {
     justify-self: flex-end;
     margin-bottom: 5px;
 }
+.back-button {
+    color: #692b9d;
+    text-align: left;
+}
 nav {
     display: flex;
     justify-content: space-around;
     background-color: rgb(160, 160, 160);
+    margin-top: 5px;
+    margin-bottom: 20px;
 }
 nav a {
     text-decoration: none;
@@ -43,6 +64,12 @@ nav a {
 }
 nav a:hover {
     color: rgb(93, 93, 217);
+}
+#message-container {
+    /* background-color: #692b9d; */
+
+
+
 }
 
 #editor-wrapper.editing {
@@ -55,6 +82,31 @@ nav a:hover {
 #postures-container.editing {
     /* width: 50%; */
 }
+
+#postures-container {
+    /* display: flex;
+    flex-wrap: wrap; */
+    background-color: #AFD7F7;
+}
+#postures-container div{
+    /* max-width: 100px; */
+    
+}
+#sequence-container{
+    background-color: #692b9d;
+}
+
+form {
+    margin: 10px auto;
+    display: grid;
+    width: 50%;
+}
+footer {
+    margin: 50px auto 0;
+    padding: 2px;
+}
+
+
 
 
 .hide {

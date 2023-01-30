@@ -45,7 +45,7 @@ const navPracticesButton = document.querySelector("#nav-practices-button")
 const navFindPracticesButton = document.querySelector("#nav-find-practices-button")
 const navNewPracticeButton = document.querySelector("#nav-new-practice-button")
 const navPosturesButton = document.querySelector("#nav-postures-button")
-
+const messageContainer = document.querySelector("#message-container")
 
 
 
@@ -73,6 +73,7 @@ signOutButton.addEventListener("click", () => {
     store.userToken = ""
     clearBody()
     signInAndUpContainer.classList.remove("hide")
+    signUpForm.classList.remove("hide")
 
 })
 
@@ -155,19 +156,16 @@ export const addPostureToKnown = (postureData) => {
         .then((res) => res.json())
         .then((res) => {
             const knownPostures = res.postures
-            //console.log(knownPostures)
-            //console.log(postureData)
-            if (knownPostures.filter(posture => posture._id === postureData._id).length > 0){
-                console.log("You already know this posture!")
-            } else {
-                //console.log("ok add it to known")
-
             
-                //console.log(knownPostures)
-               // console.log(JSON.stringify(knownPostures))
+            //IF the posture is already known
+            if (knownPostures.filter(posture => posture._id === postureData._id).length > 0){
+                messageContainer.innerHTML = "You already know this posture!"
+            } else {
+                //add it to known
                updateKnownPostures(postureData)
-                // updateKnownPostures(knownPostures)
-                    .then(console.log)//update the dom
+                    .then(() => {
+                        messageContainer.innerHTML = "Added to your list of known postures!"
+                    })//update the dom
                     .catch(onFailure)
             }
         })
