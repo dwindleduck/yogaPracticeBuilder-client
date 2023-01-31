@@ -49,6 +49,7 @@ export const clearBody = () => {
     pageTitleContainer.innerHTML = ""
     editPracticeContainer.innerHTML = ""
     sequenceContainer.innerHTML = ""
+    detailsContainer.innerHTML = ""
     detailsContainer.classList.add("hide")
     posturesContainer.classList.remove("editing")
     sequenceContainer.classList.remove("editing")
@@ -275,17 +276,23 @@ export const onIndexKnownPosturesSuccess = (postures, practiceId, sequence, isEd
                 sequenceContainer.classList.remove("editing")
                 posturesContainer.classList.add("hide")
                 posturesContainer.classList.remove("editing")
-                messageContainer.innerHTML = ""
+                //messageContainer.innerHTML = ""
                 //messageContainer.classList.add("hide")
-            
+                messageContainer.style.display = "none"
+                
                 //create a button to go back...
                 const keepEditing = document.createElement("button")
                 keepEditing.textContent = "Keep Editing"
                 keepEditing.classList.add("back-button")
-                messageContainer.appendChild(keepEditing)
+                //messageContainer.appendChild(keepEditing)
+                
+                detailsContainer.innerHTML = ""
+                detailsContainer.appendChild(keepEditing)
+
                 keepEditing.addEventListener("click", () => {
-                    messageContainer.innerHTML = ""
+                    //messageContainer.innerHTML = ""
                     //messageContainer.classList.remove(hide)
+                    messageContainer.style.display = "flex"
                     detailsContainer.innerHTML = ""
                     detailsContainer.classList.add("hide")
                     editPracticeContainer.classList.remove("hide")
@@ -311,7 +318,7 @@ export const onShowPostureSuccess = (posture) => {
     editorWrapper.classList.add("hide")
     posturesContainer.classList.add("hide")
     detailsContainer.classList.remove("hide")
-    detailsContainer.innerHTML = ""
+    // detailsContainer.innerHTML = ""
     const div = document.createElement('div')
     div.innerHTML = `
         <h3>${posture.name}</h3>
@@ -454,6 +461,7 @@ export const onIndexBuiltPracticesSuccess = (practices) => {
             backToMyPractices.textContent = "Back to My Practices"
             backToMyPractices.classList.add("back-button")
             messageContainer.appendChild(backToMyPractices)
+
             backToMyPractices.addEventListener("click", () => {
                 ///////////////////////////////////////
                 //need to refresh the list of practicesto catch any changes that have been made
@@ -570,16 +578,23 @@ const showSequence = (practiceId) => {
                     sequenceContainer.classList.remove("editing")
                     posturesContainer.classList.add("hide")
                     posturesContainer.classList.remove("editing")
-                    messageContainer.innerHTML = ""
-                    //messageContainer.classList.add("hide")
+                   // messageContainer.innerHTML = ""
+                    messageContainer.style.display = "none"
                     
                     //create a button to go back...
                     const keepEditing = document.createElement("button")
                     keepEditing.textContent = "Keep Editing"
                     keepEditing.classList.add("back-button")
-                    messageContainer.appendChild(keepEditing)
+                    //messageContainer.appendChild(keepEditing)
+                    
+                    detailsContainer.innerHTML = ""
+                    detailsContainer.appendChild(keepEditing)
+
+
                     keepEditing.addEventListener("click", () => {
-                        messageContainer.innerHTML = ""
+                        //messageContainer.innerHTML = ""
+
+                        messageContainer.style.display = "flex"
                         //messageContainer.classList.remove("hide")
                         detailsContainer.innerHTML = ""
                         detailsContainer.classList.add("hide")
