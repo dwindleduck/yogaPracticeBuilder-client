@@ -46,6 +46,8 @@ const navFindPracticesButton = document.querySelector("#nav-find-practices-butto
 const navNewPracticeButton = document.querySelector("#nav-new-practice-button")
 const navPosturesButton = document.querySelector("#nav-postures-button")
 const messageContainer = document.querySelector("#message-container")
+const loggedInUserMessageContainer = document.querySelector("#logged-in-user-message-container")
+const notLoggedInUserMessageContainer = document.querySelector("#not-logged-in-user-message-container")
 
 
 
@@ -72,6 +74,12 @@ signOutButton.addEventListener("click", () => {
     signOutButton.classList.add("hide")
     store.userToken = ""
     clearBody()
+    
+    messageContainer.innerHTML = "You've been logged out"
+
+    notLoggedInUserMessageContainer.classList.remove("hide")
+    loggedInUserMessageContainer.classList.add("hide")
+
     signInAndUpContainer.classList.remove("hide")
     signUpForm.classList.remove("hide")
 

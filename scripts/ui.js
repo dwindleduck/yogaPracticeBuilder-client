@@ -71,8 +71,7 @@ export const onSignInFailure = (error) => {
 export const onUnauthorized = (error) => {
     clearBody()
     messageContainer.innerHTML = `
-    <p>Only registered users can do that!</p>    
-    <p>Please sign in or create an account to continue</p>
+    <p>Only registered users can do that! Please sign in or create an account to continue</p>
     `
     signInAndUpContainer.classList.remove("hide")
     //back button
@@ -320,9 +319,16 @@ export const onShowPostureSuccess = (posture) => {
         <p>${posture.portionOfPractice}</p>
         <p>${posture.description}</p>
         <img />
+        <h4>Instructions</h4>
+
+
+
+
     `
-    //<p>${posture.instructions}</p>
-    detailsContainer.appendChild(div)
+/////////<p>${posture.instructions}</p>/////////////
+
+
+detailsContainer.appendChild(div)
 }
 
 
@@ -356,9 +362,8 @@ export const onIndexPracticesSuccess = (practices) => {
         detailsButton.setAttribute("data-id", practice._id)
         detailsButton.addEventListener("click", event => {
             practicesContainer.classList.add("hide")
-            /////////////
-            //button for back to Find a Practice
 
+            //button for back to Find a Practice
             const backToFindPractice = document.createElement("button")
             backToFindPractice.textContent = "Back"
             backToFindPractice.classList.add("back-button")
@@ -670,7 +675,10 @@ editPracticeContainer.addEventListener("submit", (event) => {
 	}
 	if (!id) return
     updatePractice(id, practiceData)
-		.then(showEditForm(id))//needs a practiceId
+		.then(() => {
+            //messageContainer.innerHTML += "Practice updated"
+            showEditForm(id)
+        })//needs a practiceId
 		.catch(onFailure)
 
 })
@@ -682,7 +690,10 @@ editPracticeContainer.addEventListener('click', (event) => {
 	if (buttonAction === "delete" && id) {
 		//console.log("clicked delete button")
         deletePractice(id)
-			.then(showBuiltPractices)//direct back to my practices
+			.then(() => {
+                //messageContainer.innerHTML = "Practice successfully deleted"
+                showBuiltPractices()
+            })//direct back to my practices
 			.catch(onFailure)
 	} 
 
