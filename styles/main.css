@@ -23,7 +23,9 @@ body {
 a {
     text-decoration: none;
     color: #692b9d;
-
+}
+a:hover {
+    color: rgb(93, 93, 217);
 }
 
 
@@ -33,26 +35,24 @@ header {
 header h1 {
     margin-bottom: 0;
 }
-#sign-in-button {
+button {
+    color: #692b9d;
+}
+#sign-in-button,
+#sign-out-button  {
     max-width: 58px;
     max-height: 21px;
     align-self: flex-end;
     justify-self: flex-end;
     margin-bottom: 5px;
+    margin-right: 3%;
+    
 }
 #sign-out-button  {
     max-width: 70px;
-    max-height: 21px;
-    align-self: flex-end;
-    justify-self: flex-end;
-    margin-bottom: 5px;
+    margin-left: 2%;
 }
-#message-container {
-    display: flex;
-}
-.back-button {
-    color: #692b9d;
-}
+
 nav {
     display: flex;
     justify-content: space-around;
@@ -63,41 +63,59 @@ nav {
 nav a {
     text-decoration: none;
     color: rgb(62, 62, 160);
+    padding: 3px;
 }
 nav a:hover {
     color: rgb(93, 93, 217);
 }
+
+main {
+    margin: 0 20px;
+}
 #message-container {
-    /* background-color: #692b9d; */
-
-
-
+    display: flex;
+    margin-left: 2%;
+    /* margin-bottom: -40px; */
+}
+.back-button {
+    color: #692b9d;
+    /* margin-bottom: -60px;
+    height: 100%; */
 }
 
 
 
 
-
+#page-title-container *{
+    margin-bottom: 20px;
+}
 
 
 
 
 #editor-wrapper.editing {
     display: flex;
+    gap: 25px;
+    margin-top: 40px;
 }
 #sequence-container.editing {
+    align-self: flex-start;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+#postures-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 10px;
 }
 #postures-container.editing {
     align-self: flex-start; /* this stopped the stretching */
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
 }
-#postures-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 3px;
-}
-.section-title {
+#postures-container.editing .section-title {
     grid-column: 1 / span 3;
 }
 #postures-container div{
@@ -105,7 +123,9 @@ nav a:hover {
 }
 .posture-wrapper {
     background-color: #AFD7F7;
-    padding: 5px;
+    padding: 10px;
+}
+.posture-wrapper button {
 }
 #sequence-container{
     
@@ -113,14 +133,19 @@ nav a:hover {
 .sequence-wrapper {
     background-color: #692b9d;
     padding: 10px;
-    margin: 10px auto;
+    /* margin: 10px auto; */
 }
 
 
 
 
 
-
+.practice-wrapper {
+    background-color: #8a35d0;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 600px;
+}
 
 
 
@@ -136,6 +161,7 @@ form {
 footer {
     margin: 50px auto 0;
     padding: 2px;
+    border-top: 1px solid rgb(62, 62, 160);
 }
 
 
