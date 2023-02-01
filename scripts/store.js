@@ -1,5 +1,1 @@
-export const store = {
-
-   // sequenceHolder: []
-
-}
+export const store = {}

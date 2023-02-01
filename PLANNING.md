@@ -1,21 +1,12 @@
 # Yoga Practice Builder
 
-Collect postures that you know and use them to build a yoga sequence.
-This app is meant to help students build a home practice and to be used by teachers to construct sequences for class.
+Collect postures that you know and use them to build a yoga sequence
 
-## Technologies Used
-- JavaScript
-- HTML
-- CSS
-
-## Getting Started 
-
-[link to deployed app]
-
-### ERD & Wireframes
+## ERD & Wireframes
 ![ERD & Wireframes](./assets/YPB_ERD_Wireframes.png)
 
-### MVP/Version 1 User Stories
+## User Stories
+### MVP/Version 1
 - As a user I want to be able to sign in
 - As a user I want to be able to see a landing page with navigation buttons
 - As a user I want to be able to see a list of all postures in the library
@@ -31,8 +22,6 @@ This app is meant to help students build a home practice and to be used by teach
 - As a user I want to be able to update a practice I created
 - As a user I want to be able to delete a practice I created
 
-
-## Next Steps
 ### Version 2
 - As a user I want to be able to build a new practice from a list of templates
 - As a user I want to be able to add new (unique) postures to the library

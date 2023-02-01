@@ -1,5 +1,4 @@
 //Command Center for Client Side
-
 import {store} from "./store.js"
 import { 
     signUp,
@@ -30,12 +29,10 @@ import {
     onUnauthorized
 } from "./ui.js"
 
-
 /*----- DOM Elements -----*/
 const signInButtons = document.querySelectorAll(".sign-in-button")
 const signInButton = document.querySelector("#sign-in-button")
 const signOutButton = document.querySelector("#sign-out-button")
-
 const signInForm = document.querySelector("#sign-in-form")
 const signUpForm = document.querySelector("#sign-up-form")
 const landingContainer = document.querySelector("#landing-container")
@@ -49,25 +46,15 @@ const messageContainer = document.querySelector("#message-container")
 const loggedInUserMessageContainer = document.querySelector("#logged-in-user-message-container")
 const notLoggedInUserMessageContainer = document.querySelector("#not-logged-in-user-message-container")
 
-
-
-
-
-
-
-
-
 /*----------------------*/
 /*----- Sign In/Up -----*/
 /*----------------------*/
-
 signInButtons.forEach(button => {
     button.addEventListener("click", (event) => {
         event.preventDefault()
         clearBody()
         signInAndUpContainer.classList.remove("hide")
     })
-
 })
 signOutButton.addEventListener("click", () => {
     signInButton.classList.remove("hide")
@@ -82,10 +69,7 @@ signOutButton.addEventListener("click", () => {
 
     signInAndUpContainer.classList.remove("hide")
     signUpForm.classList.remove("hide")
-
 })
-
-
 signUpForm.addEventListener("submit", (event) => {
     event.preventDefault()
     const studentData = {
@@ -100,7 +84,6 @@ signUpForm.addEventListener("submit", (event) => {
         .then(res => onSignUpSuccess())
         .catch(onFailure)
 })
-
 signInForm.addEventListener("submit", (event) => {
     event.preventDefault()
     const studentData = {
@@ -118,26 +101,19 @@ signInForm.addEventListener("submit", (event) => {
         .catch(onSignInFailure)
 })
 
-
 /*--------------------*/
 /*----- Postures -----*/
 /*--------------------*/
-//MOVE THIS TO UI.JS
 export const showPostureDetails = (event) => {
-    //event.preventDefault()
     const id = event.target.getAttribute("data-id")
     if (!id) return
     showPostureById(id)
         .then((res) => res.json())
         .then((res) => {
-            // console.log(res)
             onShowPostureSuccess(res.posture)
         })
         .catch(onUnauthorized)
 }
-
-
-
 export const showAllPostures = () => {
     indexPostures()
         .then((res) => res.json())
@@ -150,15 +126,10 @@ export const showKnownPostures = (practiceId, sequence, isEditing) => {
     indexKnownPostures()
     .then((res) => res.json())
     .then((res) => {
-        //onIndexPosturesSuccess(res.postures)
         onIndexKnownPosturesSuccess(res.postures, practiceId, sequence, isEditing)
     })
     .catch(onUnauthorized)
 }
-
-
-
-//might need to get the whole posture, not just ID...
 export const addPostureToKnown = (postureData) => {
     indexKnownPostures()
         .then((res) => res.json())
@@ -173,23 +144,17 @@ export const addPostureToKnown = (postureData) => {
                updateKnownPostures(postureData)
                     .then(() => {
                         messageContainer.innerHTML = "Added to your list of known postures!"
-                    })//update the dom
+                    })
                     .catch(onFailure)
             }
         })
         .catch(onUnauthorized)
 }
 
-
-
 /*---------------------*/
 /*----- Practices -----*/
 /*---------------------*/
-
-
-//MOVE THIS TO UI.JS
 export const showPracticeDetails = (event) => {
-    //event.preventDefault()
     const id = event.target.getAttribute("data-id")
     if (!id) return
     showPracticeById(id)
@@ -199,7 +164,6 @@ export const showPracticeDetails = (event) => {
         })
         .catch(onUnauthorized)
 }
-
 
 const showPractices = () => {
     indexPractices()
@@ -228,7 +192,6 @@ const showCreatePractice = () => {
 
         const practiceData = {
             practice: {
-                
                 name: event.target["name"].value,
                 description: event.target["description"].value,
                 style: event.target["style"].value,
@@ -237,40 +200,28 @@ const showCreatePractice = () => {
         createPractice(practiceData)
         .then((res) => res.json())
         .then((res) => {
-            //console.log(res.practice._id) //returning the created Practice
-            
             showEditForm(res.practice._id)
         })
         .catch(onUnauthorized)
-
     })
-   
 }
-
-
 
 /*---------------*/
 /*----- Nav -----*/
 /*---------------*/
-
 navHomeButton.addEventListener("click", (event) => {
     event.preventDefault()
     clearBody()
     landingContainer.classList.remove("hide")
-    //IF user is logged in......
-    //show 
 })
-
 navPracticesButton.addEventListener("click", (event) => {
     event.preventDefault()
     showBuiltPractices()
 })
-
 navFindPracticesButton.addEventListener("click", (event) => {
     event.preventDefault()
     showPractices()
 })
-
 navPosturesButton.addEventListener("click", (event) => {
     event.preventDefault()
     showAllPostures()
