@@ -26,7 +26,8 @@ import {
     showEditForm,
     onIndexKnownPosturesSuccess,
     onSignInFailure,
-    onUnauthorized
+    onUnauthorized,
+    onSignUpFailure
 } from "./ui.js"
 
 /*----- DOM Elements -----*/
@@ -61,7 +62,7 @@ signUpForm.addEventListener("submit", (event) => {
     signUp(studentData)
         .then((res) => res.json())
         .then(res => onSignUpSuccess())
-        .catch(onFailure)
+        .catch(onSignUpFailure)
 })
 signInForm.addEventListener("submit", (event) => {
     event.preventDefault()
@@ -100,6 +101,7 @@ signOutButton.addEventListener("click", () => {
     signInAndUpContainer.classList.remove("hide")
     signUpForm.classList.remove("hide")
 })
+
 /*--------------------*/
 /*----- Postures -----*/
 /*--------------------*/

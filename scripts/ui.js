@@ -59,6 +59,12 @@ export const onSignInFailure = (error) => {
         <p>Your email or password are incorrect, please try again</p>
     `
 }
+export const onSignUpFailure = (error) => {
+    messageContainer.innerHTML = `
+        <h3>Sign-up failed.</h3>
+        <p>Please enter a unique email address</p>
+    `
+}
 export const onUnauthorized = (error) => {
     clearBody()
     messageContainer.innerHTML = `
