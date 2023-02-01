@@ -66,6 +66,36 @@ export const onUnauthorized = (error) => {
     `
     signInAndUpContainer.classList.remove("hide")
 }
+const writePageTitle = (pageTitle) => {
+    clearBody()
+    const title = document.createElement("h2")
+    title.innerText = pageTitle
+    pageTitleContainer.appendChild(title)
+ 
+    if(pageTitle === "Postures") {
+        //button for All that calls showAllPostures
+        const allButton = document.createElement("button")
+        allButton.textContent = "All"
+        allButton.addEventListener("click", event => {
+            messageContainer.innerHTML = ""
+            editorWrapper.classList.remove("hide")
+            detailsContainer.classList.add("hide")
+            showAllPostures()
+        })
+        pageTitleContainer.appendChild(allButton)
+        //button for Known that calls indexKnownPostures
+        const knownButton = document.createElement("button")
+        knownButton.textContent = "Known"
+        knownButton.addEventListener("click", event => {
+            messageContainer.innerHTML = ""
+            editorWrapper.classList.remove("hide")
+            detailsContainer.innerHTML = ""
+            detailsContainer.classList.add("hide")
+            showKnownPostures()
+        })
+        pageTitleContainer.appendChild(knownButton)
+    }
+}
 
 /*----------------------*/
 /*----- Sign In/Up -----*/
@@ -100,37 +130,6 @@ export const onSignInSuccess = (userToken) => {
 /*--------------------*/
 /*----- Postures -----*/
 /*--------------------*/
-
-const writePageTitle = (pageTitle) => {
-    clearBody()
-    const title = document.createElement("h2")
-    title.innerText = pageTitle
-    pageTitleContainer.appendChild(title)
- 
-    if(pageTitle === "Postures") {
-        //button for All that calls showAllPostures
-        const allButton = document.createElement("button")
-        allButton.textContent = "All"
-        allButton.addEventListener("click", event => {
-            messageContainer.innerHTML = ""
-            editorWrapper.classList.remove("hide")
-            detailsContainer.classList.add("hide")
-            showAllPostures()
-        })
-        pageTitleContainer.appendChild(allButton)
-        //button for Known that calls indexKnownPostures
-        const knownButton = document.createElement("button")
-        knownButton.textContent = "Known"
-        knownButton.addEventListener("click", event => {
-            messageContainer.innerHTML = ""
-            editorWrapper.classList.remove("hide")
-            detailsContainer.innerHTML = ""
-            detailsContainer.classList.add("hide")
-            showKnownPostures()
-        })
-        pageTitleContainer.appendChild(knownButton)
-    }
-}
 export const onIndexPosturesSuccess = (postures) => {
     writePageTitle("Postures")
     editorWrapper.classList.remove("hide")
@@ -446,7 +445,6 @@ export const showCreatePracticeForm = () => {
     `
     practiceBuilderContainer.appendChild(createPracticeForm)
 }
-
 const showSequence = (practiceId) => {
     sequenceContainer.innerHTML = ""
     const theSequence = []

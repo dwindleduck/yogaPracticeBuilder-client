@@ -7,6 +7,7 @@ This app is meant to help students build a home practice and to be used by teach
 - JavaScript
 - HTML
 - CSS
+- Figma
 
 ## Getting Started 
 Start building yoga sequences [here](http://127.0.0.1:5500/)
