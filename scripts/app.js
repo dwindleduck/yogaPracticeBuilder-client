@@ -49,27 +49,6 @@ const notLoggedInUserMessageContainer = document.querySelector("#not-logged-in-u
 /*----------------------*/
 /*----- Sign In/Up -----*/
 /*----------------------*/
-signInButtons.forEach(button => {
-    button.addEventListener("click", (event) => {
-        event.preventDefault()
-        clearBody()
-        signInAndUpContainer.classList.remove("hide")
-    })
-})
-signOutButton.addEventListener("click", () => {
-    signInButton.classList.remove("hide")
-    signOutButton.classList.add("hide")
-    store.userToken = ""
-    clearBody()
-    
-    messageContainer.innerHTML = "You've been logged out"
-
-    notLoggedInUserMessageContainer.classList.remove("hide")
-    loggedInUserMessageContainer.classList.add("hide")
-
-    signInAndUpContainer.classList.remove("hide")
-    signUpForm.classList.remove("hide")
-})
 signUpForm.addEventListener("submit", (event) => {
     event.preventDefault()
     const studentData = {
@@ -100,7 +79,27 @@ signInForm.addEventListener("submit", (event) => {
         })
         .catch(onSignInFailure)
 })
+signInButtons.forEach(button => {
+    button.addEventListener("click", (event) => {
+        event.preventDefault()
+        clearBody()
+        signInAndUpContainer.classList.remove("hide")
+    })
+})
+signOutButton.addEventListener("click", () => {
+    signInButton.classList.remove("hide")
+    signOutButton.classList.add("hide")
+    store.userToken = ""
+    clearBody()
+    
+    messageContainer.innerHTML = "You've been logged out"
 
+    notLoggedInUserMessageContainer.classList.remove("hide")
+    loggedInUserMessageContainer.classList.add("hide")
+
+    signInAndUpContainer.classList.remove("hide")
+    signUpForm.classList.remove("hide")
+})
 /*--------------------*/
 /*----- Postures -----*/
 /*--------------------*/
