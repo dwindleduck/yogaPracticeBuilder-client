@@ -164,7 +164,6 @@ export const showPracticeDetails = (event) => {
         })
         .catch(onUnauthorized)
 }
-
 const showPractices = () => {
     indexPractices()
     .then((res) => res.json())
@@ -173,7 +172,6 @@ const showPractices = () => {
     })
     .catch(onFailure)
 }
-
 export const showBuiltPractices = () => {
     indexBuiltPractices()
     .then((res) => res.json())
@@ -182,9 +180,8 @@ export const showBuiltPractices = () => {
     })
     .catch(onUnauthorized)
 }
-
 const showCreatePractice = () => {
-    //need to show the form
+    //show the form
     showCreatePracticeForm()
     const form = document.querySelector("#create-new-practice-form")
     form.addEventListener("submit", (event) => {

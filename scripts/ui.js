@@ -89,6 +89,9 @@ export const onSignInSuccess = (userToken) => {
             loggedInUserMessageContainer.innerHTML = `
                 <h2>Welcome, ${res.student.name}!</h2>
                 <p>You know ${res.student.knownPostures.length} postures!</p>
+                <p>Look through the library of postures and collect the ones you know.</p>
+                <p>Create practices of your own and find new practices to try.</p>
+                <p>But no matter what, keep breathing.</p>
                 </div>
             `
         })

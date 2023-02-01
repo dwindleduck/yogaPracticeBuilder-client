@@ -67,6 +67,10 @@ nav a:hover {
 main {
     margin: 0 20px;
 }
+#landing-container {
+    max-width: 525px;
+    margin: 0 auto;
+}
 #message-container {
     display: flex; 
     margin-left: 2%;
