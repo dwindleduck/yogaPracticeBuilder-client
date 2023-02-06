@@ -32,6 +32,19 @@ export const showStudent = () => {
         },
     })
 }
+/*--------------------*/
+/*----- Postures -----*/
+/*--------------------*/
+export const indexPostures = () => {
+    return fetch("http://localhost:8000/postures")
+}
+export const showPostureById = (id) => {
+    return fetch(`http://localhost:8000/postures/${id}`, { 
+        headers: {
+            "Authorization": `Bearer ${store.userToken}`,
+        },
+    })
+}
 export const indexKnownPostures = () => {
     return fetch(`http://localhost:8000/known`, { 
         headers: {
@@ -50,26 +63,6 @@ export const updateKnownPostures = (data) => {
         body: JSON.stringify(data)
     })
 }
-export const indexBuiltPractices = () => {
-    return fetch(`http://localhost:8000/built`, { 
-        headers: {
-            "Authorization": `Bearer ${store.userToken}`,
-        },
-    })
-}
-/*--------------------*/
-/*----- Postures -----*/
-/*--------------------*/
-export const indexPostures = () => {
-    return fetch("http://localhost:8000/postures")
-}
-export const showPostureById = (id) => {
-    return fetch(`http://localhost:8000/postures/${id}`, { 
-        headers: {
-            "Authorization": `Bearer ${store.userToken}`,
-        },
-    })
-}
 /*---------------------*/
 /*----- Practices -----*/
 /*---------------------*/
@@ -78,6 +71,13 @@ export const indexPractices = () => {
 }
 export const showPracticeById = (id) => {
     return fetch(`http://localhost:8000/practices/${id}`, { 
+        headers: {
+            "Authorization": `Bearer ${store.userToken}`,
+        },
+    })
+}
+export const indexBuiltPractices = () => {
+    return fetch(`http://localhost:8000/built`, { 
         headers: {
             "Authorization": `Bearer ${store.userToken}`,
         },
