@@ -1,4 +1,7 @@
 import { store } from "./store.js"
+
+// visually clear comments!
+
 /*----------------------*/
 /*----- Sign In/Up -----*/
 /*----------------------*/
