@@ -36,19 +36,18 @@ header h1 {
 button {
     color: #692b9d;
 }
-#sign-in-button,
-#sign-out-button  {
-    max-width: 58px;
+#sign-in-or-out-toggle {
+    max-width: 70px;
     max-height: 21px;
     align-self: flex-end;
     justify-self: flex-end;
     margin-bottom: 5px;
     margin-right: 3%;
 }
-#sign-out-button  {
+/* #sign-out-button  {
     max-width: 70px;
     margin-left: 2%;
-}
+} */
 nav {
     display: flex;
     justify-content: space-around;

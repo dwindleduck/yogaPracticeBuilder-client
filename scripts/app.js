@@ -31,15 +31,15 @@ import {
 } from "./ui.js"
 
 /*----- DOM Elements -----*/
-const signInButtons = document.querySelectorAll(".sign-in-button")
-const signInButton = document.querySelector("#sign-in-button")
-const signOutButton = document.querySelector("#sign-out-button")
+//const signInButtons = document.querySelectorAll(".sign-in-button")
+const signInOrOutToggle = document.querySelector("#sign-in-or-out-toggle")
+//const signOutButton = document.querySelector("#sign-out-button")
 const signInForm = document.querySelector("#sign-in-form")
 const signUpForm = document.querySelector("#sign-up-form")
 const landingContainer = document.querySelector("#landing-container")
 const signInAndUpContainer = document.querySelector("#sign-in-and-up-container")
 const navHomeButton = document.querySelector("#nav-home-button")
-const navPracticesButton = document.querySelector("#nav-practices-button")
+const navMyPracticesButton = document.querySelector("#nav-my-practices-button")
 const navFindPracticesButton = document.querySelector("#nav-find-practices-button")
 const navNewPracticeButton = document.querySelector("#nav-new-practice-button")
 const navPosturesButton = document.querySelector("#nav-postures-button")
@@ -47,64 +47,12 @@ const messageContainer = document.querySelector("#message-container")
 const loggedInUserMessageContainer = document.querySelector("#logged-in-user-message-container")
 const notLoggedInUserMessageContainer = document.querySelector("#not-logged-in-user-message-container")
 
-/*----------------------*/
-/*----- Sign In/Up -----*/
-/*----------------------*/
-signUpForm.addEventListener("submit", (event) => {
-    event.preventDefault()
-    const studentData = {
-        credentials: {
-            name: event.target["name"].value,
-            email: event.target["email"].value,
-            password: event.target["password"].value
-        }
-    }
-    signUp(studentData)
-        .then((res) => res.json())
-        .then(res => onSignUpSuccess())
-        .catch(onSignUpFailure)
-})
-signInForm.addEventListener("submit", (event) => {
-    event.preventDefault()
-    const studentData = {
-        credentials: {
-            email: event.target["email"].value,
-            password: event.target["password"].value
-        }
-    }
-    signIn(studentData)
-        .then((res) => res.json())
-        .then(res => {
-            //res has the token
-            onSignInSuccess(res.token)
-        })
-        .catch(onSignInFailure)
-})
-signInButtons.forEach(button => {
-    button.addEventListener("click", (event) => {
-        event.preventDefault()
-        clearBody()
-        signInAndUpContainer.classList.remove("hide")
-    })
-})
-signOutButton.addEventListener("click", () => {
-    signInButton.classList.remove("hide")
-    signOutButton.classList.add("hide")
-    store.userToken = ""
-    clearBody()
-    
-    messageContainer.innerHTML = "You've been logged out"
 
-    notLoggedInUserMessageContainer.classList.remove("hide")
-    loggedInUserMessageContainer.classList.add("hide")
+/*---------------------*/
+/*----- Functions -----*/
+/*---------------------*/
 
-    signInAndUpContainer.classList.remove("hide")
-    signUpForm.classList.remove("hide")
-})
-
-/*--------------------*/
-/*----- Postures -----*/
-/*--------------------*/
+/*------ Postures ------*/
 export const showPostureDetails = (event) => {
     const id = event.target.getAttribute("data-id")
     if (!id) return
@@ -152,9 +100,7 @@ export const addPostureToKnown = (postureData) => {
         .catch(onUnauthorized)
 }
 
-/*---------------------*/
 /*----- Practices -----*/
-/*---------------------*/
 export const showPracticeDetails = (event) => {
     const id = event.target.getAttribute("data-id")
     if (!id) return
@@ -204,15 +150,75 @@ const showCreatePractice = () => {
     })
 }
 
-/*---------------*/
+
+
+/*---------------------------*/
+/*----- Event Listeners -----*/
+/*---------------------------*/
+
+/*----- Sign In/Up -----*/
+signInOrOutToggle.addEventListener("click", (event) => {
+    const dataEvent = event.target.getAttribute("data-event")
+    if(dataEvent === "Sign Out") {
+        signInOrOutToggle.setAttribute("data-event", "Sign In")
+        signInOrOutToggle.innerHTML = "Sign In"
+        store.userToken = ""
+        clearBody()
+        
+        messageContainer.innerHTML = "You've been logged out"
+
+        notLoggedInUserMessageContainer.classList.remove("hide")
+        loggedInUserMessageContainer.classList.add("hide")
+
+        signInAndUpContainer.classList.remove("hide")
+        signUpForm.classList.remove("hide")
+    }
+    else if (dataEvent === "Sign In") {
+        event.preventDefault()
+        clearBody()
+        signInAndUpContainer.classList.remove("hide")
+    }
+    
+})
+signUpForm.addEventListener("submit", (event) => {
+    event.preventDefault()
+    const studentData = {
+        credentials: {
+            name: event.target["name"].value,
+            email: event.target["email"].value,
+            password: event.target["password"].value
+        }
+    }
+    signUp(studentData)
+        .then((res) => res.json())
+        .then(res => onSignUpSuccess())
+        //then call signIn()
+        .catch(onSignUpFailure)
+})
+signInForm.addEventListener("submit", (event) => {
+    event.preventDefault()
+    const studentData = {
+        credentials: {
+            email: event.target["email"].value,
+            password: event.target["password"].value
+        }
+    }
+    signIn(studentData)
+        .then((res) => res.json())
+        .then(res => {
+            //res has the token
+            onSignInSuccess(res.token)
+        })
+        .catch(onSignInFailure)
+})
+
 /*----- Nav -----*/
-/*---------------*/
 navHomeButton.addEventListener("click", (event) => {
     event.preventDefault()
     clearBody()
     landingContainer.classList.remove("hide")
 })
-navPracticesButton.addEventListener("click", (event) => {
+navMyPracticesButton.addEventListener("click", (event) => {
     event.preventDefault()
     showBuiltPractices()
 })

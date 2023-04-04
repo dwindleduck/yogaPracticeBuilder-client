@@ -10,8 +10,8 @@ import {
 import { showPracticeById, showStudent, updatePractice,deletePractice } from "./api.js"
 
 /*----- DOM Elements -----*/
-const signInButton = document.querySelector("#sign-in-button")
-const signOutButton = document.querySelector("#sign-out-button")
+const signInOrOutToggle = document.querySelector("#sign-in-or-out-toggle")
+//const signOutButton = document.querySelector("#sign-out-button")
 const pageTitleContainer = document.querySelector("#page-title-container")
 const landingContainer = document.querySelector("#landing-container")
 const signInAndUpContainer = document.querySelector("#sign-in-and-up-container")
@@ -26,6 +26,9 @@ const practiceBuilderContainer = document.querySelector("#practice-builder-conta
 const editPracticeContainer = document.querySelector("#edit-practice-container")
 const editorWrapper = document.querySelector("#editor-wrapper")
 const detailsContainer = document.querySelector("#details-container")
+
+
+
 
 /*--------------------*/
 /*----- Fuctions -----*/
@@ -46,31 +49,6 @@ export const clearBody = () => {
     posturesContainer.classList.remove("editing")
     sequenceContainer.classList.remove("editing")
     editorWrapper.classList.remove("editing")
-}
-export const onFailure = (error) => {
-    messageContainer.innerHTML = `
-        <h3>You've got an error!</h3>
-        <p>${error}</p>
-    `
-}
-export const onSignInFailure = (error) => {
-    messageContainer.innerHTML = `
-        <h3>Oh no!</h3>
-        <p>Your email or password are incorrect, please try again</p>
-    `
-}
-export const onSignUpFailure = (error) => {
-    messageContainer.innerHTML = `
-        <h3>Sign-up failed.</h3>
-        <p>Please enter a unique email address</p>
-    `
-}
-export const onUnauthorized = (error) => {
-    clearBody()
-    messageContainer.innerHTML = `
-    <p>Only registered users can do that! Please sign in or create an account to continue</p>
-    `
-    signInAndUpContainer.classList.remove("hide")
 }
 const writePageTitle = (pageTitle) => {
     clearBody()
@@ -102,6 +80,35 @@ const writePageTitle = (pageTitle) => {
         pageTitleContainer.appendChild(knownButton)
     }
 }
+/*-----------------------------*/
+/*----- Handle for Failue -----*/
+/*-----------------------------*/
+export const onFailure = (error) => {
+    messageContainer.innerHTML = `
+        <h3>You've got an error!</h3>
+        <p>${error}</p>
+    `
+}
+export const onSignInFailure = (error) => {
+    messageContainer.innerHTML = `
+        <h3>Oh no!</h3>
+        <p>Your email or password are incorrect, please try again</p>
+    `
+}
+export const onSignUpFailure = (error) => {
+    messageContainer.innerHTML = `
+        <h3>Sign-up failed.</h3>
+        <p>Please enter a unique email address</p>
+    `
+}
+export const onUnauthorized = (error) => {
+    clearBody()
+    messageContainer.innerHTML = `
+    <p>Only registered users can do that! Please sign in or create an account to continue</p>
+    `
+    signInAndUpContainer.classList.remove("hide")
+}
+
 
 /*----------------------*/
 /*----- Sign In/Up -----*/
@@ -113,8 +120,10 @@ export const onSignUpSuccess = () => {
 export const onSignInSuccess = (userToken) => {
     clearBody()
     store.userToken = userToken
-    signInButton.classList.add("hide")
-    signOutButton.classList.remove("hide")
+    signInOrOutToggle.innerHTML = "Sign Out"
+    signInOrOutToggle.setAttribute("data-event", "Sign Out")
+
+
     landingContainer.classList.remove("hide")
     notLoggedInUserMessageContainer.classList.add("hide")
     loggedInUserMessageContainer.classList.remove("hide")
