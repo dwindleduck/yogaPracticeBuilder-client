@@ -1,9 +1,12 @@
 import { store } from "./store.js"
+
+const BASE_URL = "https://yoga-practice-builder-server.onrender.com"
+
 /*----------------------*/
 /*----- Sign In/Up -----*/
 /*----------------------*/
 export const signUp = (data) => {
-    return fetch("http://localhost:8000/sign-up", {
+    return fetch(BASE_URL + "/sign-up", {
         method: "POST",
         headers: {
             "Accept": "application/json",
@@ -13,7 +16,7 @@ export const signUp = (data) => {
     })
 }
 export const signIn = (data) => {
-    return fetch("http://localhost:8000/sign-in", {
+    return fetch(BASE_URL + "/sign-in", {
         method: "POST",
         headers: {
             "Accept": "application/json",
@@ -26,7 +29,7 @@ export const signIn = (data) => {
 /*----- Student -----*/
 /*-------------------*/
 export const showStudent = () => {
-    return fetch(`http://localhost:8000/student`, { 
+    return fetch(BASE_URL + "/student", { 
         headers: {
             "Authorization": `Bearer ${store.userToken}`,
         },
@@ -36,24 +39,24 @@ export const showStudent = () => {
 /*----- Postures -----*/
 /*--------------------*/
 export const indexPostures = () => {
-    return fetch("http://localhost:8000/postures")
+    return fetch(BASE_URL + "/postures")
 }
 export const showPostureById = (id) => {
-    return fetch(`http://localhost:8000/postures/${id}`, { 
+    return fetch(BASE_URL + "/postures/${id}", { 
         headers: {
             "Authorization": `Bearer ${store.userToken}`,
         },
     })
 }
 export const indexKnownPostures = () => {
-    return fetch(`http://localhost:8000/known`, { 
+    return fetch(BASE_URL + `/known`, { 
         headers: {
             "Authorization": `Bearer ${store.userToken}`,
         },
     })
 }
 export const updateKnownPostures = (data) => {
-    return fetch(`http://localhost:8000/student/updateKnown`, {
+    return fetch(BASE_URL + `/student/updateKnown`, {
         method: "PATCH",
         headers: {
             "Accept": "application/json",
@@ -67,24 +70,24 @@ export const updateKnownPostures = (data) => {
 /*----- Practices -----*/
 /*---------------------*/
 export const indexPractices = () => {
-    return fetch("http://localhost:8000/practices")
+    return fetch(BASE_URL + "/practices")
 }
 export const showPracticeById = (id) => {
-    return fetch(`http://localhost:8000/practices/${id}`, { 
+    return fetch(BASE_URL + `/practices/${id}`, { 
         headers: {
             "Authorization": `Bearer ${store.userToken}`,
         },
     })
 }
 export const indexBuiltPractices = () => {
-    return fetch(`http://localhost:8000/built`, { 
+    return fetch(BASE_URL + `/built`, { 
         headers: {
             "Authorization": `Bearer ${store.userToken}`,
         },
     })
 }
 export const createPractice = (data) => {
-    return fetch(`http://localhost:8000/practices`, {
+    return fetch(BASE_URL + `/practices`, {
         method: "POST",
         headers: {
             "Accept": "application/json",
@@ -95,7 +98,7 @@ export const createPractice = (data) => {
     })
 }
 export const updatePractice = (id, data) => {
-    return fetch(`http://localhost:8000/practices/${id}`, {
+    return fetch(BASE_URL + `/practices/${id}`, {
         method: "PATCH",
         headers: {
             "Accept": "application/json",
@@ -106,7 +109,7 @@ export const updatePractice = (id, data) => {
     })
 }
 export const deletePractice = (id) => {
-    return fetch(`http://localhost:8000/practices/${id}`, {
+    return fetch(BASE_URL + `/practices/${id}`, {
         headers: {
             "Authorization": `Bearer ${store.userToken}`,
         },
