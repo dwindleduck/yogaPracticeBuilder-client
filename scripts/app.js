@@ -208,6 +208,7 @@ signInForm.addEventListener("submit", (event) => {
         .then(res => {
             //res has the token
             onSignInSuccess(res.token)
+            // then call showStudent()
         })
         .catch(onSignInFailure)
 })
