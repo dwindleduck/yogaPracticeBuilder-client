@@ -5,7 +5,8 @@ export const store = {
     knownPostures: [],
     favoritedPractices: [],
 
-    builtPractices: [],
+    // builtPractices: [], should not use this, use endpoint /practices/author
+    
     sequenceBuilderContainer: [],
 
 }
