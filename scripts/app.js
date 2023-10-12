@@ -3,13 +3,14 @@ import {store} from "./store.js"
 import { 
     signUp,
     signIn,
-    indexPostures,
-    indexPractices,
-    showPostureById,
-    showPracticeById,
-    indexKnownPostures,
-    updateKnownPostures,
-    indexBuiltPractices,
+    getStudent,
+    getAllPostures,
+    getPractices,
+    getPostureById,
+    getPracticeById,
+    getKnownPostures,
+    addOrRemoveKnownPosture,
+    getBuiltPractices,
     createPractice
 } from "./api.js"
 import {
@@ -52,11 +53,27 @@ const notLoggedInUserMessageContainer = document.querySelector("#not-logged-in-u
 /*----- Functions -----*/
 /*---------------------*/
 
+
+/*------ Students ------*/
+export const saveStudent = (res) => {
+    console.log(res)
+
+
+    store.usersName = res.student.name
+    store.knownPostures = res.student.knownPostures
+    store.favoritedPractices = res.student.favoritedPractices
+}
+
+
+
+
+
+
 /*------ Postures ------*/
 export const showPostureDetails = (event) => {
     const id = event.target.getAttribute("data-id")
     if (!id) return
-    showPostureById(id)
+    getPostureById(id)
         .then((res) => res.json())
         .then((res) => {
             onShowPostureSuccess(res.posture)
@@ -64,7 +81,7 @@ export const showPostureDetails = (event) => {
         .catch(onUnauthorized)
 }
 export const showAllPostures = () => {
-    indexPostures()
+    getAllPostures()
         .then((res) => res.json())
         .then((res) => {
             onIndexPosturesSuccess(res.postures)
@@ -72,7 +89,7 @@ export const showAllPostures = () => {
         .catch(onFailure)
 }
 export const showKnownPostures = (practiceId, sequence, isEditing) => {
-    indexKnownPostures()
+    getKnownPostures()
     .then((res) => res.json())
     .then((res) => {
         onIndexKnownPosturesSuccess(res.postures, practiceId, sequence, isEditing)
@@ -80,7 +97,7 @@ export const showKnownPostures = (practiceId, sequence, isEditing) => {
     .catch(onUnauthorized)
 }
 export const addPostureToKnown = (postureData) => {
-    indexKnownPostures()
+    getKnownPostures()
         .then((res) => res.json())
         .then((res) => {
             const knownPostures = res.postures
@@ -90,7 +107,7 @@ export const addPostureToKnown = (postureData) => {
                 messageContainer.innerHTML = "You already know this posture!"
             } else {
                 //add it to known
-               updateKnownPostures(postureData)
+               addOrRemoveKnownPosture(postureData)
                     .then(() => {
                         messageContainer.innerHTML = "Added to your list of known postures!"
                     })
@@ -104,7 +121,7 @@ export const addPostureToKnown = (postureData) => {
 export const showPracticeDetails = (event) => {
     const id = event.target.getAttribute("data-id")
     if (!id) return
-    showPracticeById(id)
+    getPracticeById(id)
         .then((res) => res.json())
         .then((res) => {
             onShowPracticeSuccess(res.practice)
@@ -112,7 +129,7 @@ export const showPracticeDetails = (event) => {
         .catch(onUnauthorized)
 }
 const showPractices = () => {
-    indexPractices()
+    getPractices()
     .then((res) => res.json())
     .then((res) => {
         onIndexPracticesSuccess(res.practices)
@@ -120,7 +137,7 @@ const showPractices = () => {
     .catch(onFailure)
 }
 export const showBuiltPractices = () => {
-    indexBuiltPractices()
+    getBuiltPractices()
     .then((res) => res.json())
     .then((res) => {
         onIndexBuiltPracticesSuccess(res.practices)
@@ -206,9 +223,8 @@ signInForm.addEventListener("submit", (event) => {
     signIn(studentData)
         .then((res) => res.json())
         .then(res => {
-            //res has the token
+            //res only has the token
             onSignInSuccess(res.token)
-            // then call showStudent()
         })
         .catch(onSignInFailure)
 })

@@ -5,9 +5,10 @@ import {
     showAllPostures,
     showKnownPostures,
     addPostureToKnown,
-    showBuiltPractices
+    showBuiltPractices,
+    saveStudent
 } from "./app.js"
-import { showPracticeById, showStudent, updatePractice,deletePractice } from "./api.js"
+import { getPracticeById, getStudent, updatePractice,deletePractice } from "./api.js"
 
 /*----- DOM Elements -----*/
 const signInOrOutToggle = document.querySelector("#sign-in-or-out-toggle")
@@ -90,6 +91,7 @@ export const onFailure = (error) => {
     `
 }
 export const onSignInFailure = (error) => {
+    console.error(error)
     messageContainer.innerHTML = `
         <h3>Oh no!</h3>
         <p>Your email or password are incorrect, please try again</p>
@@ -127,12 +129,13 @@ export const onSignInSuccess = (userToken) => {
     landingContainer.classList.remove("hide")
     notLoggedInUserMessageContainer.classList.add("hide")
     loggedInUserMessageContainer.classList.remove("hide")
-    showStudent()
+    getStudent()
         .then(res => res.json())
         .then(res => {
+            saveStudent(res)
             loggedInUserMessageContainer.innerHTML = `
-                <h2>Welcome, ${res.student.name}!</h2>
-                <p>You know ${res.student.knownPostures.length} postures!</p>
+                <h2>Welcome, ${store.usersName}!</h2>
+                <p>You know ${store.knownPostures.length} postures!</p>
                 <p>Look through the library of postures and collect the ones you know.</p>
                 <p>Create practices of your own and find new practices to try.</p>
                 <p>But no matter what, keep breathing.</p>
@@ -464,7 +467,7 @@ const showSequence = (practiceId) => {
     sequenceContainer.innerHTML = ""
     const theSequence = []
 
-    showPracticeById(practiceId)
+    getPracticeById(practiceId)
         .then(res => res.json())
         .then(res => {
             const sectionTitle = document.createElement("h3")
@@ -526,7 +529,7 @@ const showSequence = (practiceId) => {
     return theSequence
 }  
 export const showEditForm = (practiceId) => {
-    showPracticeById(practiceId)
+    getPracticeById(practiceId)
         .then(res => res.json())
         .then(res => {
             practiceBuilderContainer.innerHTML = ""
