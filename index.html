@@ -19,16 +19,12 @@
         <![endif]-->
 
         <header>
-            <h1>Yoga Practice Builder</h1>
-            <!-- <input id="sign-in-button" class="sign-in-button" type="button" value="Sign In" /> -->
+            <a id="home-button" href=""><h1>Yoga Practice Builder</h1></a>
             <button id="sign-in-or-out-toggle" class="sign-in-or-out-toggle" data-event="Sign In">Sign In</button>
-            <!-- <button id="sign-out-button" class="sign-out-button, hide">Sign Out</button> -->
             <nav>
-                <a id="nav-home-button" href="">Home</a>
-                <a id="nav-my-practices-button" href="">My Practices</a>
-                <a id="nav-find-practices-button" href="">Find a Practice</a>
-                <a id="nav-postures-button" href="">Postures</a>
-                <a id="nav-new-practice-button" href="">Create a Practice</a>
+                <a id="nav-practice-button" href="">Practice</a>
+                <a id="nav-create-button" href="">Create</a>
+                <a id="nav-posture-library-button" href="">Posture Library</a>
             </nav>
         </header>
         <main>
@@ -44,20 +40,28 @@
                --> </div> 
             </div> 
             <div id="sign-in-and-up-container" class="hide">
-                <h3>Sign In</h3>
-                <form id="sign-in-form">
-                    <input type="text" name="email" placeholder="email" required/>
-                    <input type="text" name="password" placeholder="password" required/>
-                    <input type="submit" value="Sign In" />
-                </form>
 
-                <h3>Sign Up</h3>
-                <form id="sign-up-form">
-                    <input type="text" name="name" placeholder="name" required/>
-                    <input type="text" name="email" placeholder="email" required/>
-                    <input type="text" name="password" placeholder="password" required/>
-                    <input type="submit" value="Sign Up" />
-                </form>
+                <div id="sign-in-container">
+                    <h3>Sign In</h3>
+                    <form id="sign-in-form">
+                        <input type="text" name="email" placeholder="email" required/>
+                        <input type="password" name="password" placeholder="password" required/>
+                        <input type="submit" value="Sign In" />
+                    </form>
+                    <button id="demo-login">Demo Login</button>
+                    <p>First time here? <a id="toggle-sign-up" href="">Create an account</a></p>
+                </div>
+
+                <div id="sign-up-contatiner" class="hide">
+                    <h3>Sign Up</h3>
+                    <form id="sign-up-form">
+                        <input type="text" name="name" placeholder="name" required/>
+                        <input type="text" name="email" placeholder="email" required/>
+                        <input type="password" name="password" placeholder="password" required/>
+                        <input type="submit" value="Sign Up" />
+                    </form>
+                    <p>Already have an account? <a id="toggle-sign-in" href="">Login here</a></p>
+                </div>
             </div>
             <div id="practices-container"></div>
             <div id="practice-builder-container"></div>

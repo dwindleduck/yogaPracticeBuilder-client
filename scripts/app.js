@@ -32,19 +32,28 @@ import {
 } from "./ui.js"
 
 /*----- DOM Elements -----*/
-//const signInButtons = document.querySelectorAll(".sign-in-button")
+
 const signInOrOutToggle = document.querySelector("#sign-in-or-out-toggle")
-//const signOutButton = document.querySelector("#sign-out-button")
+const toggleSignUp = document.querySelector("#toggle-sign-up")
+const toggleSignIn = document.querySelector("#toggle-sign-in")
+
+
 const signInForm = document.querySelector("#sign-in-form")
+const demoLoginButton = document.querySelector("#demo-login")
 const signUpForm = document.querySelector("#sign-up-form")
+
 const landingContainer = document.querySelector("#landing-container")
 const signInAndUpContainer = document.querySelector("#sign-in-and-up-container")
-const navHomeButton = document.querySelector("#nav-home-button")
-const navMyPracticesButton = document.querySelector("#nav-my-practices-button")
-const navFindPracticesButton = document.querySelector("#nav-find-practices-button")
-const navNewPracticeButton = document.querySelector("#nav-new-practice-button")
-const navPosturesButton = document.querySelector("#nav-postures-button")
+const signInContainer = document.querySelector("#sign-in-container")
+const signUpContainer = document.querySelector("#sign-up-contatiner")
+
+const homeButton = document.querySelector("#home-button")
+const navPracticeButton = document.querySelector("#nav-practice-button")
+const navCreateButton = document.querySelector("#nav-create-button")
+const navPostureLibraryButton = document.querySelector("#nav-posture-library-button")
+
 const messageContainer = document.querySelector("#message-container")
+
 const loggedInUserMessageContainer = document.querySelector("#logged-in-user-message-container")
 const notLoggedInUserMessageContainer = document.querySelector("#not-logged-in-user-message-container")
 
@@ -213,6 +222,30 @@ const showCreatePractice = () => {
 /*----- Event Listeners -----*/
 /*---------------------------*/
 
+/*----- Header / Nav -----*/
+
+homeButton.addEventListener("click", (event) => {
+    event.preventDefault()
+    clearBody()
+    landingContainer.classList.remove("hide")
+})
+navPracticeButton.addEventListener("click", (event) => {
+    event.preventDefault()
+    showBuiltPractices()
+})
+navCreateButton.addEventListener("click", (event) => {
+    event.preventDefault()
+    showPractices()
+})
+navPostureLibraryButton.addEventListener("click", (event) => {
+    event.preventDefault()
+    showAllPostures()
+})
+
+
+
+
+
 /*----- Sign In/Up -----*/
 signInOrOutToggle.addEventListener("click", (event) => {
     const dataEvent = event.target.getAttribute("data-event")
@@ -237,6 +270,18 @@ signInOrOutToggle.addEventListener("click", (event) => {
     }
     
 })
+
+toggleSignUp.addEventListener("click", (event) => {
+    event.preventDefault()
+    signInContainer.classList.add("hide")
+    signUpContainer.classList.remove("hide")
+})
+toggleSignIn.addEventListener("click", (event) => {
+    event.preventDefault()
+    signUpContainer.classList.add("hide")
+    signInContainer.classList.remove("hide")
+})
+
 signUpForm.addEventListener("submit", (event) => {
     event.preventDefault()
     const studentData = {
@@ -254,6 +299,9 @@ signUpForm.addEventListener("submit", (event) => {
         })
         .catch(onSignUpFailure)
 })
+
+
+
 signInForm.addEventListener("submit", (event) => {
     event.preventDefault()
     const studentData = {
@@ -264,27 +312,14 @@ signInForm.addEventListener("submit", (event) => {
     }
     signInStudent(studentData)
 })
+demoLoginButton.addEventListener("click", (event) => {
+    event.preventDefault()
+    const demoLoginData = {
+        credentials: {
+            email: "demo@demo.demo",
+            password: "demodemodemo"
+        }
+    }
+    signInStudent(demoLoginData)
+})
 
-
-/*----- Nav -----*/
-navHomeButton.addEventListener("click", (event) => {
-    event.preventDefault()
-    clearBody()
-    landingContainer.classList.remove("hide")
-})
-navMyPracticesButton.addEventListener("click", (event) => {
-    event.preventDefault()
-    showBuiltPractices()
-})
-navFindPracticesButton.addEventListener("click", (event) => {
-    event.preventDefault()
-    showPractices()
-})
-navPosturesButton.addEventListener("click", (event) => {
-    event.preventDefault()
-    showAllPostures()
-})
-navNewPracticeButton.addEventListener("click", (event) => {
-    event.preventDefault()
-    showCreatePractice()
-})

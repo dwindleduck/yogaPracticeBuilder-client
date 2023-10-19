@@ -6,14 +6,11 @@ import {
     showKnownPostures,
     addPostureToKnown,
     showBuiltPractices,
-    saveStudent,
-    getStudentData
 } from "./app.js"
-import { getPracticeById, getStudent, updatePractice,deletePractice } from "./api.js"
+import { getPracticeById, updatePractice,deletePractice } from "./api.js"
 
 /*----- DOM Elements -----*/
 const signInOrOutToggle = document.querySelector("#sign-in-or-out-toggle")
-//const signOutButton = document.querySelector("#sign-out-button")
 const pageTitleContainer = document.querySelector("#page-title-container")
 const landingContainer = document.querySelector("#landing-container")
 const signInAndUpContainer = document.querySelector("#sign-in-and-up-container")
