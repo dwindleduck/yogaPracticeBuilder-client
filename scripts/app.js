@@ -14,21 +14,19 @@ import {
     createPractice
 } from "./api.js"
 import {
-    // onSignUpSuccess,
     onSignInSuccess,
+    onSignOutSuccess,
     onFailure,
-    onIndexPosturesSuccess,
-    onIndexPracticesSuccess,
+    onShowPracticesSuccess,
     clearBody,
     onShowPostureSuccess,
     onShowPracticeSuccess,
-    showCreatePracticeForm,
-    onIndexBuiltPracticesSuccess,
-    showEditForm,
-    onIndexKnownPosturesSuccess,
+    showNewPracticeForm,
+    showSequence,
     onSignInFailure,
     onUnauthorized,
-    onSignUpFailure
+    onSignUpFailure,
+    onGetPosturesSuccess
 } from "./ui.js"
 
 /*----- DOM Elements -----*/
@@ -51,6 +49,8 @@ const homeButton = document.querySelector("#home-button")
 const navPracticeButton = document.querySelector("#nav-practice-button")
 const navCreateButton = document.querySelector("#nav-create-button")
 const navPostureLibraryButton = document.querySelector("#nav-posture-library-button")
+const backButton = document.querySelector("#back-button")
+
 
 const messageContainer = document.querySelector("#message-container")
 
@@ -58,9 +58,35 @@ const loggedInUserMessageContainer = document.querySelector("#logged-in-user-mes
 const notLoggedInUserMessageContainer = document.querySelector("#not-logged-in-user-message-container")
 
 
+const showAllPosturesButton = document.querySelector("#all-postures-button")
+const showKnownPosturesButton = document.querySelector("#known-postures-button")
+const showPostureDetailsButtons = document.querySelectorAll(".posture-details-button")
+const addPostureToKnownToggles = document.querySelectorAll(".add-or-remove-known-posture-button")
+const addPostureToSequenceButtons = document.querySelectorAll(".add-posture-to-sequence-button")
+
+
+
+const editorWrapper = document.querySelector("#editor-wrapper")
+const detailsContainer = document.querySelector("#details-container")
+
+const sequenceContainer = document.querySelector("#sequence-container")
+const posturesContainer = document.querySelector("#postures-container")
+const practicesContainer = document.querySelector("#practices-container")
+const practiceBuilderContainer = document.querySelector("#practice-builder-container")
+const editPracticeContainer = document.querySelector("#edit-practice-container")
+
+const showPracticeDetailsButtons = document.querySelectorAll(".practice-details-button")
+const editPracticeButtons = document.querySelectorAll(".edit-practice-button")
+
+
+
+
+/*---------------------*/
 /*---------------------*/
 /*----- Functions -----*/
 /*---------------------*/
+/*---------------------*/
+
 
 
 /*---------------------*/
@@ -103,13 +129,33 @@ export const signInStudent = (studentData) => {
         })
         .catch(onSignInFailure)
 }
+// TODO: write updateStudent()
+
+// TODO: write deleteStudent()
 
 
 
 
-
-
+/*----------------------*/
 /*------ Postures ------*/
+/*----------------------*/
+export const showAllPostures = () => {
+    getAllPostures()
+        .then((res) => res.json())
+        .then((res) => {
+            // onIndexPosturesSuccess(res.postures)
+            onGetPosturesSuccess(res.postures)
+        })
+        .catch(onFailure)
+}
+export const showKnownPostures = (practiceId, sequence, isEditing) => {
+    getKnownPostures()
+        .then((res) => res.json())
+        .then((res) => {
+            onGetPosturesSuccess(res.postures, practiceId, sequence, isEditing)
+        })
+        .catch(onUnauthorized)
+}
 export const showPostureDetails = (event) => {
     const id = event.target.getAttribute("data-id")
     if (!id) return
@@ -120,23 +166,7 @@ export const showPostureDetails = (event) => {
         })
         .catch(onUnauthorized)
 }
-export const showAllPostures = () => {
-    getAllPostures()
-        .then((res) => res.json())
-        .then((res) => {
-            onIndexPosturesSuccess(res.postures)
-        })
-        .catch(onFailure)
-}
-export const showKnownPostures = (practiceId, sequence, isEditing) => {
-    getKnownPostures()
-    .then((res) => res.json())
-    .then((res) => {
-        onIndexKnownPosturesSuccess(res.postures, practiceId, sequence, isEditing)
-    })
-    .catch(onUnauthorized)
-}
-export const addPostureToKnown = (postureData) => {
+export const addOrRemovePostureFromKnown = (postureData) => {
     getKnownPostures()
         .then((res) => res.json())
         .then((res) => {
@@ -158,7 +188,28 @@ export const addPostureToKnown = (postureData) => {
 }
 
 
+/*---------------------*/
 /*----- Practices -----*/
+/*---------------------*/
+const showAllPractices = () => {
+    getPractices()
+    .then((res) => res.json())
+    .then((res) => {
+        onShowPracticesSuccess(res.practices)
+    })
+    .catch(onFailure)
+}
+export const showBuiltPractices = () => {
+    getBuiltPractices()
+    .then((res) => res.json())
+    .then((res) => {
+        onShowPracticesSuccess(res.practices)
+    })
+    .catch(onUnauthorized)
+}
+const showFavoritePractices = () => {
+
+}
 export const showPracticeDetails = (event) => {
     const id = event.target.getAttribute("data-id")
     if (!id) return
@@ -169,25 +220,9 @@ export const showPracticeDetails = (event) => {
         })
         .catch(onUnauthorized)
 }
-const showPractices = () => {
-    getPractices()
-    .then((res) => res.json())
-    .then((res) => {
-        onIndexPracticesSuccess(res.practices)
-    })
-    .catch(onFailure)
-}
-export const showBuiltPractices = () => {
-    getBuiltPractices()
-    .then((res) => res.json())
-    .then((res) => {
-        onIndexBuiltPracticesSuccess(res.practices)
-    })
-    .catch(onUnauthorized)
-}
-const showCreatePractice = () => {
+const showNewPractice = () => {
     //show the form
-    showCreatePracticeForm()
+    showNewPracticeForm()
     const form = document.querySelector("#create-new-practice-form")
     form.addEventListener("submit", (event) => {
         event.preventDefault()
@@ -207,23 +242,27 @@ const showCreatePractice = () => {
         .catch(onUnauthorized)
     })
 }
+const showEditForm = (practiceId) => {
+    getPracticeById(practiceId)
+        .then(res => res.json())
+        .then(res => {
+            onShowEditFormSuccess()
+            showSequence(res.practice.sequence)
+            showKnownPostures(res.practice._id, res.practice.sequence, true) //expecting isEditing = true
+        })
+        .catch(onFailure)
+}
 
 
 
-
-
-
-
-
-
-
-
+/*---------------------------*/
 /*---------------------------*/
 /*----- Event Listeners -----*/
 /*---------------------------*/
+/*---------------------------*/
+
 
 /*----- Header / Nav -----*/
-
 homeButton.addEventListener("click", (event) => {
     event.preventDefault()
     clearBody()
@@ -231,46 +270,34 @@ homeButton.addEventListener("click", (event) => {
 })
 navPracticeButton.addEventListener("click", (event) => {
     event.preventDefault()
-    showBuiltPractices()
+    showAllPractices()
 })
 navCreateButton.addEventListener("click", (event) => {
     event.preventDefault()
-    showPractices()
+    showNewPractice()
 })
 navPostureLibraryButton.addEventListener("click", (event) => {
     event.preventDefault()
     showAllPostures()
 })
+backButton.addEventListener("click", (event) => {
+    event.preventDefault()
 
-
-
-
+})
 
 /*----- Sign In/Up -----*/
 signInOrOutToggle.addEventListener("click", (event) => {
     const dataEvent = event.target.getAttribute("data-event")
     if(dataEvent === "Sign Out") {
-        signInOrOutToggle.setAttribute("data-event", "Sign In")
-        signInOrOutToggle.innerHTML = "Sign In"
         store.userToken = ""
-        clearBody()
-        
-        messageContainer.innerHTML = "You've been logged out"
-
-        notLoggedInUserMessageContainer.classList.remove("hide")
-        loggedInUserMessageContainer.classList.add("hide")
-
-        signInAndUpContainer.classList.remove("hide")
-        signUpForm.classList.remove("hide")
+        onSignOutSuccess()
     }
     else if (dataEvent === "Sign In") {
         event.preventDefault()
         clearBody()
         signInAndUpContainer.classList.remove("hide")
     }
-    
 })
-
 toggleSignUp.addEventListener("click", (event) => {
     event.preventDefault()
     signInContainer.classList.add("hide")
@@ -281,7 +308,6 @@ toggleSignIn.addEventListener("click", (event) => {
     signUpContainer.classList.add("hide")
     signInContainer.classList.remove("hide")
 })
-
 signUpForm.addEventListener("submit", (event) => {
     event.preventDefault()
     const studentData = {
@@ -299,9 +325,6 @@ signUpForm.addEventListener("submit", (event) => {
         })
         .catch(onSignUpFailure)
 })
-
-
-
 signInForm.addEventListener("submit", (event) => {
     event.preventDefault()
     const studentData = {
@@ -323,3 +346,164 @@ demoLoginButton.addEventListener("click", (event) => {
     signInStudent(demoLoginData)
 })
 
+/*----- Postures -----*/
+showAllPosturesButton.addEventListener("click", (event) => {
+    console.log("showAllPosturesButton")
+    messageContainer.innerHTML = ""
+            editorWrapper.classList.remove("hide")
+            detailsContainer.classList.add("hide")
+            showAllPostures()
+})
+showKnownPosturesButton.addEventListener("click", event => {
+    console.log("showKnownPosturesButton")
+    messageContainer.innerHTML = ""
+    editorWrapper.classList.remove("hide")
+    detailsContainer.innerHTML = ""
+    detailsContainer.classList.add("hide")
+    showKnownPostures()
+})
+showPostureDetailsButtons.forEach(button => {
+    console.log("showPostureDetailsButton")
+    button.addEventListener("click", event => {
+        editorWrapper.classList.add("hide")
+        messageContainer.innerHTML = ""
+        if(isEditing) {
+            editPracticeContainer.classList.add("hide")
+            editorWrapper.classList.add("hide")
+            editorWrapper.classList.remove("editing")
+            sequenceContainer.classList.add("hide")
+            sequenceContainer.classList.remove("editing")
+            posturesContainer.classList.add("hide")
+            posturesContainer.classList.remove("editing")
+            messageContainer.style.display = "none"
+
+
+            //button to go back
+            // TODO: move this out to Back Button
+            const keepEditing = document.createElement("button")
+            keepEditing.textContent = "Keep Editing"
+            keepEditing.classList.add("back-button")
+
+            detailsContainer.innerHTML = ""
+            detailsContainer.appendChild(keepEditing)
+
+            keepEditing.addEventListener("click", () => {
+                messageContainer.style.display = "flex" //?block
+                detailsContainer.innerHTML = ""
+                detailsContainer.classList.add("hide")
+                editPracticeContainer.classList.remove("hide")
+                editorWrapper.classList.remove("hide")
+                editorWrapper.classList.add("editing")
+                sequenceContainer.classList.remove("hide")
+                posturesContainer.classList.remove("hide")
+                sequenceContainer.classList.add("editing")
+                posturesContainer.classList.add("editing")
+            })
+        }
+        showPostureDetails(event)
+    })
+})
+addPostureToKnownToggles.forEach(button => {
+    console.log("addPostureToKnownToggle")
+    button.addEventListener("click", event => {
+        messageContainer.innerHTML = ""
+        addOrRemovePostureFromKnown(posture)
+    })
+})
+addPostureToSequenceButtons.forEach(button => {
+    button.addEventListener("click", event => {
+        //add posture to sequence
+        const selectedPostureId = event.target.getAttribute("data-id")
+    
+        const updatedSequence = sequence
+        updatedSequence.push(posture)
+    
+        const practiceData = {
+            practice: {
+                sequence: updatedSequence
+            }
+        }
+        updatePractice(practiceId, practiceData)
+            .then(() => {
+                showSequence(updatedSequence)
+            })
+            .catch(onFailure)
+    })
+})
+
+/*----- Practices -----*/
+showPracticeDetailsButtons.forEach(button => {
+    button.addEventListener("click", event => {
+        practicesContainer.classList.add("hide")
+
+        // TODO: Separate out this Back Button
+        // backToMyPractices.textContent = "Back to My Practices"
+        const backToFindPractice = document.createElement("button")
+        backToFindPractice.textContent = "Back"
+        backToFindPractice.classList.add("back-button")
+        messageContainer.appendChild(backToFindPractice)
+        backToFindPractice.addEventListener("click", () => {
+            practicesContainer.classList.remove("hide")
+            detailsContainer.classList.add("hide")
+            detailsContainer.innerHTML = ""
+            messageContainer.innerHTML = ""
+
+        })
+        showPracticeDetails(event)
+    })
+})
+editPracticeButtons.forEach(button => {
+    button.addEventListener("click", event => {
+        practicesContainer.classList.add("hide")
+
+        const backToMyPractices = document.createElement("button")
+        backToMyPractices.textContent = "Back to My Practices"
+        backToMyPractices.classList.add("back-button")
+        messageContainer.appendChild(backToMyPractices)
+
+        backToMyPractices.addEventListener("click", () => {
+            showBuiltPractices()
+
+            practicesContainer.classList.remove("hide")
+            editPracticeContainer.classList.add("hide")
+            posturesContainer.classList.add("hide")
+            sequenceContainer.classList.add("hide")
+            editPracticeContainer.innerHTML = ""
+            messageContainer.innerHTML = ""
+        })
+        showEditForm(practice._id)
+    })
+
+})
+
+/*----- Edit -----*/
+editPracticeContainer.addEventListener("submit", (event) => {
+    event.preventDefault()
+	const id = event.target.getAttribute("data-id")
+	
+	const practiceData = {
+		practice: {
+			name: event.target["name"].value,
+			style: event.target["style"].value,
+			description: event.target["description"].value,
+		},
+	}
+	if (!id) return
+    updatePractice(id, practiceData)
+		.then(() => {
+            showEditForm(id)//needs a practiceId
+        })
+		.catch(onFailure)
+})
+editPracticeContainer.addEventListener("click", (event) => {
+	const id = event.target.getAttribute("data-id")
+	const buttonAction = event.target.getAttribute("data-event")
+
+	if (buttonAction === "delete" && id) {
+        deletePractice(id)
+			.then(() => {
+                showBuiltPractices()//direct back to my practices
+            })
+			.catch(onFailure)
+	} 
+})

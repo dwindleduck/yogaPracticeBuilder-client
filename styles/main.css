@@ -44,10 +44,6 @@ button {
     margin-bottom: 5px;
     margin-right: 3%;
 }
-/* #sign-out-button  {
-    max-width: 70px;
-    margin-left: 2%;
-} */
 nav {
     display: flex;
     justify-content: space-around;
@@ -71,8 +67,10 @@ main {
     margin: 0 auto;
 }
 #message-container {
-    display: flex; 
-    margin-left: 2%;
+    background-color: rgba(93, 93, 217, 0.673);
+    padding: 5px;
+    margin: 0 15%;
+    font-style: italic;
 }
 .back-button {
     color: #692b9d;

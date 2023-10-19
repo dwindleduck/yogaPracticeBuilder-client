@@ -41,12 +41,12 @@ export const getStudent = () => {
     })
 }
 
-
+// TODO:
 // updateStudent
 
 
 
-
+// TODO:
 // deleteStudent
 
 
@@ -57,7 +57,7 @@ export const getStudent = () => {
 /*----- Postures -----*/
 /*--------------------*/
 
-
+// TODO:
 // createPosture
 
 
