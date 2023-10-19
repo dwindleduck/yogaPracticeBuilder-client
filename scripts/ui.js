@@ -6,7 +6,8 @@ import {
     showKnownPostures,
     addPostureToKnown,
     showBuiltPractices,
-    saveStudent
+    saveStudent,
+    getStudentData
 } from "./app.js"
 import { getPracticeById, getStudent, updatePractice,deletePractice } from "./api.js"
 
@@ -100,7 +101,7 @@ export const onSignInFailure = (error) => {
 export const onSignUpFailure = (error) => {
     messageContainer.innerHTML = `
         <h3>Sign-up failed.</h3>
-        <p>Please enter a unique email address</p>
+        <p>Please enter a valid and unique email address</p>
     `
 }
 export const onUnauthorized = (error) => {
@@ -115,13 +116,9 @@ export const onUnauthorized = (error) => {
 /*----------------------*/
 /*----- Sign In/Up -----*/
 /*----------------------*/
-export const onSignUpSuccess = () => {
-    messageContainer.innerText = "Thanks for creating an account! Please sign in with the password you just created"
-    signUpForm.classList.add("hide")
-}
-export const onSignInSuccess = (userToken) => {
+
+export const onSignInSuccess = () => {
     clearBody()
-    store.userToken = userToken
     signInOrOutToggle.innerHTML = "Sign Out"
     signInOrOutToggle.setAttribute("data-event", "Sign Out")
 
@@ -129,20 +126,15 @@ export const onSignInSuccess = (userToken) => {
     landingContainer.classList.remove("hide")
     notLoggedInUserMessageContainer.classList.add("hide")
     loggedInUserMessageContainer.classList.remove("hide")
-    getStudent()
-        .then(res => res.json())
-        .then(res => {
-            saveStudent(res)
-            loggedInUserMessageContainer.innerHTML = `
-                <h2>Welcome, ${store.usersName}!</h2>
-                <p>You know ${store.knownPostures.length} postures!</p>
-                <p>Look through the library of postures and collect the ones you know.</p>
-                <p>Create practices of your own and find new practices to try.</p>
-                <p>But no matter what, keep breathing.</p>
-                </div>
-            `
-        })
-        .catch(onFailure)
+
+    loggedInUserMessageContainer.innerHTML = `
+        <h2>Welcome, ${store.usersName}!</h2>
+        <p>You know ${store.knownPostures.length} postures!</p>
+        <p>Look through the library of postures and collect the ones you know.</p>
+        <p>Create practices of your own and find new practices to try.</p>
+        <p>But no matter what, keep breathing.</p>
+        </div>
+    `
 }
 
 /*--------------------*/

@@ -14,7 +14,7 @@ import {
     createPractice
 } from "./api.js"
 import {
-    onSignUpSuccess,
+    // onSignUpSuccess,
     onSignInSuccess,
     onFailure,
     onIndexPosturesSuccess,
@@ -54,14 +54,45 @@ const notLoggedInUserMessageContainer = document.querySelector("#not-logged-in-u
 /*---------------------*/
 
 
+/*---------------------*/
 /*------ Students ------*/
+// SignUp --initiates--> SignIn
+// SignIn --initiates--> getStudentData
+// getStudentData --initiates--> saveStudent
+/*---------------------*/
+
 export const saveStudent = (res) => {
-    console.log(res)
-
-
     store.usersName = res.student.name
     store.knownPostures = res.student.knownPostures
     store.favoritedPractices = res.student.favoritedPractices
+}
+export const getStudentData = () => {
+    getStudent()
+        .then((res) => res.json())
+        .then(res => {
+            saveStudent(res)
+        })
+        .catch(onFailure)
+}
+export const signInStudent = (studentData) => {
+    const formattedData = {
+        credentials: {
+            email: studentData.credentials.email,
+            password: studentData.credentials.password
+        }
+    }
+    signIn(formattedData)
+        .then((res) => res.json())
+        .then(res => {
+            //res only has the token, store it
+            store.userToken = res.token
+            // after successful signIn, getStudentData()
+            getStudentData()
+        })
+        .then(res => {
+            onSignInSuccess()
+        })
+        .catch(onSignInFailure)
 }
 
 
@@ -117,6 +148,7 @@ export const addPostureToKnown = (postureData) => {
         .catch(onUnauthorized)
 }
 
+
 /*----- Practices -----*/
 export const showPracticeDetails = (event) => {
     const id = event.target.getAttribute("data-id")
@@ -169,6 +201,14 @@ const showCreatePractice = () => {
 
 
 
+
+
+
+
+
+
+
+
 /*---------------------------*/
 /*----- Event Listeners -----*/
 /*---------------------------*/
@@ -208,8 +248,10 @@ signUpForm.addEventListener("submit", (event) => {
     }
     signUp(studentData)
         .then((res) => res.json())
-        .then(res => onSignUpSuccess())
-        //then call signIn()
+        .then(res => {
+            // after successful sign up, auto sign in
+            signInStudent(studentData)
+        })
         .catch(onSignUpFailure)
 })
 signInForm.addEventListener("submit", (event) => {
@@ -220,14 +262,9 @@ signInForm.addEventListener("submit", (event) => {
             password: event.target["password"].value
         }
     }
-    signIn(studentData)
-        .then((res) => res.json())
-        .then(res => {
-            //res only has the token
-            onSignInSuccess(res.token)
-        })
-        .catch(onSignInFailure)
+    signInStudent(studentData)
 })
+
 
 /*----- Nav -----*/
 navHomeButton.addEventListener("click", (event) => {
