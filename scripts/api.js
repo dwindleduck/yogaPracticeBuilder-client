@@ -62,29 +62,25 @@ export const getStudent = () => {
 
 
 
-
-
 export const getAllPostures = () => {
     return fetch(BASE_URL + "/postures")
 }
-
-export const getPostureById = (id) => {
-    return fetch(BASE_URL + "/postures/${id}", { 
+export const getKnownPostures = () => {
+    return fetch(BASE_URL + `/postures/known`, { 
         headers: {
             "Authorization": `Bearer ${store.userToken}`,
         },
     })
 }
-
-export const getKnownPostures = () => {
-    return fetch(BASE_URL + `/known`, { 
+export const getPostureById = (id) => {
+    return fetch(BASE_URL + `/postures/${id}`, { 
         headers: {
             "Authorization": `Bearer ${store.userToken}`,
         },
     })
 }
 export const addOrRemoveKnownPosture = (data) => {
-    return fetch(BASE_URL + `/student/updateKnown`, {
+    return fetch(BASE_URL + `/postures/known`, {
         method: "PATCH",
         headers: {
             "Accept": "application/json",

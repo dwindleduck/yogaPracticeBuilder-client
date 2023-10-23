@@ -19,15 +19,6 @@ const practiceDetailsContainer = document.querySelector("#practice-details-conta
 const sequenceContainer = document.querySelector("#sequence-container")
 
 
-
-// const sequenceContainer = document.querySelector("#sequence-container")
-// const posturesContainer = document.querySelector("#postures-container")
-// const practicesContainer = document.querySelector("#practices-container")
-// const practiceBuilderContainer = document.querySelector("#practice-builder-container")
-// const editPracticeContainer = document.querySelector("#edit-practice-container")
-// const editorWrapper = document.querySelector("#editor-wrapper")
-// const detailsContainer = document.querySelector("#details-container")
-
 /*--------------------*/
 /*----- Fuctions -----*/
 /*--------------------*/
@@ -40,14 +31,17 @@ export const clearBody = () => {
 
     pageTitleContainer.innerHTML = ""
 
+    posturesListContainer.innerHTML = ""
     posturesListContainer.classList.add("hide")
-    // posturesListContainer.innerHTML = ""
 
+    postureDetailsContainer.innerHTML = ""
     postureDetailsContainer.classList.add("hide")
 
-    // practicesListContainer.innerHTML = ""
-    practiceDetailsContainer.classList.add("hide")
+    practicesListContainer.innerHTML = ""
+    practicesListContainer.classList.add("hide")
 
+    practiceDetailsContainer.innerHTML = ""
+    practiceDetailsContainer.classList.add("hide")
     practiceDetailsContainer.classList.remove("editing")
 
     sequenceContainer.innerHTML = ""
@@ -58,6 +52,7 @@ export const clearBody = () => {
 /*----- Handle for Failue -----*/
 /*-----------------------------*/
 export const onFailure = (error) => {
+    console.error(error)
     messageContainer.innerHTML = `
         <h4>You've got an error!</h4>
         <p>${error}</p>
@@ -65,6 +60,7 @@ export const onFailure = (error) => {
     messageContainer.classList.remove("hide")
 }
 export const onSignInFailure = (error) => {
+    console.error(error)
     messageContainer.innerHTML = `
         <h4>Oh no!</h4>
         <p>Your email or password are incorrect, please try again</p>
@@ -72,6 +68,7 @@ export const onSignInFailure = (error) => {
     messageContainer.classList.remove("hide")
 }
 export const onSignUpFailure = (error) => {
+    console.error(error)
     messageContainer.innerHTML = `
         <h4>Sign-up failed.</h4>
         <p>Please enter a valid and unique email address</p>
@@ -79,6 +76,7 @@ export const onSignUpFailure = (error) => {
     messageContainer.classList.remove("hide")
 }
 export const onUnauthorized = (error) => {
+    console.error(error)
     clearBody()
     messageContainer.innerHTML = `
         <h4>Only registered users can do that!</h4>
@@ -152,9 +150,6 @@ export const onGetPosturesSuccess = (postures, practiceId, sequence, isEditing) 
     pageTitleContainer.appendChild(knownButton)
 
 
-    // editorWrapper.classList.remove("hide")
-    // posturesContainer.classList.remove("hide")
-    // posturesContainer.innerHTML = ""
     posturesListContainer.classList.remove("hide")
     posturesListContainer.innerHTML = ""
 
@@ -172,7 +167,7 @@ export const onGetPosturesSuccess = (postures, practiceId, sequence, isEditing) 
     postures.forEach(posture => {
         const postureWrapper = document.createElement("div")
         postureWrapper.classList.add("posture-wrapper")
-
+        
         const postureInfo = document.createElement("div")
         postureInfo.innerHTML = `
             <h3>${posture.name}</h3>
@@ -191,10 +186,18 @@ export const onGetPosturesSuccess = (postures, practiceId, sequence, isEditing) 
         postureWrapper.appendChild(detailsButton)
 
         const knownButton = document.createElement("button")
-        knownButton.textContent = "Add to Known"
         knownButton.setAttribute("data-id", posture._id)
-        knownButton.setAttribute("data-event", "known-toggle")
         knownButton.classList.add("add-or-remove-known-posture-button")
+
+        // if the posture is known, mark the button as known
+        if (store.knownPostures.includes(posture._id)){
+            knownButton.textContent = "Known"
+            knownButton.setAttribute("data-event", "known-toggle-remove")
+        }
+        else {
+            knownButton.textContent = "Unknown"
+            knownButton.setAttribute("data-event", "known-toggle-add")
+        }
         postureWrapper.appendChild(knownButton)
 
         if(isEditing) {
@@ -205,45 +208,37 @@ export const onGetPosturesSuccess = (postures, practiceId, sequence, isEditing) 
             addToSequenceButton.classList.add("add-posture-to-sequence-button")
             postureWrapper.appendChild(addToSequenceButton)
         }
-
-        // posturesContainer.appendChild(postureWrapper)
         posturesListContainer.appendChild(postureWrapper)
     })
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 export const onShowPostureSuccess = (posture) => {
-//     editorWrapper.classList.add("hide")
-//     posturesContainer.classList.add("hide")
-//     detailsContainer.classList.remove("hide")
-//     const postureDetails = document.createElement("div")
-//     postureDetails.innerHTML = `
-//         <h3>Details: ${posture.name}</h3>
-//         <p>Translation: ${posture.translation}</p>
-//         <p>Portion of Practice: ${posture.portionOfPractice}</p>
-//         <p>Description: ${posture.description}</p>
-//         <img />
-//         <h4>Instructions</h4>
-//         <p>Breath: ${posture.instructions.breath}</p>
-//         <p>Time to spend: ${posture.instructions.timeToSpend}</p>
-//         <p>Gaze: ${posture.instructions.gaze}</p>
-//         <p>Bandha activation: ${posture.instructions.bandha}</p>
-//     `
-// detailsContainer.appendChild(postureDetails)
+    posturesListContainer.classList.add("hide")
+    postureDetailsContainer.classList.remove("hide")
+
+    const closeDetailsButton = document.createElement("button")
+    closeDetailsButton.textContent = "Close Details"
+    closeDetailsButton.setAttribute("data-id", posture._id)
+    closeDetailsButton.setAttribute("data-event", "close-details")
+    closeDetailsButton.classList.add("posture-details-button")
+   
+    const postureDetails = document.createElement("div")
+    postureDetails.appendChild(closeDetailsButton)
+
+
+    postureDetails.innerHTML += `
+        <h3>Details: ${posture.name}</h3>
+        <p>Translation: ${posture.translation}</p>
+        <p>Portion of Practice: ${posture.portionOfPractice}</p>
+        <p>Description: ${posture.description}</p>
+        <img />
+        <h4>Instructions</h4>
+        <p>Breath: ${posture.instructions.breath}</p>
+        <p>Time to spend: ${posture.instructions.timeToSpend}</p>
+        <p>Gaze: ${posture.instructions.gaze}</p>
+        <p>Bandha activation: ${posture.instructions.bandha}</p>
+    `
+    postureDetailsContainer.appendChild(postureDetails)
 }
 
 /*---------------------*/

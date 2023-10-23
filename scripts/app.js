@@ -52,10 +52,6 @@ const landingContainer = document.querySelector("#landing-container")
 
 const pageTitleContainer = document.querySelector("#page-title-container")
 
-
-
-
-
 const posturesListContainer = document.querySelector("#postures-list-container")
 const postureDetailsContainer = document.querySelector("#posture-details-container")
 
@@ -84,6 +80,7 @@ const showAllPosturesButton = document.querySelector("#all-postures-button")
 /*---------------------*/
 
 const saveStudent = (res) => {
+    store.userToken = res.token
     store.usersName = res.student.name
     store.knownPostures = res.student.knownPostures
     store.favoritedPractices = res.student.favoritedPractices
@@ -106,13 +103,8 @@ const signInStudent = (studentData) => {
     signIn(formattedData)
         .then((res) => res.json())
         .then(res => {
-            //res only has the token, store it
-            store.userToken = res.token
-            // after successful signIn, getStudentData()
-            getStudentData()
-        })
-        .then(res => {
-            onSignInSuccess()
+            saveStudent(res)
+            onSignInSuccess()    
         })
         .catch(onSignInFailure)
 }
@@ -154,30 +146,18 @@ const showPostureDetails = (event) => {
     if (!id) return
     getPostureById(id)
         .then((res) => res.json())
-        .then((res) => {
-            onShowPostureSuccess(res.posture)
-        })
+        .then((res) => onShowPostureSuccess(res.posture))
         .catch(onUnauthorized)
 }
 const addOrRemovePostureFromKnown = (postureData) => {
-    getKnownPostures()
-        .then((res) => res.json())
+    addOrRemoveKnownPosture(postureData)
         .then((res) => {
-            const knownPostures = res.postures
-            
-            //IF the posture is already known
-            if (knownPostures.filter(posture => posture._id === postureData._id).length > 0){
-                messageContainer.innerHTML = "You already know this posture!"
-            } else {
-                //add it to known
-               addOrRemoveKnownPosture(postureData)
-                    .then(() => {
-                        messageContainer.innerHTML = "Added to your list of known postures!"
-                    })
-                    .catch(onFailure)
-            }
+            // res.json()
+            // TODO: handle for success
+            messageContainer.innerHTML = "Known Postures updated"
+            messageContainer.classList.remove("hide")
         })
-        .catch(onUnauthorized)
+        .catch(onFailure)
 }
 
 
@@ -341,17 +321,10 @@ pageTitleContainer.addEventListener("click", (event) => {
     
     if(buttonAction === "show-all-postures") {
         console.log("showAllPosturesButton")
-        // messageContainer.innerHTML = ""
-        // posturesListContainer.classList.remove("hide")
-        // postureDetailsContainer.classList.add("hide")
         showAllPostures()
     }
     else if (buttonAction === "show-known-postures") {
         console.log("showKnownPosturesButton")
-        // messageContainer.innerHTML = ""
-        // editorWrapper.classList.remove("hide")
-        // detailsContainer.innerHTML = ""
-        // detailsContainer.classList.add("hide")
         showKnownPostures()
     }
 
@@ -367,20 +340,46 @@ pageTitleContainer.addEventListener("click", (event) => {
 /*----- Postures -----*/
 
 posturesListContainer.addEventListener("click", (event) => {
-    const id = event.target.getAttribute("data-id")
+    const postureId = event.target.getAttribute("data-id")
 	const buttonAction = event.target.getAttribute("data-event")
+    const postureData = {
+        posture: postureId
+    }
+
     
-    if(buttonAction === "known-toggle") {
-        console.log("addPostureToKnownToggle")
+    if(buttonAction === "known-toggle-add") {
         messageContainer.innerHTML = ""
-        addOrRemovePostureFromKnown(id)
+        // event.target.innerText = "Unknown"
+        store.knownPostures.push(postureId)
+        addOrRemovePostureFromKnown(postureData)
+    }
+    if(buttonAction === "known-toggle-remove") {
+        messageContainer.innerHTML = ""
+        // event.target.innerText = "Known"
+        const postureIndex = store.knownPostures.indexOf(postureId)
+        store.knownPostures.splice(postureIndex, 1)
+        addOrRemovePostureFromKnown(postureData)
     }
 
     if(buttonAction === "show-details") {
         console.log("showPostureDetailsButton")
+
+        messageContainer.innerHTML = ""
+        
+        showPostureDetails(event)
     }
-
-
 })
 
+postureDetailsContainer.addEventListener("click", (event) => {
+    const postureId = event.target.getAttribute("data-id")
+	const buttonAction = event.target.getAttribute("data-event")
 
+    if(buttonAction === "close-details") {
+        console.log("closeDetails button")
+
+        messageContainer.innerHTML = ""
+        postureDetailsContainer.classList.add("hide")
+        postureDetailsContainer.innerHTML = ""
+        posturesListContainer.classList.remove("hide")
+    }
+})
