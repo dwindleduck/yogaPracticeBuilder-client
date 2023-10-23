@@ -320,12 +320,18 @@ pageTitleContainer.addEventListener("click", (event) => {
 	const buttonAction = event.target.getAttribute("data-event")
     
     if(buttonAction === "show-all-postures") {
-        console.log("showAllPosturesButton")
         showAllPostures()
     }
     else if (buttonAction === "show-known-postures") {
-        console.log("showKnownPosturesButton")
         showKnownPostures()
+    }
+    else if (buttonAction === "show-all-practices") {
+        console.log("show-all-practices")
+        showAllPractices()
+    }
+    else if (buttonAction === "show-built-practices") {
+        console.log("show-built-practices")
+        showBuiltPractices()
     }
 
 
@@ -364,7 +370,6 @@ posturesListContainer.addEventListener("click", (event) => {
     if(buttonAction === "show-details") {
         console.log("showPostureDetailsButton")
 
-        messageContainer.innerHTML = ""
         
         showPostureDetails(event)
     }
@@ -383,3 +388,81 @@ postureDetailsContainer.addEventListener("click", (event) => {
         posturesListContainer.classList.remove("hide")
     }
 })
+
+
+/*----- Practices -----*/
+practicesListContainer.addEventListener("click", event => {
+    const practiceId = event.target.getAttribute("data-id")
+	const buttonAction = event.target.getAttribute("data-event")
+    
+    if(buttonAction === "show-details") {
+        showPracticeDetails(event)
+    }
+})
+
+practiceDetailsContainer.addEventListener("click", event => {
+    const practiceId = event.target.getAttribute("data-id")
+	const buttonAction = event.target.getAttribute("data-event")
+    
+    if(buttonAction === "close-details") {
+        console.log("closeDetails button")
+    
+        messageContainer.innerHTML = ""
+        practiceDetailsContainer.classList.add("hide")
+        practiceDetailsContainer.innerHTML = ""
+
+        practicesListContainer.classList.remove("hide")
+    }
+})
+
+
+
+// editPracticeButtons.forEach(button => {
+//     button.addEventListener("click", event => {
+//         practicesContainer.classList.add("hide")
+//         const backToMyPractices = document.createElement("button")
+//         backToMyPractices.textContent = "Back to My Practices"
+//         backToMyPractices.classList.add("back-button")
+//         messageContainer.appendChild(backToMyPractices)
+//         backToMyPractices.addEventListener("click", () => {
+//             showBuiltPractices()
+//             practicesContainer.classList.remove("hide")
+//             editPracticeContainer.classList.add("hide")
+//             posturesContainer.classList.add("hide")
+//             sequenceContainer.classList.add("hide")
+//             editPracticeContainer.innerHTML = ""
+//             messageContainer.innerHTML = ""
+//         })
+//         showEditForm(practice._id)
+//     })
+// })
+/*----- Edit -----*/
+// editPracticeContainer.addEventListener("submit", (event) => {
+//     event.preventDefault()
+//     const id = event.target.getAttribute("data-id")
+    
+//     const practiceData = {
+//         practice: {
+//             name: event.target["name"].value,
+//             style: event.target["style"].value,
+//             description: event.target["description"].value,
+//         },
+//     }
+//     if (!id) return
+//     updatePractice(id, practiceData)
+//         .then(() => {
+//             showEditForm(id)//needs a practiceId
+//         })
+//         .catch(onFailure)
+// })
+// editPracticeContainer.addEventListener("click", (event) => {
+//     const id = event.target.getAttribute("data-id")
+//     const buttonAction = event.target.getAttribute("data-event")
+//     if (buttonAction === "delete" && id) {
+//         deletePractice(id)
+//             .then(() => {
+//                 showBuiltPractices()//direct back to my practices
+//             })
+//             .catch(onFailure)
+//     } 
+// })

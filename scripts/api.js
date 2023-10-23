@@ -122,7 +122,7 @@ export const getPractices = () => {
 }
 
 export const getBuiltPractices = () => {
-    return fetch(BASE_URL + `/built`, { 
+    return fetch(BASE_URL + `/practices/author`, { 
         headers: {
             "Authorization": `Bearer ${store.userToken}`,
         },
