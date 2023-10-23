@@ -34,26 +34,24 @@ const sequenceContainer = document.querySelector("#sequence-container")
 export const clearBody = () => {
     messageContainer.innerHTML = ""
     messageContainer.classList.add("hide")
+
     landingContainer.classList.add("hide")
     signInAndUpContainer.classList.add("hide")
- 
-    // posturesContainer.classList.remove("hide")
-    // posturesContainer.innerHTML = ""
-    posturesListContainer.classList.remove("hide")
-    posturesListContainer.innerHTML = ""
 
-    // practicesContainer.innerHTML = ""
-    // practiceBuilderContainer.innerHTML = ""
-    
     pageTitleContainer.innerHTML = ""
 
-    // editPracticeContainer.innerHTML = ""
-    // sequenceContainer.innerHTML = ""
-    // detailsContainer.innerHTML = ""
-    // detailsContainer.classList.add("hide")
-    // posturesContainer.classList.remove("editing")
-    // sequenceContainer.classList.remove("editing")
-    // editorWrapper.classList.remove("editing")
+    posturesListContainer.classList.add("hide")
+    // posturesListContainer.innerHTML = ""
+
+    postureDetailsContainer.classList.add("hide")
+
+    // practicesListContainer.innerHTML = ""
+    practiceDetailsContainer.classList.add("hide")
+
+    practiceDetailsContainer.classList.remove("editing")
+
+    sequenceContainer.innerHTML = ""
+    sequenceContainer.classList.remove("editing")
 }
 
 /*-----------------------------*/
@@ -143,12 +141,14 @@ export const onGetPosturesSuccess = (postures, practiceId, sequence, isEditing) 
     const allButton = document.createElement("button")
     allButton.textContent = "All"
     allButton.classList.add("all-postures-button")
+    allButton.setAttribute("data-event", "show-all-postures")
     pageTitleContainer.appendChild(allButton)
 
     //button for Known that calls indexKnownPostures
     const knownButton = document.createElement("button")
     knownButton.textContent = "Known"
     knownButton.classList.add("known-postures-button")
+    knownButton.setAttribute("data-event", "show-known-postures")
     pageTitleContainer.appendChild(knownButton)
 
 
@@ -186,7 +186,7 @@ export const onGetPosturesSuccess = (postures, practiceId, sequence, isEditing) 
         const detailsButton = document.createElement("button")
         detailsButton.textContent = "Details"
         detailsButton.setAttribute("data-id", posture._id)
-        knownButton.setAttribute("data-event", "show-details")
+        detailsButton.setAttribute("data-event", "show-details")
         detailsButton.classList.add("posture-details-button")
         postureWrapper.appendChild(detailsButton)
 
