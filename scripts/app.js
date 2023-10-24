@@ -8,10 +8,12 @@ import {
     getPractices,
     getPostureById,
     getPracticeById,
-    getKnownPostures,
+    // getKnownPostures,
     addOrRemoveKnownPosture,
     getBuiltPractices,
-    createPractice
+    createPractice,
+    updatePractice,
+    deletePractice
 } from "./api.js"
 import {
     onSignInSuccess,
@@ -26,7 +28,9 @@ import {
     onSignInFailure,
     onUnauthorized,
     onSignUpFailure,
-    onGetPosturesSuccess
+    onGetPosturesSuccess,
+    onShowEditFormSuccess,
+    showPostureList
 } from "./ui.js"
 
 /*----- DOM Elements -----*/
@@ -133,14 +137,15 @@ const showAllPostures = () => {
         })
         .catch(onFailure)
 }
-const showKnownPostures = (practiceId, sequence, isEditing) => {
-    getKnownPostures()
-        .then((res) => res.json())
-        .then((res) => {
-            onGetPosturesSuccess(res.postures, practiceId, sequence, isEditing)
-        })
-        .catch(onUnauthorized)
-}
+// const showKnownPostures = (practiceId, sequence, isEditing) => {
+//     getKnownPostures()
+//         .then((res) => res.json())
+//         .then((res) => {
+//             // practiceId, sequence,
+//             onGetPosturesSuccess(res.postures, isEditing)
+//         })
+//         .catch(onUnauthorized)
+// }
 const showPostureDetails = (event) => {
     const id = event.target.getAttribute("data-id")
     if (!id) return
@@ -160,7 +165,6 @@ const addOrRemovePostureFromKnown = (postureData) => {
         .catch(onFailure)
 }
 
-
 /*---------------------*/
 /*----- Practices -----*/
 /*---------------------*/
@@ -176,7 +180,7 @@ const showBuiltPractices = () => {
     getBuiltPractices()
     .then((res) => res.json())
     .then((res) => {
-        onShowPracticesSuccess(res.practices)
+        onShowPracticesSuccess(res.practices, true)
     })
     .catch(onUnauthorized)
 }
@@ -219,14 +223,15 @@ const showEditForm = (practiceId) => {
     getPracticeById(practiceId)
         .then(res => res.json())
         .then(res => {
-            onShowEditFormSuccess()
+            onShowEditFormSuccess(res)
+            // Also show the sequence and known postures
             showSequence(res.practice.sequence)
-            showKnownPostures(res.practice._id, res.practice.sequence, true) //expecting isEditing = true
-        })
+
+            // need to pass along full posture info, not just the id
+            showPostureList(store.knownPostures, true)
+         })
         .catch(onFailure)
 }
-
-
 
 /*---------------------------*/
 /*---------------------------*/
@@ -253,10 +258,7 @@ navPostureLibraryButton.addEventListener("click", (event) => {
     event.preventDefault()
     showAllPostures()
 })
-// backButton.addEventListener("click", (event) => {
-//     event.preventDefault()
 
-// })
 
 /*----- Sign In/Up -----*/
 signInOrOutToggle.addEventListener("click", (event) => {
@@ -313,7 +315,6 @@ demoLoginButton.addEventListener("click", (event) => {
     signInStudent(demoLoginData)
 })
 
-
 /*----- Page Title nav -----*/
 
 pageTitleContainer.addEventListener("click", (event) => {
@@ -323,25 +324,19 @@ pageTitleContainer.addEventListener("click", (event) => {
         showAllPostures()
     }
     else if (buttonAction === "show-known-postures") {
-        showKnownPostures()
+        showPostureList(store.knownPostures)
+        // showKnownPostures()
     }
     else if (buttonAction === "show-all-practices") {
-        console.log("show-all-practices")
         showAllPractices()
     }
     else if (buttonAction === "show-built-practices") {
-        console.log("show-built-practices")
         showBuiltPractices()
     }
-
-
-    // add nav functionality for practices (all, built, favorites)
-
-
-
+    // else if (buttonAction === "show-favorite-practices") {
+    //     // 
+    // }
 })
-
-
 
 /*----- Postures -----*/
 
@@ -373,8 +368,26 @@ posturesListContainer.addEventListener("click", (event) => {
         
         showPostureDetails(event)
     }
-})
+    if(buttonAction === "add-posture-to-sequence-button") {
+        console.log("add-posture-to-sequence-button")
+        console.log("NOT IMPLEMENTED")
 
+        // const updatedSequence = sequence
+        // updatedSequence.push(posture)
+    
+        // const practiceData = {
+        //     practice: {
+        //         sequence: updatedSequence
+        //     }
+        // }
+        // updatePractice(practiceId, practiceData)
+        //     .then(() => {
+        //         showSequence(updatedSequence)
+        //     })
+        //     .catch(onFailure)
+
+    }
+})
 postureDetailsContainer.addEventListener("click", (event) => {
     const postureId = event.target.getAttribute("data-id")
 	const buttonAction = event.target.getAttribute("data-event")
@@ -389,17 +402,20 @@ postureDetailsContainer.addEventListener("click", (event) => {
     }
 })
 
-
 /*----- Practices -----*/
-practicesListContainer.addEventListener("click", event => {
+practicesListContainer.addEventListener("click", (event) => {
     const practiceId = event.target.getAttribute("data-id")
 	const buttonAction = event.target.getAttribute("data-event")
     
     if(buttonAction === "show-details") {
         showPracticeDetails(event)
     }
-})
+    if(buttonAction === "edit-practice-button") {
+        console.log("Edit Practice Button")
+        showEditForm(practiceId)
+    }
 
+})
 practiceDetailsContainer.addEventListener("click", event => {
     const practiceId = event.target.getAttribute("data-id")
 	const buttonAction = event.target.getAttribute("data-event")
@@ -415,54 +431,34 @@ practiceDetailsContainer.addEventListener("click", event => {
     }
 })
 
-
-
-// editPracticeButtons.forEach(button => {
-//     button.addEventListener("click", event => {
-//         practicesContainer.classList.add("hide")
-//         const backToMyPractices = document.createElement("button")
-//         backToMyPractices.textContent = "Back to My Practices"
-//         backToMyPractices.classList.add("back-button")
-//         messageContainer.appendChild(backToMyPractices)
-//         backToMyPractices.addEventListener("click", () => {
-//             showBuiltPractices()
-//             practicesContainer.classList.remove("hide")
-//             editPracticeContainer.classList.add("hide")
-//             posturesContainer.classList.add("hide")
-//             sequenceContainer.classList.add("hide")
-//             editPracticeContainer.innerHTML = ""
-//             messageContainer.innerHTML = ""
-//         })
-//         showEditForm(practice._id)
-//     })
-// })
 /*----- Edit -----*/
-// editPracticeContainer.addEventListener("submit", (event) => {
-//     event.preventDefault()
-//     const id = event.target.getAttribute("data-id")
+practiceDetailsContainer.addEventListener("submit", (event) => {
+    event.preventDefault()
+    const id = event.target.getAttribute("data-id")
     
-//     const practiceData = {
-//         practice: {
-//             name: event.target["name"].value,
-//             style: event.target["style"].value,
-//             description: event.target["description"].value,
-//         },
-//     }
-//     if (!id) return
-//     updatePractice(id, practiceData)
-//         .then(() => {
-//             showEditForm(id)//needs a practiceId
-//         })
-//         .catch(onFailure)
-// })
-// editPracticeContainer.addEventListener("click", (event) => {
-//     const id = event.target.getAttribute("data-id")
-//     const buttonAction = event.target.getAttribute("data-event")
-//     if (buttonAction === "delete" && id) {
-//         deletePractice(id)
-//             .then(() => {
-//                 showBuiltPractices()//direct back to my practices
-//             })
-//             .catch(onFailure)
-//     } 
-// })
+    const practiceData = {
+        practice: {
+            name: event.target["name"].value,
+            style: event.target["style"].value,
+            description: event.target["description"].value,
+        },
+    }
+    if (!id) return
+    updatePractice(id, practiceData)
+        .then(() => {
+            console.log("Practice updated")
+            showEditForm(id)//needs a practiceId
+        })
+        .catch(onFailure)
+})
+practiceDetailsContainer.addEventListener("click", (event) => {
+    const id = event.target.getAttribute("data-id")
+    const buttonAction = event.target.getAttribute("data-event")
+    if (buttonAction === "delete" && id) {
+        deletePractice(id)
+            .then(() => {
+                showBuiltPractices()//direct back to my practices
+            })
+            .catch(onFailure)
+    } 
+})

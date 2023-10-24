@@ -65,13 +65,13 @@ export const getStudent = () => {
 export const getAllPostures = () => {
     return fetch(BASE_URL + "/postures")
 }
-export const getKnownPostures = () => {
-    return fetch(BASE_URL + `/postures/known`, { 
-        headers: {
-            "Authorization": `Bearer ${store.userToken}`,
-        },
-    })
-}
+// export const getKnownPostures = () => {
+//     return fetch(BASE_URL + `/postures/known`, { 
+//         headers: {
+//             "Authorization": `Bearer ${store.userToken}`,
+//         },
+//     })
+// }
 export const getPostureById = (id) => {
     return fetch(BASE_URL + `/postures/${id}`, { 
         headers: {
