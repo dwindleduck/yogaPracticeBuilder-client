@@ -129,7 +129,7 @@ export const onSignOutSuccess = () => {
 /*--------------------*/
 /*----- Postures -----*/
 /*--------------------*/
-export const showPostureList = (postures, isEditing) => {
+export const showPostureList = (postures, isEditing, practiceId) => {
 
     posturesListContainer.classList.remove("hide")
     posturesListContainer.innerHTML = ""
@@ -156,27 +156,29 @@ export const showPostureList = (postures, isEditing) => {
         detailsButton.classList.add("posture-details-button")
         postureWrapper.appendChild(detailsButton)
 
-        const knownButton = document.createElement("button")
-        knownButton.setAttribute("data-id", posture._id)
-        knownButton.classList.add("add-or-remove-known-posture-button")
 
-        // if the posture is known, mark the button as known
-        if(store.knownPostures.filter(knownPosture => knownPosture._id === posture._id).length > 0){
-        // if (store.knownPostures.includes(posture._id)){
-            knownButton.textContent = "Known"
-            knownButton.setAttribute("data-event", "known-toggle-remove")
-        }
-        else {
-            knownButton.textContent = "Unknown"
-            knownButton.setAttribute("data-event", "known-toggle-add")
-        }
-        postureWrapper.appendChild(knownButton)
+        if(!isEditing){
+            const knownButton = document.createElement("button")
+            knownButton.setAttribute("data-id", posture._id)
+            knownButton.classList.add("add-or-remove-known-posture-button")
 
+            // if the posture is known, mark the button as known
+            if(store.knownPostures.filter(knownPosture => knownPosture._id === posture._id).length > 0){
+                knownButton.textContent = "Known"
+                knownButton.setAttribute("data-event", "remove-known")
+            }
+            else {
+                knownButton.textContent = "Unknown"
+                knownButton.setAttribute("data-event", "add-known")
+            }
+            postureWrapper.appendChild(knownButton)
+        }
         if(isEditing) {
             //button to add posture to sequence 
             const addToSequenceButton = document.createElement("button")
             addToSequenceButton.textContent = "Add to Sequence"
             addToSequenceButton.setAttribute("data-id", posture._id)
+            addToSequenceButton.setAttribute("data-destination", practiceId)
             addToSequenceButton.setAttribute("data-event", "add-posture-to-sequence-button")
             addToSequenceButton.classList.add("add-posture-to-sequence-button")
             postureWrapper.appendChild(addToSequenceButton)
@@ -226,6 +228,7 @@ export const onGetPosturesSuccess = (postures, isEditing) => {
 export const onShowPostureSuccess = (posture) => {
     messageContainer.innerHTML = ""
     posturesListContainer.classList.add("hide")
+    practiceDetailsContainer.classList.add("hide")
     postureDetailsContainer.classList.remove("hide")
 
     const closeDetailsButton = document.createElement("button")
@@ -279,13 +282,24 @@ export const showSequence = (sequence) => {
         const name = document.createElement("h4")
         name.innerText = theSequence[i].name
         sequenceWrapper.appendChild(name)
+
         //details button
         const detailsButton = document.createElement("button")
         detailsButton.textContent = "Details"
         detailsButton.setAttribute("data-id", theSequence[i]._id)
+        detailsButton.setAttribute("data-event", "posture-details-button")
         detailsButton.classList.add(".posture-details-button")
-
         sequenceWrapper.appendChild(detailsButton)
+
+        // remove from sequence button
+        const removeFromSequenceButton = document.createElement("button")
+        removeFromSequenceButton.textContent = "Remove"
+        removeFromSequenceButton.setAttribute("data-id", theSequence[i]._id)
+        removeFromSequenceButton.setAttribute("data-index", i)
+        removeFromSequenceButton.setAttribute("data-event", "remove-from-sequence-button")
+        removeFromSequenceButton.classList.add(".remove-from-sequence-button")
+        sequenceWrapper.appendChild(removeFromSequenceButton)
+
         sequenceContainer.appendChild(sequenceWrapper)
     }
     sequenceContainer.classList.remove("hide")
@@ -409,7 +423,6 @@ export const showNewPracticeForm = () => {
 export const onShowEditFormSuccess = (res) => {
     
     practicesListContainer.classList.add("hide")
-
     practiceDetailsContainer.innerHTML = ""
     
     const title = document.createElement("h2")
@@ -429,8 +442,5 @@ export const onShowEditFormSuccess = (res) => {
             <input type="submit" value="Save" />
         </form>
     `
-
     practiceDetailsContainer.classList.remove("hide")
-    posturesListContainer.classList.remove("hide")
-    sequenceContainer.classList.remove("hide")
 }

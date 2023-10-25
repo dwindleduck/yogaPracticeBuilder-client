@@ -79,8 +79,19 @@ export const getPostureById = (id) => {
         },
     })
 }
-export const addOrRemoveKnownPosture = (data) => {
-    return fetch(BASE_URL + `/postures/known`, {
+export const addKnownPosture = (data) => {
+    return fetch(BASE_URL + `/postures/add-known`, {
+        method: "PATCH",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${store.userToken}`,
+        },
+        body: JSON.stringify(data)
+    })
+}
+export const removeKnownPosture = (data) => {
+    return fetch(BASE_URL + `/postures/remove-known`, {
         method: "PATCH",
         headers: {
             "Accept": "application/json",

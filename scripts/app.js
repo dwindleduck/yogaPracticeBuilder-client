@@ -9,7 +9,8 @@ import {
     getPostureById,
     getPracticeById,
     // getKnownPostures,
-    addOrRemoveKnownPosture,
+    addKnownPosture,
+    removeKnownPosture,
     getBuiltPractices,
     createPractice,
     updatePractice,
@@ -154,17 +155,26 @@ const showPostureDetails = (event) => {
         .then((res) => onShowPostureSuccess(res.posture))
         .catch(onUnauthorized)
 }
-const addOrRemovePostureFromKnown = (postureData) => {
-    addOrRemoveKnownPosture(postureData)
+const addPostureToKnown = (postureData) => {
+    addKnownPosture(postureData)
         .then((res) => {
             // res.json()
             // TODO: handle for success
-            messageContainer.innerHTML = "Known Postures updated"
+            messageContainer.innerHTML = "Posture added to Known"
             messageContainer.classList.remove("hide")
         })
         .catch(onFailure)
 }
-
+const removePostureFromKnown = (postureData) => {
+    removeKnownPosture(postureData)
+        .then((res) => {
+            // res.json()
+            // TODO: handle for success
+            messageContainer.innerHTML = "Posture removed from Known"
+            messageContainer.classList.remove("hide")
+        })
+        .catch(onFailure)
+}
 /*---------------------*/
 /*----- Practices -----*/
 /*---------------------*/
@@ -223,12 +233,19 @@ const showEditForm = (practiceId) => {
     getPracticeById(practiceId)
         .then(res => res.json())
         .then(res => {
-            onShowEditFormSuccess(res)
-            // Also show the sequence and known postures
-            showSequence(res.practice.sequence)
 
-            // need to pass along full posture info, not just the id
-            showPostureList(store.knownPostures, true)
+            // store the sequence for editing
+            store.sequenceBuilderContainer = res.practice.sequence
+
+            // show the edit form
+            onShowEditFormSuccess(res)
+
+            // Also show the sequence and known postures
+            showSequence(store.sequenceBuilderContainer)
+
+            // passing along full posture info, not just the id
+            showPostureList(store.knownPostures, true, res.practice._id)
+
          })
         .catch(onFailure)
 }
@@ -342,63 +359,65 @@ pageTitleContainer.addEventListener("click", (event) => {
 
 posturesListContainer.addEventListener("click", (event) => {
     const postureId = event.target.getAttribute("data-id")
+    const practiceId = event.target.getAttribute("data-destination")
 	const buttonAction = event.target.getAttribute("data-event")
     const postureData = {
         posture: postureId
     }
 
     
-    if(buttonAction === "known-toggle-add") {
+    if(buttonAction === "add-known") {
         messageContainer.innerHTML = ""
-        // event.target.innerText = "Unknown"
+        event.target.textContent = "Known"
         store.knownPostures.push(postureId)
-        addOrRemovePostureFromKnown(postureData)
+        addPostureToKnown(postureData)
+
     }
-    if(buttonAction === "known-toggle-remove") {
+    if(buttonAction === "remove-known") {
         messageContainer.innerHTML = ""
-        // event.target.innerText = "Known"
+        event.target.textContent = "Unknown"
         const postureIndex = store.knownPostures.indexOf(postureId)
         store.knownPostures.splice(postureIndex, 1)
-        addOrRemovePostureFromKnown(postureData)
+        removePostureFromKnown(postureData)
     }
 
     if(buttonAction === "show-details") {
-        console.log("showPostureDetailsButton")
-
-        
         showPostureDetails(event)
     }
     if(buttonAction === "add-posture-to-sequence-button") {
-        console.log("add-posture-to-sequence-button")
-        console.log("NOT IMPLEMENTED")
-
-        // const updatedSequence = sequence
-        // updatedSequence.push(posture)
-    
-        // const practiceData = {
-        //     practice: {
-        //         sequence: updatedSequence
-        //     }
-        // }
-        // updatePractice(practiceId, practiceData)
-        //     .then(() => {
-        //         showSequence(updatedSequence)
-        //     })
-        //     .catch(onFailure)
-
+        const foundPosture = store.knownPostures.filter(knownPosture => knownPosture._id === postureId)[0]
+        if(foundPosture) {
+            store.sequenceBuilderContainer.push(foundPosture)
+            showSequence(store.sequenceBuilderContainer)
+        }
     }
+})
+sequenceContainer.addEventListener("click", (event) => {
+    const postureIndex = event.target.getAttribute("data-index")
+    const postureId = event.target.getAttribute("data-id")
+	const buttonAction = event.target.getAttribute("data-event")
+    // details button
+    if(buttonAction === "posture-details-button") {
+        showPostureDetails(event)
+    }
+    // remove from sequence button
+    if(buttonAction === "remove-from-sequence-button") {
+        store.sequenceBuilderContainer.splice(postureIndex, 1)
+        showSequence(store.sequenceBuilderContainer)
+    }
+
 })
 postureDetailsContainer.addEventListener("click", (event) => {
     const postureId = event.target.getAttribute("data-id")
 	const buttonAction = event.target.getAttribute("data-event")
 
     if(buttonAction === "close-details") {
-        console.log("closeDetails button")
-
         messageContainer.innerHTML = ""
         postureDetailsContainer.classList.add("hide")
         postureDetailsContainer.innerHTML = ""
+
         posturesListContainer.classList.remove("hide")
+        practiceDetailsContainer.classList.remove("hide")
     }
 })
 
@@ -411,54 +430,47 @@ practicesListContainer.addEventListener("click", (event) => {
         showPracticeDetails(event)
     }
     if(buttonAction === "edit-practice-button") {
-        console.log("Edit Practice Button")
         showEditForm(practiceId)
     }
-
 })
-practiceDetailsContainer.addEventListener("click", event => {
-    const practiceId = event.target.getAttribute("data-id")
-	const buttonAction = event.target.getAttribute("data-event")
-    
-    if(buttonAction === "close-details") {
-        console.log("closeDetails button")
-    
-        messageContainer.innerHTML = ""
-        practiceDetailsContainer.classList.add("hide")
-        practiceDetailsContainer.innerHTML = ""
-
-        practicesListContainer.classList.remove("hide")
-    }
-})
-
-/*----- Edit -----*/
 practiceDetailsContainer.addEventListener("submit", (event) => {
     event.preventDefault()
-    const id = event.target.getAttribute("data-id")
+    const practiceId = event.target.getAttribute("data-id")
     
     const practiceData = {
         practice: {
             name: event.target["name"].value,
             style: event.target["style"].value,
             description: event.target["description"].value,
+            sequence: store.sequenceBuilderContainer
         },
     }
-    if (!id) return
-    updatePractice(id, practiceData)
+    if (!practiceId) return
+    updatePractice(practiceId, practiceData)
         .then(() => {
             console.log("Practice updated")
-            showEditForm(id)//needs a practiceId
+            showEditForm(practiceId)//needs a practiceId
         })
         .catch(onFailure)
+
+
 })
 practiceDetailsContainer.addEventListener("click", (event) => {
-    const id = event.target.getAttribute("data-id")
+    const practiceId = event.target.getAttribute("data-id")
     const buttonAction = event.target.getAttribute("data-event")
-    if (buttonAction === "delete" && id) {
-        deletePractice(id)
+    
+    if (buttonAction === "delete" && practiceId) {
+        deletePractice(practiceId)
             .then(() => {
                 showBuiltPractices()//direct back to my practices
             })
             .catch(onFailure)
     } 
+
+    if(buttonAction === "close-details") {
+        messageContainer.innerHTML = ""
+        practiceDetailsContainer.classList.add("hide")
+        practiceDetailsContainer.innerHTML = ""
+        practicesListContainer.classList.remove("hide")
+    }
 })
