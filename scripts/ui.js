@@ -46,11 +46,12 @@ export const clearBody = () => {
 
     practicesListContainer.innerHTML = ""
     practicesListContainer.classList.add("hide")
-    practiceDetailsContainer.classList.remove("unsaved-changes")
+    
 
     practiceDetailsContainer.innerHTML = ""
     practiceDetailsContainer.classList.add("hide")
     practiceDetailsContainer.classList.remove("editing")
+    practiceDetailsContainer.classList.remove("unsaved-changes")
 
     sequenceContainer.innerHTML = ""
     sequenceContainer.classList.add("hide")
@@ -528,4 +529,5 @@ export const onDeletePracticeSuccess = () => {
     practiceDetailsContainer.appendChild(redirectButton)
 
     practiceDetailsContainer.classList.remove("hide")
+    practiceDetailsContainer.classList.remove("unsaved-changes")
 }
