@@ -1,6 +1,7 @@
 import { store } from "./store.js"
 
-const BASE_URL = "https://yoga-practice-builder-server.onrender.com"
+const BASE_URL = "https://yoga-practice-builder-server.onrender.com/v2"
+
 
 /*----------------------*/
 /*----- Sign In/Up -----*/
@@ -28,35 +29,55 @@ export const signIn = (data) => {
 /*-------------------*/
 /*----- Student -----*/
 /*-------------------*/
-export const showStudent = () => {
+
+export const getStudent = () => {
     return fetch(BASE_URL + "/student", { 
         headers: {
             "Authorization": `Bearer ${store.userToken}`,
         },
     })
 }
+
+// TODO:
+// updateStudent
+
+
+
+// TODO:
+// deleteStudent
+
+
+
+
+
 /*--------------------*/
 /*----- Postures -----*/
 /*--------------------*/
-export const indexPostures = () => {
+
+// TODO:
+// createPosture
+
+
+
+export const getAllPostures = () => {
     return fetch(BASE_URL + "/postures")
 }
-export const showPostureById = (id) => {
-    return fetch(BASE_URL + "/postures/${id}", { 
+// export const getKnownPostures = () => {
+//     return fetch(BASE_URL + `/postures/known`, { 
+//         headers: {
+//             "Authorization": `Bearer ${store.userToken}`,
+//         },
+//     })
+// }
+export const getPostureById = (id) => {
+    return fetch(BASE_URL + `/postures/${id}`, { 
         headers: {
             "Authorization": `Bearer ${store.userToken}`,
         },
     })
 }
-export const indexKnownPostures = () => {
-    return fetch(BASE_URL + `/known`, { 
-        headers: {
-            "Authorization": `Bearer ${store.userToken}`,
-        },
-    })
-}
-export const updateKnownPostures = (data) => {
-    return fetch(BASE_URL + `/student/updateKnown`, {
+export const addKnownPosture = (data) => {
+    return fetch(BASE_URL + `/postures/add-known`, {
         method: "PATCH",
         headers: {
             "Accept": "application/json",
@@ -66,26 +87,32 @@ export const updateKnownPostures = (data) => {
         body: JSON.stringify(data)
     })
 }
+export const removeKnownPosture = (data) => {
+    return fetch(BASE_URL + `/postures/remove-known`, {
+        method: "PATCH",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${store.userToken}`,
+        },
+        body: JSON.stringify(data)
+    })
+}
+
+// updatePosture
+
+
+
+// deletePosture
+
+
+
+
+
 /*---------------------*/
 /*----- Practices -----*/
 /*---------------------*/
-export const indexPractices = () => {
-    return fetch(BASE_URL + "/practices")
-}
-export const showPracticeById = (id) => {
-    return fetch(BASE_URL + `/practices/${id}`, { 
-        headers: {
-            "Authorization": `Bearer ${store.userToken}`,
-        },
-    })
-}
-export const indexBuiltPractices = () => {
-    return fetch(BASE_URL + `/built`, { 
-        headers: {
-            "Authorization": `Bearer ${store.userToken}`,
-        },
-    })
-}
+
 export const createPractice = (data) => {
     return fetch(BASE_URL + `/practices`, {
         method: "POST",
@@ -97,6 +124,38 @@ export const createPractice = (data) => {
         body: JSON.stringify(data)
     })
 }
+
+export const getPractices = () => {
+    return fetch(BASE_URL + "/practices")
+}
+
+export const getBuiltPractices = () => {
+    return fetch(BASE_URL + `/practices/author`, { 
+        headers: {
+            "Authorization": `Bearer ${store.userToken}`,
+        },
+    })
+}
+
+// get favoritePractices
+
+
+
+
+export const getPracticeById = (id) => {
+    return fetch(BASE_URL + `/practices/${id}`, { 
+        headers: {
+            "Authorization": `Bearer ${store.userToken}`,
+        },
+    })
+}
+
+// updateFavoritePractices
+
+
+
+
+
 export const updatePractice = (id, data) => {
     return fetch(BASE_URL + `/practices/${id}`, {
         method: "PATCH",

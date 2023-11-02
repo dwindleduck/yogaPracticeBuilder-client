@@ -44,10 +44,6 @@ button {
     margin-bottom: 5px;
     margin-right: 3%;
 }
-/* #sign-out-button  {
-    max-width: 70px;
-    margin-left: 2%;
-} */
 nav {
     display: flex;
     justify-content: space-around;
@@ -71,38 +67,50 @@ main {
     margin: 0 auto;
 }
 #message-container {
-    display: flex; 
-    margin-left: 2%;
+    background-color: rgba(93, 93, 217, 0.673);
+    padding: 5px;
+    margin: 0 15%;
+    font-style: italic;
 }
-.back-button {
+/* .back-button {
     color: #692b9d;
-}
+} */
 #page-title-container *{
     margin-bottom: 20px;
 }
-#editor-wrapper.editing {
-    display: flex;
+
+
+
+
+
+
+
+
+
+
+#practice-details-container.editing {
+    /* display: flex;
     gap: 25px;
-    margin-top: 40px;
+    margin-top: 40px; */
 }
 #sequence-container.editing {
-    align-self: flex-start;
+    /* align-self: flex-start;
     display: grid;
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 10px; */
 }
-#postures-container {
-    display: grid;
+#postures-list-container {
+    /* display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 10px;
+    gap: 10px; */
 }
-#postures-container.editing {
-    align-self: flex-start; /* this stopped the stretching */
+#postures-list-container.editing {
+    /* align-self: flex-start; /* this stopped the stretching 
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr; */
 }
-#postures-container.editing .section-title {
-    grid-column: 1 / span 3;
+#postures-list-container.editing .section-title {
+    /* grid-column: 1 / span 3; */
 }
 .posture-wrapper {
     background-color: #AFD7F7;
@@ -118,15 +126,29 @@ main {
     margin: 20px auto;
     max-width: 600px;
 }
-#details-container {
-    text-align: left;
+#practice-details-container,
+#posture-details-container {
+    /* text-align: left;
     max-width: 500px;
-    margin: 0 auto;
+    margin: 0 auto; */
 }
-#details-container h3{
-    text-align: center;
-    margin-bottom: 30px;
+#practice-details-container h3,
+#posture-details-container h3{
+    /* text-align: center;
+    margin-bottom: 30px; */
 }
+
+
+
+
+
+
+
+
+
+
+
+
 form {
     margin: 10px auto;
     display: grid;
@@ -139,4 +161,7 @@ footer {
 }
 .hide {
     display: none;
+}
+.unsaved-changes {
+    border: red 5px solid;
 }

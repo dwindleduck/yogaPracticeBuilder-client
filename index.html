@@ -19,20 +19,17 @@
         <![endif]-->
 
         <header>
-            <h1>Yoga Practice Builder</h1>
-            <!-- <input id="sign-in-button" class="sign-in-button" type="button" value="Sign In" /> -->
+            <!-- rename to "site-title" -->
+            <a id="site-title" href=""><h1>Yoga Practice Builder</h1></a>
             <button id="sign-in-or-out-toggle" class="sign-in-or-out-toggle" data-event="Sign In">Sign In</button>
-            <!-- <button id="sign-out-button" class="sign-out-button, hide">Sign Out</button> -->
-            <nav>
-                <a id="nav-home-button" href="">Home</a>
-                <a id="nav-my-practices-button" href="">My Practices</a>
-                <a id="nav-find-practices-button" href="">Find a Practice</a>
-                <a id="nav-postures-button" href="">Postures</a>
-                <a id="nav-new-practice-button" href="">Create a Practice</a>
+            <nav id="main-nav">
+                <a id="nav-practice-button" data-event="practice" href="">Practice</a>
+                <a id="nav-create-button" data-event="create" href="">Create</a>
+                <a id="nav-posture-library-button" data-event="posture-library" href="">Posture Library</a>
             </nav>
         </header>
         <main>
-            <div id="message-container"></div>
+            <div id="message-container" class="hide"></div>
             <div id="page-title-container"></div>
             <div id="landing-container">
                 <div id="logged-in-user-message-container" class="hide"></div>
@@ -40,36 +37,57 @@
                     <h2>Welcome to the Practice Builder!</h2>
                     <p>Collect postures that you know and use them to build a yoga sequence.</p>
                     <p>This app is meant to help students build a home practice and to be used by teachers to construct sequences for their classes.</p>
-                    <!-- <p><a class="sign-in-button" href="">Create an account</a> to take full advantage of all this app has to offer!</p>
-               --> </div> 
+                    <p><a class="sign-in-button" data-event="sign-in-button" href="">Create an account</a> to take full advantage of all this app has to offer!</p>
+                </div> 
             </div> 
             <div id="sign-in-and-up-container" class="hide">
-                <h3>Sign In</h3>
-                <form id="sign-in-form">
-                    <input type="text" name="email" placeholder="email" required/>
-                    <input type="text" name="password" placeholder="password" required/>
-                    <input type="submit" value="Sign In" />
-                </form>
 
-                <h3>Sign Up</h3>
-                <form id="sign-up-form">
-                    <input type="text" name="name" placeholder="name" required/>
-                    <input type="text" name="email" placeholder="email" required/>
-                    <input type="text" name="password" placeholder="password" required/>
-                    <input type="submit" value="Sign Up" />
-                </form>
+                <div id="sign-in-container">
+                    <h3>Sign In</h3>
+                    <form id="sign-in-form">
+                        <input type="text" name="email" placeholder="email" required/>
+                        <input type="password" name="password" placeholder="password" required/>
+                        <input type="submit" value="Sign In" />
+                    </form>
+                    <button id="demo-login">Demo Login</button>
+                    <p>First time here? <a id="toggle-sign-up" href="">Create an account</a></p>
+                </div>
+
+                <div id="sign-up-contatiner" class="hide">
+                    <h3>Sign Up</h3>
+                    <form id="sign-up-form">
+                        <input type="text" name="name" placeholder="name" required/>
+                        <input type="text" name="email" placeholder="email" required/>
+                        <input type="password" name="password" placeholder="password" required/>
+                        <input type="submit" value="Sign Up" />
+                    </form>
+                    <p>Already have an account? <a id="toggle-sign-in" href="">Login here</a></p>
+                </div>
             </div>
-            <div id="practices-container"></div>
-            <div id="practice-builder-container"></div>
-            <div id="edit-practice-container"></div>
-            <div id="editor-wrapper">
-                <div id="sequence-container"></div>
-                <div id="postures-container"></div>
-            </div>
-            <div id="details-container"></div>
+
+            <!-- New Practice Form -->
+            <div id="create-new-practice-form-container"></div>
+            
+            <!-- List of Practices -->
+            <div id="practices-list-container"></div>
+
+            <!-- Practice Details / Editor-->
+            <div id="practice-details-container" class="editor"></div>
+            
+            <!-- Sequence for the Editor -->
+            <div id="sequence-container"></div>
+
+            <!-- List of Postures -->
+            <div id="postures-list-container"></div>
+
+            <!-- Posture Details -->
+            <div id="posture-details-container" class="admin_editor"></div>
+
+            
+
         </main>
         <footer>
-            <p>Created by <a href="http://yoga.andrewsquier.com" target="_blank">Andrew Squier Yoga</a></p>
+            <p>Created by <a href="https://yoga.andrewsquier.com/" target="_blank">Andrew Squier Yoga</a></p>
         </footer>
     </body>
 </html>

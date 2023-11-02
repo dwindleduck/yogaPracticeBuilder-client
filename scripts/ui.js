@@ -1,17 +1,9 @@
 import { store } from "./store.js"
-import {
-    showPostureDetails,
-    showPracticeDetails,
-    showAllPostures,
-    showKnownPostures,
-    addPostureToKnown,
-    showBuiltPractices
-} from "./app.js"
-import { showPracticeById, showStudent, updatePractice,deletePractice } from "./api.js"
 
 /*----- DOM Elements -----*/
 const signInOrOutToggle = document.querySelector("#sign-in-or-out-toggle")
-//const signOutButton = document.querySelector("#sign-out-button")
+const mainNav = document.querySelector("#main-nav")
+
 const pageTitleContainer = document.querySelector("#page-title-container")
 const landingContainer = document.querySelector("#landing-container")
 const signInAndUpContainer = document.querySelector("#sign-in-and-up-container")
@@ -19,15 +11,16 @@ const signUpForm = document.querySelector("#sign-up-form")
 const messageContainer = document.querySelector("#message-container")
 const loggedInUserMessageContainer = document.querySelector("#logged-in-user-message-container")
 const notLoggedInUserMessageContainer = document.querySelector("#not-logged-in-user-message-container")
+
+const newPracticeFormContatiner = document.querySelector("#create-new-practice-form-container")
+
+const posturesListContainer = document.querySelector("#postures-list-container")
+const postureDetailsContainer = document.querySelector("#posture-details-container")
+
+const practicesListContainer = document.querySelector("#practices-list-container")
+const practiceDetailsContainer = document.querySelector("#practice-details-container")
+
 const sequenceContainer = document.querySelector("#sequence-container")
-const posturesContainer = document.querySelector("#postures-container")
-const practicesContainer = document.querySelector("#practices-container")
-const practiceBuilderContainer = document.querySelector("#practice-builder-container")
-const editPracticeContainer = document.querySelector("#edit-practice-container")
-const editorWrapper = document.querySelector("#editor-wrapper")
-const detailsContainer = document.querySelector("#details-container")
-
-
 
 
 /*--------------------*/
@@ -35,257 +28,267 @@ const detailsContainer = document.querySelector("#details-container")
 /*--------------------*/
 export const clearBody = () => {
     messageContainer.innerHTML = ""
+    messageContainer.classList.add("hide")
+
     landingContainer.classList.add("hide")
     signInAndUpContainer.classList.add("hide")
-    posturesContainer.classList.remove("hide")
-    posturesContainer.innerHTML = ""
-    practicesContainer.innerHTML = ""
-    practiceBuilderContainer.innerHTML = ""
+
     pageTitleContainer.innerHTML = ""
-    editPracticeContainer.innerHTML = ""
+
+    newPracticeFormContatiner.innerHTML = ""
+    newPracticeFormContatiner.classList.add("hide")
+
+    posturesListContainer.innerHTML = ""
+    posturesListContainer.classList.add("hide")
+
+    postureDetailsContainer.innerHTML = ""
+    postureDetailsContainer.classList.add("hide")
+
+    practicesListContainer.innerHTML = ""
+    practicesListContainer.classList.add("hide")
+
+    practiceDetailsContainer.innerHTML = ""
+    practiceDetailsContainer.classList.add("hide")
+    practiceDetailsContainer.classList.remove("editing")
+
     sequenceContainer.innerHTML = ""
-    detailsContainer.innerHTML = ""
-    detailsContainer.classList.add("hide")
-    posturesContainer.classList.remove("editing")
+    sequenceContainer.classList.add("hide")
     sequenceContainer.classList.remove("editing")
-    editorWrapper.classList.remove("editing")
 }
-const writePageTitle = (pageTitle) => {
-    clearBody()
-    const title = document.createElement("h2")
-    title.innerText = pageTitle
-    pageTitleContainer.appendChild(title)
- 
-    if(pageTitle === "Postures") {
-        //button for All that calls showAllPostures
-        const allButton = document.createElement("button")
-        allButton.textContent = "All"
-        allButton.addEventListener("click", event => {
-            messageContainer.innerHTML = ""
-            editorWrapper.classList.remove("hide")
-            detailsContainer.classList.add("hide")
-            showAllPostures()
-        })
-        pageTitleContainer.appendChild(allButton)
-        //button for Known that calls indexKnownPostures
-        const knownButton = document.createElement("button")
-        knownButton.textContent = "Known"
-        knownButton.addEventListener("click", event => {
-            messageContainer.innerHTML = ""
-            editorWrapper.classList.remove("hide")
-            detailsContainer.innerHTML = ""
-            detailsContainer.classList.add("hide")
-            showKnownPostures()
-        })
-        pageTitleContainer.appendChild(knownButton)
-    }
-}
+
 /*-----------------------------*/
 /*----- Handle for Failue -----*/
 /*-----------------------------*/
 export const onFailure = (error) => {
+    console.error(error)
     messageContainer.innerHTML = `
-        <h3>You've got an error!</h3>
+        <h4>You've got an error!</h4>
         <p>${error}</p>
     `
+    messageContainer.classList.remove("hide")
 }
 export const onSignInFailure = (error) => {
+    console.error(error)
     messageContainer.innerHTML = `
-        <h3>Oh no!</h3>
+        <h4>Oh no!</h4>
         <p>Your email or password are incorrect, please try again</p>
     `
+    messageContainer.classList.remove("hide")
 }
 export const onSignUpFailure = (error) => {
+    console.error(error)
     messageContainer.innerHTML = `
-        <h3>Sign-up failed.</h3>
-        <p>Please enter a unique email address</p>
+        <h4>Sign-up failed.</h4>
+        <p>Please enter a valid and unique email address</p>
     `
+    messageContainer.classList.remove("hide")
 }
 export const onUnauthorized = (error) => {
+    console.error(error)
     clearBody()
     messageContainer.innerHTML = `
-    <p>Only registered users can do that! Please sign in or create an account to continue</p>
+        <h4>Only registered users can do that!</h4>
+        <p>Please sign in or create an account to continue</p>
     `
+
+    messageContainer.classList.remove("hide")
     signInAndUpContainer.classList.remove("hide")
 }
-
 
 /*----------------------*/
 /*----- Sign In/Up -----*/
 /*----------------------*/
-export const onSignUpSuccess = () => {
-    messageContainer.innerText = "Thanks for creating an account! Please sign in with the password you just created"
-    signUpForm.classList.add("hide")
-}
-export const onSignInSuccess = (userToken) => {
+export const onSignInSuccess = () => {
     clearBody()
-    store.userToken = userToken
     signInOrOutToggle.innerHTML = "Sign Out"
     signInOrOutToggle.setAttribute("data-event", "Sign Out")
-
 
     landingContainer.classList.remove("hide")
     notLoggedInUserMessageContainer.classList.add("hide")
     loggedInUserMessageContainer.classList.remove("hide")
-    showStudent()
-        .then(res => res.json())
-        .then(res => {
-            loggedInUserMessageContainer.innerHTML = `
-                <h2>Welcome, ${res.student.name}!</h2>
-                <p>You know ${res.student.knownPostures.length} postures!</p>
-                <p>Look through the library of postures and collect the ones you know.</p>
-                <p>Create practices of your own and find new practices to try.</p>
-                <p>But no matter what, keep breathing.</p>
-                </div>
-            `
-        })
-        .catch(onFailure)
+
+    loggedInUserMessageContainer.innerHTML = `
+        <h2>Welcome, ${store.usersName}!</h2>
+        <p>You know ${store.knownPostures.length} postures!</p>
+        <p>Look through the library of postures and collect the ones you know.</p>
+        <p>Create practices of your own and find new practices to try.</p>
+        <p>But no matter what, keep breathing.</p>
+        </div>
+    `
+}
+export const onSignOutSuccess = () => {
+    signInOrOutToggle.setAttribute("data-event", "Sign In")
+    signInOrOutToggle.innerHTML = "Sign In"
+
+    clearBody()
+    
+    messageContainer.innerHTML = "You've been logged out"
+    messageContainer.classList.remove("hide")
+
+    notLoggedInUserMessageContainer.classList.remove("hide")
+    loggedInUserMessageContainer.classList.add("hide")
+
+    signInAndUpContainer.classList.remove("hide")
+    signUpForm.classList.remove("hide")
 }
 
 /*--------------------*/
 /*----- Postures -----*/
 /*--------------------*/
-export const onIndexPosturesSuccess = (postures) => {
-    writePageTitle("Postures")
-    editorWrapper.classList.remove("hide")
+export const showPostureList = (postures, isEditing, practiceId) => {
 
-    postures.forEach(posture => {
-        const postureWrapper = document.createElement("div")
-        postureWrapper.classList.add("posture-wrapper")
+    posturesListContainer.classList.remove("hide")
+    posturesListContainer.innerHTML = ""
 
-        const info = document.createElement("div")
-        info.innerHTML = `
-        <h3>${posture.name}</h3>
-        <h4>${posture.translation}</h4>
-        <p>${posture.description}</p>
-        <img />
-        `
-        postureWrapper.appendChild(info)
+    
 
-        const detailsButton = document.createElement("button")
-        detailsButton.textContent = "Details"
-        detailsButton.setAttribute("data-id", posture._id)
-        detailsButton.addEventListener("click", event => {
-            editorWrapper.classList.add("hide")
-            messageContainer.innerHTML = ""
-            showPostureDetails(event)
+
+    if(postures.length===0){
+        posturesListContainer.innerHTML = "No postures to display"
+    } else {
+        postures.forEach(posture => {
+            const postureWrapper = document.createElement("div")
+            postureWrapper.classList.add("posture-wrapper")
+
+            const postureInfo = document.createElement("div")
+            postureInfo.innerHTML = `
+                <h3>${posture.name}</h3>
+                <h4>${posture.translation}</h4>
+                <p>${posture.description}</p>
+                <img />
+                `
+            postureWrapper.appendChild(postureInfo)
+
+
+            const detailsButton = document.createElement("button")
+            detailsButton.textContent = "Details"
+            detailsButton.setAttribute("data-id", posture._id)
+            detailsButton.setAttribute("data-event", "show-details")
+            detailsButton.classList.add("posture-details-button")
+            postureWrapper.appendChild(detailsButton)
+
+
+        // if(!isEditing){
+            const knownButton = document.createElement("button")
+            knownButton.setAttribute("data-id", posture._id)
+            knownButton.classList.add("add-or-remove-known-posture-button")
+
+            // if the posture is known, mark the button as known
+            if(store.knownPostures.filter(knownPosture => knownPosture._id === posture._id).length > 0){
+                knownButton.textContent = "Known"
+                knownButton.setAttribute("data-event", "remove-known")
+            }
+            else {
+                knownButton.textContent = "Unknown"
+                knownButton.setAttribute("data-event", "add-known")
+            }
+            postureWrapper.appendChild(knownButton)
+        // }
+            posturesListContainer.appendChild(postureWrapper)
         })
-        postureWrapper.appendChild(detailsButton)
-
-        const knownButton = document.createElement("button")
-        knownButton.textContent = "Add to Known"
-        knownButton.setAttribute("data-id", posture._id)
-        knownButton.addEventListener("click", event => {
-            messageContainer.innerHTML = ""
-            //add this posture to knownPostures
-            addPostureToKnown(posture)
-        })
-        postureWrapper.appendChild(knownButton)
-        posturesContainer.appendChild(postureWrapper)
-    })
-}
-export const onIndexKnownPosturesSuccess = (postures, practiceId, sequence, isEditing) => {
-    //Maybe add to "selectFromKnownPostures" container instead of posturesContainer???
-    posturesContainer.classList.remove("hide")
-    posturesContainer.innerHTML = ""
-
-    if(isEditing) {
-        editorWrapper.classList.add("editing")
-        posturesContainer.classList.add("editing")
-        sequenceContainer.classList.add("editing")
-
-        const sectionTitle = document.createElement("h3")
-        sectionTitle.innerText = "Known Postures"
-        sectionTitle.classList.add("section-title")
-        posturesContainer.appendChild(sectionTitle)
     }
 
-    postures.forEach(posture => {
-        const postureWrapper = document.createElement("div")
-        postureWrapper.classList.add("posture-wrapper")
+}
+export const showKnownPosturesList = (postures, isEditing, practiceId) => {
+    posturesListContainer.classList.remove("hide")
+    posturesListContainer.innerHTML = ""
 
-        const postureInfo = document.createElement("div")
-        postureInfo.innerHTML = `
-        <h3>${posture.name}</h3>
-        <h4>${posture.translation}</h4>
-        <p>${posture.description}</p>
-        <img />
-        `
-        postureWrapper.appendChild(postureInfo)
-        
-        if(isEditing) {
-            //button to add posture to sequence 
-            const addToSequenceButton = document.createElement("button")
-            addToSequenceButton.textContent = "Add to Sequence"
-            addToSequenceButton.setAttribute("data-id", posture._id)
-            addToSequenceButton.addEventListener("click", event => {
-                //add posture to sequence
-                const selectedPostureId = event.target.getAttribute("data-id")
+    if(postures.length===0){
+        posturesListContainer.innerHTML = "No Known Postures"
+    } else {
+        postures.forEach(posture => {
+            const postureWrapper = document.createElement("div")
+            postureWrapper.classList.add("posture-wrapper")
 
-                const updatedSequence = sequence
-                updatedSequence.push(posture)
+            const postureInfo = document.createElement("div")
+            postureInfo.innerHTML = `
+                <h3>${posture.name}</h3>
+                <h4>${posture.translation}</h4>
+                <p>${posture.description}</p>
+                <img />
+                `
+            postureWrapper.appendChild(postureInfo)
 
-                const practiceData = {
-                    practice: {
-                        sequence: updatedSequence
-                    }
-                }
-                updatePractice(practiceId, practiceData)
-                    .then(() => {
-                        showSequence(practiceId)
-                    })
-                    .catch(onFailure)
-            })
-            postureWrapper.appendChild(addToSequenceButton)
-        }
 
-        //Details Button
-        const detailsButton = document.createElement("button")
-        detailsButton.textContent = "Details"
-        detailsButton.setAttribute("data-id", posture._id)
-        detailsButton.addEventListener("click", event => {
-          if(isEditing) {
-                editPracticeContainer.classList.add("hide")
-                editorWrapper.classList.add("hide")
-                editorWrapper.classList.remove("editing")
-                sequenceContainer.classList.add("hide")
-                sequenceContainer.classList.remove("editing")
-                posturesContainer.classList.add("hide")
-                posturesContainer.classList.remove("editing")
-                messageContainer.style.display = "none"
+            const detailsButton = document.createElement("button")
+            detailsButton.textContent = "Details"
+            detailsButton.setAttribute("data-id", posture._id)
+            detailsButton.setAttribute("data-event", "show-details")
+            detailsButton.classList.add("posture-details-button")
+            postureWrapper.appendChild(detailsButton)
 
-                const keepEditing = document.createElement("button")
-                keepEditing.textContent = "Keep Editing"
-                keepEditing.classList.add("back-button")
-
-                detailsContainer.innerHTML = ""
-                detailsContainer.appendChild(keepEditing)
-
-                keepEditing.addEventListener("click", () => {
-                    messageContainer.style.display = "flex"
-                    detailsContainer.innerHTML = ""
-                    detailsContainer.classList.add("hide")
-                    editPracticeContainer.classList.remove("hide")
-                    editorWrapper.classList.remove("hide")
-                    editorWrapper.classList.add("editing")
-                    sequenceContainer.classList.remove("hide")
-                    posturesContainer.classList.remove("hide")
-                    sequenceContainer.classList.add("editing")
-                    posturesContainer.classList.add("editing")
-                })
+            // TODO: need option to remove posture from knownPostures
+            
+            if(isEditing) {
+                //button to add posture to sequence 
+                const addToSequenceButton = document.createElement("button")
+                addToSequenceButton.textContent = "Add to Sequence"
+                addToSequenceButton.setAttribute("data-id", posture._id)
+                addToSequenceButton.setAttribute("data-destination", practiceId)
+                addToSequenceButton.setAttribute("data-event", "add-posture-to-sequence-button")
+                addToSequenceButton.classList.add("add-posture-to-sequence-button")
+                postureWrapper.appendChild(addToSequenceButton)
             }
-            showPostureDetails(event)
+            posturesListContainer.appendChild(postureWrapper)
+
         })
-        postureWrapper.appendChild(detailsButton)
-        posturesContainer.appendChild(postureWrapper)
-    })
+    }
+}
+export const onGetPosturesSuccess = (postures, isEditing) => {
+
+    clearBody()
+    const title = document.createElement("h2")
+    title.innerText = "Postures"
+    pageTitleContainer.appendChild(title)
+    
+    //button for All that calls showAllPostures
+    const allButton = document.createElement("button")
+    allButton.textContent = "All"
+    allButton.classList.add("all-postures-button")
+    allButton.setAttribute("data-event", "show-all-postures")
+    pageTitleContainer.appendChild(allButton)
+
+    //button for Known that calls indexKnownPostures
+    const knownButton = document.createElement("button")
+    knownButton.textContent = "Known"
+    knownButton.classList.add("known-postures-button")
+    knownButton.setAttribute("data-event", "show-known-postures")
+    pageTitleContainer.appendChild(knownButton)
+
+
+
+    // if(isEditing) {
+    //     editorWrapper.classList.add("editing")
+    //     posturesContainer.classList.add("editing")
+    //     sequenceContainer.classList.add("editing")
+
+    //     const sectionTitle = document.createElement("h3")
+    //     sectionTitle.innerText = "Known Postures"
+    //     sectionTitle.classList.add("section-title")
+    //     posturesContainer.appendChild(sectionTitle)
+    // }
+
+
+    showPostureList(postures, isEditing)
+
 }
 export const onShowPostureSuccess = (posture) => {
-    editorWrapper.classList.add("hide")
-    posturesContainer.classList.add("hide")
-    detailsContainer.classList.remove("hide")
+    messageContainer.innerHTML = ""
+    posturesListContainer.classList.add("hide")
+    practiceDetailsContainer.classList.add("hide")
+    postureDetailsContainer.classList.remove("hide")
+
+    const closeDetailsButton = document.createElement("button")
+    closeDetailsButton.textContent = "Close Details"
+    closeDetailsButton.setAttribute("data-id", posture._id)
+    closeDetailsButton.setAttribute("data-event", "close-details")
+    closeDetailsButton.classList.add("posture-details-button")
+   
     const postureDetails = document.createElement("div")
-    postureDetails.innerHTML = `
+    postureDetails.appendChild(closeDetailsButton)
+
+
+    postureDetails.innerHTML += `
         <h3>Details: ${posture.name}</h3>
         <p>Translation: ${posture.translation}</p>
         <p>Portion of Practice: ${posture.portionOfPractice}</p>
@@ -297,157 +300,181 @@ export const onShowPostureSuccess = (posture) => {
         <p>Gaze: ${posture.instructions.gaze}</p>
         <p>Bandha activation: ${posture.instructions.bandha}</p>
     `
-detailsContainer.appendChild(postureDetails)
+    postureDetailsContainer.appendChild(postureDetails)
 }
 
 /*---------------------*/
 /*----- Practices -----*/
 /*---------------------*/
-export const onIndexPracticesSuccess = (practices) => {
-    clearBody()
+
+export const showSequence = (sequence, isEditing) => {
+    sequenceContainer.innerHTML = ""
+    const theSequence = []
+
+    const sectionTitle = document.createElement("h3")
+    sectionTitle.innerText = "Sequence"
+    sectionTitle.classList.add("section-title")
+    sequenceContainer.appendChild(sectionTitle)
+
+    sequence.forEach(posture => {
+        theSequence.push(posture)
+    })
+
+    for(let i=0; i<theSequence.length; i++) {
+        const sequenceWrapper = document.createElement("div")
+        sequenceWrapper.classList.add("sequence-wrapper")
+        //name
+        const name = document.createElement("h4")
+        name.innerText = theSequence[i].name
+        sequenceWrapper.appendChild(name)
+
+        //details button
+        const detailsButton = document.createElement("button")
+        detailsButton.textContent = "Details"
+        detailsButton.setAttribute("data-id", theSequence[i]._id)
+        detailsButton.setAttribute("data-event", "posture-details-button")
+        detailsButton.classList.add(".posture-details-button")
+        sequenceWrapper.appendChild(detailsButton)
+
+        if(isEditing){
+            // remove from sequence button
+            const removeFromSequenceButton = document.createElement("button")
+            removeFromSequenceButton.textContent = "Remove"
+            removeFromSequenceButton.setAttribute("data-id", theSequence[i]._id)
+            removeFromSequenceButton.setAttribute("data-index", i)
+            removeFromSequenceButton.setAttribute("data-event", "remove-from-sequence-button")
+            removeFromSequenceButton.classList.add(".remove-from-sequence-button")
+            sequenceWrapper.appendChild(removeFromSequenceButton)
+        }
+
+        sequenceContainer.appendChild(sequenceWrapper)
+    }
+    sequenceContainer.classList.remove("hide")
+    practiceDetailsContainer.appendChild(sequenceContainer)
+}  
+export const onShowPracticesSuccess = (practices, isEditing) => {
+    practicesListContainer.innerHTML = ""
+    pageTitleContainer.innerHTML = ""
+
+    // clearBody()
     const title = document.createElement("h2")
     title.innerText = "Practices"
-    practicesContainer.classList.remove("hide")
-    practicesContainer.appendChild(title)
+    practicesListContainer.classList.remove("hide")
+    practicesListContainer.appendChild(title)
 
-    practices.forEach(practice => {
+    //button for All Practices
+    const allButton = document.createElement("button")
+    allButton.textContent = "All"
+    allButton.classList.add("all-practices-button")
+    allButton.setAttribute("data-event", "show-all-practices")
+    pageTitleContainer.appendChild(allButton)
+
+    //button for Built Practices
+    const builtButton = document.createElement("button")
+    builtButton.textContent = "Built"
+    builtButton.classList.add("built-practices-button")
+    builtButton.setAttribute("data-event", "show-built-practices")
+    pageTitleContainer.appendChild(builtButton)
+
+    // buttton for Favorite Practices
+    // 
+    // 
+    // 
+    // 
+
+    if(practices.length===0) {
         const practiceWrapper = document.createElement("div")
-        practiceWrapper.classList.add("practice-wrapper")
-
+        // practiceWrapper.classList.add("practice-wrapper")
         const practiceInfo = document.createElement("div")
+
+        // TODO: add in a link to create a new practice
         practiceInfo.innerHTML = `
-            <h3>${practice.name}</h3>
-            <p>Style: ${practice.style}</p>
-            <p>Description: ${practice.description}</p>
-            <img />
+            <h3>You have not built any Practices yet!</h3>
         `
+        const firstNewPracticeButton = document.createElement("button")
+        firstNewPracticeButton.textContent = "Create your first Practice"
+        firstNewPracticeButton.classList.add("first-new-practice-button")
+        firstNewPracticeButton.setAttribute("data-event", "first-new-practice-button")
+        practiceInfo.appendChild(firstNewPracticeButton)
         practiceWrapper.appendChild(practiceInfo)
+        practicesListContainer.appendChild(practiceWrapper)
+    } else {
+        practices.forEach(practice => {
+            const practiceWrapper = document.createElement("div")
+            practiceWrapper.classList.add("practice-wrapper")
+
+            const practiceInfo = document.createElement("div")
+            practiceInfo.innerHTML = `
+                <h3>${practice.name}</h3>
+                <p>Style: ${practice.style}</p>
+                <p>Description: ${practice.description}</p>
+                <img />
+            `
+            practiceWrapper.appendChild(practiceInfo)
+
+            // Practice Details Button
+            const detailsButton = document.createElement("button")
+            detailsButton.textContent = "Details"
+            detailsButton.setAttribute("data-id", practice._id)
+            detailsButton.setAttribute("data-event", "show-details")
+            detailsButton.classList.add("practice-details-button")
+            practiceWrapper.appendChild(detailsButton)
         
-        const detailsButton = document.createElement("button")
-        detailsButton.textContent = "Details"
-        detailsButton.setAttribute("data-id", practice._id)
-        detailsButton.addEventListener("click", event => {
-            practicesContainer.classList.add("hide")
-
-            const backToFindPractice = document.createElement("button")
-            backToFindPractice.textContent = "Back"
-            backToFindPractice.classList.add("back-button")
-            messageContainer.appendChild(backToFindPractice)
-            backToFindPractice.addEventListener("click", () => {
-                practicesContainer.classList.remove("hide")
-                detailsContainer.classList.add("hide")
-                detailsContainer.innerHTML = ""
-                messageContainer.innerHTML = ""
-
-            })
-            showPracticeDetails(event)
+            // Edit Practice Button
+            // TODO: check if the user is the author, show edit button
+            if(isEditing) {
+                const editButton = document.createElement("button")
+                editButton.textContent = "Edit"
+                editButton.setAttribute("data-id", practice._id)
+                editButton.setAttribute("data-event", "edit-practice-button")
+                editButton.classList.add("edit-practice-button")
+                practiceWrapper.appendChild(editButton)
+            }
+            practicesListContainer.appendChild(practiceWrapper)
         })
-        practiceWrapper.appendChild(detailsButton)
-        practicesContainer.appendChild(practiceWrapper)
-    })
-}
-export const onIndexBuiltPracticesSuccess = (practices) => {
-    clearBody()
-    const title = document.createElement("h2")
-    title.innerText = "My Practices"
-    //maybe this should go in the pageTitleContainer
-    practicesContainer.classList.remove("hide")
-    practicesContainer.appendChild(title)
-
-    practices.forEach(practice => {
-        const practiceWrapper = document.createElement("div")
-        practiceWrapper.classList.add("practice-wrapper")
-        
-        const practiceInfo = document.createElement("div")
-        practiceInfo.innerHTML = `
-            <h3>${practice.name}</h3>
-            <p>Style: ${practice.style}</p>
-            <p>Description: ${practice.description}</p>
-            <img />
-        `
-        practiceWrapper.appendChild(practiceInfo)
-        
-        const detailsButton = document.createElement("button")
-        detailsButton.textContent = "Details"
-        detailsButton.setAttribute("data-id", practice._id)
-        detailsButton.addEventListener("click", event => {
-            practicesContainer.classList.add("hide")
-
-            //button for "Back to My Practices"
-            const backToMyPractices = document.createElement("button")
-            backToMyPractices.textContent = "Back to My Practices"
-            backToMyPractices.classList.add("back-button")
-            messageContainer.appendChild(backToMyPractices)
-            backToMyPractices.addEventListener("click", () => {
-                practicesContainer.classList.remove("hide")
-                detailsContainer.classList.add("hide")
-                detailsContainer.innerHTML = ""
-                messageContainer.innerHTML = ""
-            })
-            showPracticeDetails(event)
-        })
-        practiceWrapper.appendChild(detailsButton)
-
-        const editButton = document.createElement("button")
-        editButton.textContent = "Edit"
-        editButton.setAttribute("data-id", practice._id)
-        editButton.addEventListener("click", event => {
-            practicesContainer.classList.add("hide")
-
-            const backToMyPractices = document.createElement("button")
-            backToMyPractices.textContent = "Back to My Practices"
-            backToMyPractices.classList.add("back-button")
-            messageContainer.appendChild(backToMyPractices)
-
-            backToMyPractices.addEventListener("click", () => {
-                showBuiltPractices()
-
-                practicesContainer.classList.remove("hide")
-                editPracticeContainer.classList.add("hide")
-                posturesContainer.classList.add("hide")
-                sequenceContainer.classList.add("hide")
-                editPracticeContainer.innerHTML = ""
-                messageContainer.innerHTML = ""
-            })
-            showEditForm(practice._id)
-        })
-        practiceWrapper.appendChild(editButton)
-        practicesContainer.appendChild(practiceWrapper)
-    })
+    }
 }
 export const onShowPracticeSuccess = (practice) => {
-    detailsContainer.innerHTML = ""
+    practicesListContainer.classList.add("hide")
+    // practiceDetailsContainer.innerHTML = ""
+    // practiceDetailsContainer.classList.remove("hide")
+
+    const closeDetailsButton = document.createElement("button")
+    closeDetailsButton.textContent = "Close Details"
+    closeDetailsButton.setAttribute("data-id", practice._id)
+    closeDetailsButton.setAttribute("data-event", "close-details")
+    closeDetailsButton.classList.add("practice-details-button")
+
 
     const practiceInfo = document.createElement("div")
-    practiceInfo.innerHTML = `
+    practiceInfo.appendChild(closeDetailsButton)
+
+    practiceInfo.innerHTML += `
         <h3>${practice.name}</h3>
+    `
+    if (practice.author){
+    practiceInfo.innerHTML += `
         <p>Author: ${practice.author.name}</p>
+    `}
+    practiceInfo.innerHTML += `
         <p>Style: ${practice.style}</p>
         <p>Description: ${practice.description}</p>
         <img />
-        <h4>Sequence</h4>
     `
-    //could call same code from showing sequence in the editor
-    practice.sequence.forEach(posture => {
-        const addToSequence = document.createElement("div")
-        addToSequence.innerHTML = `
-            <h5>${posture.name}</h5>    
-        `
-        //add details button here
-        practiceInfo.appendChild(addToSequence)
-    })
-    detailsContainer.appendChild(practiceInfo)
-    detailsContainer.classList.remove("hide")
+    practiceDetailsContainer.classList.remove("hide")
+    practiceDetailsContainer.appendChild(practiceInfo)
+
+    showSequence(practice.sequence)
 }
 
 /*-------------------------------*/
 /*----- Forms: Create, Edit -----*/
 /*-------------------------------*/
-export const showCreatePracticeForm = () => {
+export const showNewPracticeForm = () => {
     clearBody()
     const title = document.createElement("h2")
     title.innerText = "Create a New Practice"
-    practiceBuilderContainer.appendChild(title)
+    newPracticeFormContatiner.appendChild(title)
 
     const createPracticeForm = document.createElement("div")
     createPracticeForm.innerHTML = `
@@ -458,135 +485,46 @@ export const showCreatePracticeForm = () => {
             <input type="submit" value="Next" />  
         </form>
     `
-    practiceBuilderContainer.appendChild(createPracticeForm)
+    newPracticeFormContatiner.appendChild(createPracticeForm)
+    newPracticeFormContatiner.classList.remove("hide")
 }
-const showSequence = (practiceId) => {
-    sequenceContainer.innerHTML = ""
-    const theSequence = []
+export const onShowEditFormSuccess = (res) => {
+    
+    practicesListContainer.classList.add("hide")
+    practiceDetailsContainer.innerHTML = ""
+    
+    const title = document.createElement("h2")
+    title.innerText = `Editing: ${res.practice.name}`
 
-    showPracticeById(practiceId)
-        .then(res => res.json())
-        .then(res => {
-            const sectionTitle = document.createElement("h3")
-            sectionTitle.innerText = "Sequence"
-            sectionTitle.classList.add("section-title")
-            sequenceContainer.appendChild(sectionTitle)
-            res.practice.sequence.forEach(posture => {
-                theSequence.push(posture)
-            })
-
-            for(let i=0; i<theSequence.length; i++) {
-                const sequenceWrapper = document.createElement("div")
-                sequenceWrapper.classList.add("sequence-wrapper")
-                //name
-                const name = document.createElement("h4")
-                name.innerText = theSequence[i].name
-                sequenceWrapper.appendChild(name)
-                //details button
-                const detailsButton = document.createElement("button")
-                detailsButton.textContent = "Details"
-                detailsButton.setAttribute("data-id", theSequence[i]._id)
-                detailsButton.addEventListener("click", event => {
-                    editPracticeContainer.classList.add("hide")
-                    editorWrapper.classList.add("hide")
-                    editorWrapper.classList.remove("editing")
-                    sequenceContainer.classList.add("hide")
-                    sequenceContainer.classList.remove("editing")
-                    posturesContainer.classList.add("hide")
-                    posturesContainer.classList.remove("editing")
-                    messageContainer.style.display = "none"
-                    
-                    //button to go back
-                    const keepEditing = document.createElement("button")
-                    keepEditing.textContent = "Keep Editing"
-                    keepEditing.classList.add("back-button")
-                    
-                    detailsContainer.innerHTML = ""
-                    detailsContainer.appendChild(keepEditing)
-
-                    keepEditing.addEventListener("click", () => {
-                        messageContainer.style.display = "flex"
-                        detailsContainer.innerHTML = ""
-                        detailsContainer.classList.add("hide")
-                        editPracticeContainer.classList.remove("hide")
-                        editorWrapper.classList.remove("hide")
-                        editorWrapper.classList.add("editing")
-                        sequenceContainer.classList.remove("hide")
-                        sequenceContainer.classList.add("editing")
-                        posturesContainer.classList.remove("hide")
-                        posturesContainer.classList.add("editing")
-                    })
-                    showPostureDetails(event)
-                })
-                sequenceWrapper.appendChild(detailsButton)
-                sequenceContainer.appendChild(sequenceWrapper)
-            }
-        })
-        .catch(onFailure)
-    return theSequence
-}  
-export const showEditForm = (practiceId) => {
-    showPracticeById(practiceId)
-        .then(res => res.json())
-        .then(res => {
-            practiceBuilderContainer.innerHTML = ""
-            editPracticeContainer.innerHTML = ""
-            editPracticeContainer.classList.remove("hide")
-            posturesContainer.classList.remove("hide")
-            sequenceContainer.classList.remove("hide")
-
-            const title = document.createElement("h2")
-            title.innerText = `Editing: ${res.practice.name}`
-            editPracticeContainer.appendChild(title)
-            editPracticeContainer.innerHTML += `
-                <button data-event="delete" data-id="${res.practice._id}">Delete this Practice</button>
+    practiceDetailsContainer.appendChild(title)
+    practiceDetailsContainer.innerHTML += `
+        <button data-event="delete" data-id="${res.practice._id}">Delete this Practice</button>
+    
+        <form id="editForm" data-id="${res.practice._id}">
             
-                <form id="editForm" data-id="${res.practice._id}">
-                    
-                    <input type="text" id="name" name="name" value="${res.practice.name}" />
-                    
-                    <input type="text" id="style" name="style" value="${res.practice.style}" />
-                    
-                    <textarea id="description" name="description">${res.practice.description}</textarea>
-                    <input type="submit" value="Save" />
-                </form>
-            `
-            const sequence = showSequence(res.practice._id)
-            showKnownPostures(res.practice._id, sequence, true) //expecting isEditing = true
-        })
-        .catch(onFailure)
+            <input type="text" id="name" name="name" value="${res.practice.name}" />
+            
+            <input type="text" id="style" name="style" value="${res.practice.style}" />
+            
+            <textarea id="description" name="description">${res.practice.description}</textarea>
+            <input type="submit" value="Save" />
+        </form>
+    `
+    practiceDetailsContainer.classList.remove("hide")
 }
 
-/*----------------*/
-/*----- Edit -----*/
-/*----------------*/
-editPracticeContainer.addEventListener("submit", (event) => {
-    event.preventDefault()
-	const id = event.target.getAttribute("data-id")
-	
-	const practiceData = {
-		practice: {
-			name: event.target["name"].value,
-			style: event.target["style"].value,
-			description: event.target["description"].value,
-		},
-	}
-	if (!id) return
-    updatePractice(id, practiceData)
-		.then(() => {
-            showEditForm(id)//needs a practiceId
-        })
-		.catch(onFailure)
-})
-editPracticeContainer.addEventListener("click", (event) => {
-	const id = event.target.getAttribute("data-id")
-	const buttonAction = event.target.getAttribute("data-event")
+export const onDeletePracticeSuccess = () => {
+    clearBody()
+    messageContainer.classList.remove("hide")
+    messageContainer.innerHTML = "Practice successfully deleted"
 
-	if (buttonAction === "delete" && id) {
-        deletePractice(id)
-			.then(() => {
-                showBuiltPractices()//direct back to my practices
-            })
-			.catch(onFailure)
-	} 
-})
+    // button for redirect after delete
+    const redirectButton = document.createElement("button")
+    redirectButton.textContent = "My Built Practices"
+    // redirectButton.setAttribute("data-id", practice._id)
+    redirectButton.setAttribute("data-event", "redirect-after-delete")
+    redirectButton.classList.add("redirect-after-delete")
+    practiceDetailsContainer.appendChild(redirectButton)
+
+    practiceDetailsContainer.classList.remove("hide")
+}
