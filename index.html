@@ -19,12 +19,13 @@
         <![endif]-->
 
         <header>
-            <a id="home-button" href=""><h1>Yoga Practice Builder</h1></a>
+            <!-- rename to "site-title" -->
+            <a id="site-title" href=""><h1>Yoga Practice Builder</h1></a>
             <button id="sign-in-or-out-toggle" class="sign-in-or-out-toggle" data-event="Sign In">Sign In</button>
-            <nav>
-                <a id="nav-practice-button" href="">Practice</a>
-                <a id="nav-create-button" href="">Create</a>
-                <a id="nav-posture-library-button" href="">Posture Library</a>
+            <nav id="main-nav">
+                <a id="nav-practice-button" data-event="practice" href="">Practice</a>
+                <a id="nav-create-button" data-event="create" href="">Create</a>
+                <a id="nav-posture-library-button" data-event="posture-library" href="">Posture Library</a>
             </nav>
         </header>
         <main>
@@ -36,8 +37,8 @@
                     <h2>Welcome to the Practice Builder!</h2>
                     <p>Collect postures that you know and use them to build a yoga sequence.</p>
                     <p>This app is meant to help students build a home practice and to be used by teachers to construct sequences for their classes.</p>
-                    <!-- <p><a class="sign-in-button" href="">Create an account</a> to take full advantage of all this app has to offer!</p>
-               --> </div> 
+                    <p><a class="sign-in-button" data-event="sign-in-button" href="">Create an account</a> to take full advantage of all this app has to offer!</p>
+                </div> 
             </div> 
             <div id="sign-in-and-up-container" class="hide">
 
@@ -64,6 +65,9 @@
                 </div>
             </div>
 
+            <!-- New Practice Form -->
+            <div id="create-new-practice-form-container"></div>
+            
             <!-- List of Practices -->
             <div id="practices-list-container"></div>
 

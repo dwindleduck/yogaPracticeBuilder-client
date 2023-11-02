@@ -162,3 +162,6 @@ footer {
 .hide {
     display: none;
 }
+.unsaved-changes {
+    border: red 5px solid;
+}
