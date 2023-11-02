@@ -31,7 +31,7 @@ import {
     onSignUpFailure,
     onGetPosturesSuccess,
     onShowEditFormSuccess,
-    showPostureList,
+    // showPostureList,
     showKnownPosturesList,
     onDeletePracticeSuccess
 } from "./ui.js"
@@ -163,9 +163,6 @@ const addPostureToKnown = (postureData) => {
         .then((res) => {
             // res.json()
             // TODO: handle for success
-
-
-
             messageContainer.innerHTML = "Posture added to Known"
             messageContainer.classList.remove("hide")
         })
@@ -197,7 +194,7 @@ const showBuiltPractices = () => {
     getBuiltPractices()
     .then((res) => res.json())
     .then((res) => {
-        store.builtPractices = res.practices
+        // store.builtPractices = res.practices
         clearBody()
         onShowPracticesSuccess(res.practices, true)
     })
@@ -233,7 +230,7 @@ const showNewPractice = () => {
         createPractice(practiceData)
         .then((res) => res.json())
         .then((res) => {
-            store.builtPractices.push(res.practice)
+            // store.builtPractices.push(res.practice)
             showEditForm(res.practice._id)
         })
         .catch(onUnauthorized)
@@ -396,11 +393,7 @@ posturesListContainer.addEventListener("click", (event) => {
         event.target.textContent = "Known"
 
         const postureInfo = store.workingPosturesList.filter(posture => posture._id === postureId)
-        
-        // console.log(postureInfo)
-
         store.knownPostures.push(postureInfo[0])
-
         addPostureToKnown(postureData)
     }
     if(buttonAction === "remove-known") {
@@ -419,7 +412,7 @@ posturesListContainer.addEventListener("click", (event) => {
         if(foundPosture) {
             store.sequenceBuilderContainer.push(foundPosture)
             showSequence(store.sequenceBuilderContainer, true)
-            // TODO: update logic for "Unsaved Changes"
+            // Logic for "Unsaved Changes"
             practiceDetailsContainer.classList.add("unsaved-changes")
             messageContainer.innerHTML = "You have made unsaved changes to this sequence."
             messageContainer.classList.remove("hide")
@@ -438,7 +431,7 @@ sequenceContainer.addEventListener("click", (event) => {
     if(buttonAction === "remove-from-sequence-button") {
         store.sequenceBuilderContainer.splice(postureIndex, 1)
         showSequence(store.sequenceBuilderContainer, true)
-        // TODO: update logic for "Unsaved Changes"
+        // Logic for "Unsaved Changes"
         practiceDetailsContainer.classList.add("unsaved-changes")
         messageContainer.innerHTML = "You have made unsaved changes to this sequence."
         messageContainer.classList.remove("hide")
@@ -476,7 +469,7 @@ practicesListContainer.addEventListener("click", (event) => {
 })
 
 practiceDetailsContainer.addEventListener("change", (event) => {
-    // TODO: update logic for "Unsaved Changes"
+    // Logic for "Unsaved Changes"
     practiceDetailsContainer.classList.add("unsaved-changes")
     messageContainer.innerHTML = "You have made unsaved changes to this sequence."
     messageContainer.classList.remove("hide")
@@ -500,7 +493,6 @@ practiceDetailsContainer.addEventListener("submit", (event) => {
             practiceDetailsContainer.classList.remove("unsaved-changes")
             messageContainer.classList.remove("hide")
             messageContainer.innerHTML = "Practice details successfully updated"
-            // showEditForm(practiceId)//needs a practiceId
         })
         .catch(onFailure)
 

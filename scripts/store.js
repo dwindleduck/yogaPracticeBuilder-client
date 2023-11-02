@@ -6,7 +6,6 @@ export const store = {
     knownPostures: [],
     workingPosturesList: [],
     
-    builtPractices: [],
     favoritedPractices: [],
 
     // builtPractices: [], should not use this, use endpoint /practices/author

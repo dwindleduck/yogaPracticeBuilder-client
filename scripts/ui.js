@@ -190,9 +190,6 @@ export const showPostureList = (postures, isEditing, practiceId) => {
 
 }
 export const showKnownPosturesList = (postures, isEditing, practiceId) => {
-    
-    console.log(postures)
-
     posturesListContainer.classList.remove("hide")
     posturesListContainer.innerHTML = ""
 
@@ -311,8 +308,6 @@ export const onShowPostureSuccess = (posture) => {
 /*---------------------*/
 
 export const showSequence = (sequence, isEditing) => {
-    // TODO: restrict some of this for isEditing
-
     sequenceContainer.innerHTML = ""
     const theSequence = []
 
@@ -358,8 +353,6 @@ export const showSequence = (sequence, isEditing) => {
     practiceDetailsContainer.appendChild(sequenceContainer)
 }  
 export const onShowPracticesSuccess = (practices, isEditing) => {
-    console.log(practices)
-    
     practicesListContainer.innerHTML = ""
     pageTitleContainer.innerHTML = ""
 
