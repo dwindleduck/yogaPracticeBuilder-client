@@ -6,7 +6,6 @@
     nav link dark purple - rgb(62, 62, 160)
     nav link hover lite purple- rgb(93, 93, 217)
     blue - #AFD7F7
-
 */
 html {
     width: 100vw;
@@ -59,12 +58,17 @@ nav a {
 nav a:hover {
     color: rgb(93, 93, 217);
 }
+
+
+
 main {
     margin: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    grid-auto-flow: row;
 }
-#landing-container {
-    max-width: 525px;
-    margin: 0 auto;
+main > * {
+    grid-column: span 2;
 }
 #message-container {
     background-color: rgba(93, 93, 217, 0.673);
@@ -72,53 +76,21 @@ main {
     margin: 0 15%;
     font-style: italic;
 }
-/* .back-button {
-    color: #692b9d;
-} */
-#page-title-container *{
+#page-title-container {
     margin-bottom: 20px;
 }
-
-
-
-
-
-
-
-
-
-
-#practice-details-container.editing {
-    /* display: flex;
-    gap: 25px;
-    margin-top: 40px; */
-}
-#sequence-container.editing {
-    /* align-self: flex-start;
+#postures-list-container,
+#sequence-container {
+    align-self: flex-start;
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px; */
-}
-#postures-list-container {
-    /* display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 10px; */
-}
-#postures-list-container.editing {
-    /* align-self: flex-start; /* this stopped the stretching 
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr; */
-}
-#postures-list-container.editing .section-title {
-    /* grid-column: 1 / span 3; */
+    gap: 10px;
 }
 .posture-wrapper {
     background-color: #AFD7F7;
+    margin: 5px;
     padding: 10px;
-}
-.sequence-wrapper {
-    background-color: #692b9d;
-    padding: 10px;
+    align-self: flex-start; 
 }
 .practice-wrapper {
     background-color: #8a35d0;
@@ -126,24 +98,50 @@ main {
     margin: 20px auto;
     max-width: 600px;
 }
-#practice-details-container,
 #posture-details-container {
-    /* text-align: left;
-    max-width: 500px;
-    margin: 0 auto; */
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: rgb(149, 149, 211);
+    text-align: center;
+    padding-top: 40px;
 }
 #practice-details-container h3,
 #posture-details-container h3{
-    /* text-align: center;
-    margin-bottom: 30px; */
+    text-align: center;
+    margin-bottom: 30px;
 }
-
-
-
-
-
-
-
+.section-title {
+    grid-column: 1 / span 4;
+}
+.sequence-wrapper {
+    background-color: #692b9d;
+    padding: 10px;
+    margin: 5px;
+    align-self: flex-start; 
+}
+#practice-details-container.editor {
+    grid-column: 1 / span 2;
+}
+#sequence-container.editor {
+    grid-template-columns: 1fr;
+    grid-column: 1 / span 1;
+}
+#sequence-container.editor .section-title ,
+#postures-list-container.editor .section-title{
+    grid-column: 1 / span 1;
+}
+#postures-list-container.editor {
+    grid-template-columns: 1fr;
+    grid-column: 2 / span 1;
+}
 
 
 
@@ -163,5 +161,51 @@ footer {
     display: none;
 }
 .unsaved-changes {
-    border: red 5px solid;
+    border: red 3px solid;
+}
+
+
+
+
+/* For screens under 700px wide */
+@media (max-width:700px) { 
+    #postures-list-container,
+    #sequence-container {
+        grid-template-columns: 1fr;
+    }
+    .section-title {
+        grid-column: 1 / span 1;
+    }
+}
+
+/* For screens under 360px wide */
+@media (max-width:360px) { 
+    html {
+        background-color: rgb(149, 149, 211);
+    }
+    nav {
+        display: grid;
+        grid-template-columns: 1fr;
+        margin: 5px 0;
+    }
+    main {
+        grid-template-columns: 1fr; 
+    }
+    main > * {
+        grid-column: span 1;
+    }
+    #postures-list-container,
+    #sequence-container {
+        grid-template-columns: 1fr;
+    }
+    #practice-details-container.editor {
+        grid-column: 1 / span 1;
+    }
+    #postures-list-container.editor {
+        grid-column: 1 / span 1;
+    }
+    form {
+        width: 80%;
+        margin: 10px auto;
+    }
 }

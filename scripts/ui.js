@@ -2,7 +2,6 @@ import { store } from "./store.js"
 
 /*----- DOM Elements -----*/
 const signInOrOutToggle = document.querySelector("#sign-in-or-out-toggle")
-const mainNav = document.querySelector("#main-nav")
 
 const pageTitleContainer = document.querySelector("#page-title-container")
 const landingContainer = document.querySelector("#landing-container")
@@ -22,7 +21,6 @@ const practiceDetailsContainer = document.querySelector("#practice-details-conta
 
 const sequenceContainer = document.querySelector("#sequence-container")
 
-
 /*--------------------*/
 /*----- Fuctions -----*/
 /*--------------------*/
@@ -34,7 +32,8 @@ export const clearBody = () => {
     signInAndUpContainer.classList.add("hide")
 
     pageTitleContainer.innerHTML = ""
-
+    pageTitleContainer.classList.add("hide")
+    
     newPracticeFormContatiner.innerHTML = ""
     newPracticeFormContatiner.classList.add("hide")
 
@@ -46,7 +45,6 @@ export const clearBody = () => {
 
     practicesListContainer.innerHTML = ""
     practicesListContainer.classList.add("hide")
-    
 
     practiceDetailsContainer.innerHTML = ""
     practiceDetailsContainer.classList.add("hide")
@@ -87,14 +85,11 @@ export const onSignUpFailure = (error) => {
 }
 export const onUnauthorized = (error) => {
     console.error(error)
-    clearBody()
     messageContainer.innerHTML = `
         <h4>Only registered users can do that!</h4>
-        <p>Please sign in or create an account to continue</p>
+        <p>Please <a class="sign-in-button" data-event="sign-in-button" href="">create an account</a> to continue</p>
     `
-
     messageContainer.classList.remove("hide")
-    signInAndUpContainer.classList.remove("hide")
 }
 
 /*----------------------*/
@@ -140,10 +135,8 @@ export const onSignOutSuccess = () => {
 export const showPostureList = (postures, isEditing, practiceId) => {
 
     posturesListContainer.classList.remove("hide")
+    posturesListContainer.classList.remove("editor")
     posturesListContainer.innerHTML = ""
-
-    
-
 
     if(postures.length===0){
         posturesListContainer.innerHTML = "No postures to display"
@@ -161,7 +154,6 @@ export const showPostureList = (postures, isEditing, practiceId) => {
                 `
             postureWrapper.appendChild(postureInfo)
 
-
             const detailsButton = document.createElement("button")
             detailsButton.textContent = "Details"
             detailsButton.setAttribute("data-id", posture._id)
@@ -169,8 +161,6 @@ export const showPostureList = (postures, isEditing, practiceId) => {
             detailsButton.classList.add("posture-details-button")
             postureWrapper.appendChild(detailsButton)
 
-
-        // if(!isEditing){
             const knownButton = document.createElement("button")
             knownButton.setAttribute("data-id", posture._id)
             knownButton.classList.add("add-or-remove-known-posture-button")
@@ -185,15 +175,23 @@ export const showPostureList = (postures, isEditing, practiceId) => {
                 knownButton.setAttribute("data-event", "add-known")
             }
             postureWrapper.appendChild(knownButton)
-        // }
+
             posturesListContainer.appendChild(postureWrapper)
         })
     }
-
 }
 export const showKnownPosturesList = (postures, isEditing, practiceId) => {
     posturesListContainer.classList.remove("hide")
     posturesListContainer.innerHTML = ""
+    
+    if(isEditing) {
+        posturesListContainer.classList.add("editor")
+    } else {posturesListContainer.classList.remove("editor")}
+
+    const sectionTitle = document.createElement("h3")
+    sectionTitle.innerText = "Known Postures"
+    sectionTitle.classList.add("section-title")
+    posturesListContainer.appendChild(sectionTitle)
 
     if(postures.length===0){
         posturesListContainer.innerHTML = "No Known Postures"
@@ -211,7 +209,6 @@ export const showKnownPosturesList = (postures, isEditing, practiceId) => {
                 `
             postureWrapper.appendChild(postureInfo)
 
-
             const detailsButton = document.createElement("button")
             detailsButton.textContent = "Details"
             detailsButton.setAttribute("data-id", posture._id)
@@ -220,6 +217,11 @@ export const showKnownPosturesList = (postures, isEditing, practiceId) => {
             postureWrapper.appendChild(detailsButton)
 
             // TODO: need option to remove posture from knownPostures
+            // 
+            // 
+            // 
+            // 
+            //             
             
             if(isEditing) {
                 //button to add posture to sequence 
@@ -232,12 +234,10 @@ export const showKnownPosturesList = (postures, isEditing, practiceId) => {
                 postureWrapper.appendChild(addToSequenceButton)
             }
             posturesListContainer.appendChild(postureWrapper)
-
         })
     }
 }
 export const onGetPosturesSuccess = (postures, isEditing) => {
-
     clearBody()
     const title = document.createElement("h2")
     title.innerText = "Postures"
@@ -257,27 +257,16 @@ export const onGetPosturesSuccess = (postures, isEditing) => {
     knownButton.setAttribute("data-event", "show-known-postures")
     pageTitleContainer.appendChild(knownButton)
 
-
-
-    // if(isEditing) {
-    //     editorWrapper.classList.add("editing")
-    //     posturesContainer.classList.add("editing")
-    //     sequenceContainer.classList.add("editing")
-
-    //     const sectionTitle = document.createElement("h3")
-    //     sectionTitle.innerText = "Known Postures"
-    //     sectionTitle.classList.add("section-title")
-    //     posturesContainer.appendChild(sectionTitle)
-    // }
-
+    pageTitleContainer.classList.remove("hide")
 
     showPostureList(postures, isEditing)
-
 }
 export const onShowPostureSuccess = (posture) => {
+    // This pops open over the whole page
     messageContainer.innerHTML = ""
-    posturesListContainer.classList.add("hide")
-    practiceDetailsContainer.classList.add("hide")
+    messageContainer.classList.add("hide")
+
+    postureDetailsContainer.innerHTML = ""
     postureDetailsContainer.classList.remove("hide")
 
     const closeDetailsButton = document.createElement("button")
@@ -289,7 +278,6 @@ export const onShowPostureSuccess = (posture) => {
     const postureDetails = document.createElement("div")
     postureDetails.appendChild(closeDetailsButton)
 
-
     postureDetails.innerHTML += `
         <h3>Details: ${posture.name}</h3>
         <p>Translation: ${posture.translation}</p>
@@ -297,11 +285,28 @@ export const onShowPostureSuccess = (posture) => {
         <p>Description: ${posture.description}</p>
         <img />
         <h4>Instructions</h4>
-        <p>Breath: ${posture.instructions.breath}</p>
-        <p>Time to spend: ${posture.instructions.timeToSpend}</p>
-        <p>Gaze: ${posture.instructions.gaze}</p>
-        <p>Bandha activation: ${posture.instructions.bandha}</p>
-    `
+        `
+    if (posture.instructions.breath){    
+        postureDetails.innerHTML += `
+            <p>Breath: ${posture.instructions.breath}</p>
+            `
+        }
+    if (posture.instructions.timeToSpend){ 
+        postureDetails.innerHTML += `    
+            <p>Time to spend: ${posture.instructions.timeToSpend}</p>
+            `
+        }
+    if (posture.instructions.gaze){ 
+        postureDetails.innerHTML += `
+            <p>Gaze: ${posture.instructions.gaze}</p>
+            `
+        }
+    if (posture.instructions.bandha){ 
+            postureDetails.innerHTML += `
+            <p>Bandha activation: ${posture.instructions.bandha}</p>
+        `
+    }
+
     postureDetailsContainer.appendChild(postureDetails)
 }
 
@@ -351,14 +356,17 @@ export const showSequence = (sequence, isEditing) => {
 
         sequenceContainer.appendChild(sequenceWrapper)
     }
+
+    if(isEditing){
+        sequenceContainer.classList.add("editor")
+    } else {sequenceContainer.classList.remove("editor")}
+
     sequenceContainer.classList.remove("hide")
-    practiceDetailsContainer.appendChild(sequenceContainer)
 }  
 export const onShowPracticesSuccess = (practices, isEditing) => {
     practicesListContainer.innerHTML = ""
     pageTitleContainer.innerHTML = ""
 
-    // clearBody()
     const title = document.createElement("h2")
     title.innerText = "Practices"
     practicesListContainer.classList.remove("hide")
@@ -384,9 +392,10 @@ export const onShowPracticesSuccess = (practices, isEditing) => {
     // 
     // 
 
+    pageTitleContainer.classList.remove("hide")
+
     if(practices.length===0) {
         const practiceWrapper = document.createElement("div")
-        // practiceWrapper.classList.add("practice-wrapper")
         const practiceInfo = document.createElement("div")
 
         // TODO: add in a link to create a new practice
@@ -438,15 +447,12 @@ export const onShowPracticesSuccess = (practices, isEditing) => {
 }
 export const onShowPracticeSuccess = (practice) => {
     practicesListContainer.classList.add("hide")
-    // practiceDetailsContainer.innerHTML = ""
-    // practiceDetailsContainer.classList.remove("hide")
 
     const closeDetailsButton = document.createElement("button")
     closeDetailsButton.textContent = "Close Details"
     closeDetailsButton.setAttribute("data-id", practice._id)
     closeDetailsButton.setAttribute("data-event", "close-details")
     closeDetailsButton.classList.add("practice-details-button")
-
 
     const practiceInfo = document.createElement("div")
     practiceInfo.appendChild(closeDetailsButton)
@@ -492,6 +498,12 @@ export const showNewPracticeForm = () => {
 }
 export const onShowEditFormSuccess = (res) => {
     
+    // TODO: Button to close the editor
+    // 
+    //     
+    // 
+    // 
+
     practicesListContainer.classList.add("hide")
     practiceDetailsContainer.innerHTML = ""
     
@@ -514,7 +526,6 @@ export const onShowEditFormSuccess = (res) => {
     `
     practiceDetailsContainer.classList.remove("hide")
 }
-
 export const onDeletePracticeSuccess = () => {
     clearBody()
     messageContainer.classList.remove("hide")
@@ -523,7 +534,6 @@ export const onDeletePracticeSuccess = () => {
     // button for redirect after delete
     const redirectButton = document.createElement("button")
     redirectButton.textContent = "My Built Practices"
-    // redirectButton.setAttribute("data-id", practice._id)
     redirectButton.setAttribute("data-event", "redirect-after-delete")
     redirectButton.classList.add("redirect-after-delete")
     practiceDetailsContainer.appendChild(redirectButton)

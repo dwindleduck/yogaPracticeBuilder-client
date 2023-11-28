@@ -31,17 +31,14 @@ import {
     onSignUpFailure,
     onGetPosturesSuccess,
     onShowEditFormSuccess,
-    // showPostureList,
     showKnownPosturesList,
     onDeletePracticeSuccess
 } from "./ui.js"
 
 /*----- DOM Elements -----*/
-
 const siteTitle = document.querySelector("#site-title")
 const signInOrOutToggle = document.querySelector("#sign-in-or-out-toggle")
 const mainNav = document.querySelector("#main-nav")
-
 const messageContainer = document.querySelector("#message-container")
 
 const signInAndUpContainer = document.querySelector("#sign-in-and-up-container")
@@ -54,10 +51,7 @@ const toggleSignUp = document.querySelector("#toggle-sign-up")
 const toggleSignIn = document.querySelector("#toggle-sign-in")
 
 const landingContainer = document.querySelector("#landing-container")
-
 const pageTitleContainer = document.querySelector("#page-title-container")
-
-const newPracticeFormContatiner = document.querySelector("create-new-practice-form-container")
 
 const posturesListContainer = document.querySelector("#postures-list-container")
 const postureDetailsContainer = document.querySelector("#posture-details-container")
@@ -67,16 +61,11 @@ const practiceDetailsContainer = document.querySelector("#practice-details-conta
 
 const sequenceContainer = document.querySelector("#sequence-container")
 
-const showAllPosturesButton = document.querySelector("#all-postures-button")
-
-
-
 /*---------------------*/
 /*---------------------*/
 /*----- Functions -----*/
 /*---------------------*/
 /*---------------------*/
-
 
 
 /*---------------------*/
@@ -92,14 +81,15 @@ const saveStudent = (res) => {
     store.knownPostures = res.student.knownPostures
     store.favoritedPractices = res.student.favoritedPractices
 }
-const getStudentData = () => {
-    getStudent()
-        .then((res) => res.json())
-        .then(res => {
-            saveStudent(res)
-        })
-        .catch(onFailure)
-}
+// Not using this function yet
+// const getStudentData = () => {
+//     getStudent()
+//         .then((res) => res.json())
+//         .then(res => {
+//             saveStudent(res)
+//         })
+//         .catch(onFailure)
+// }
 const signInStudent = (studentData) => {
     const formattedData = {
         credentials: {
@@ -125,9 +115,17 @@ const signUpStudent = (studentData) => {
         .catch(onSignUpFailure)
 }
 // TODO: write updateStudent()
+// 
+// 
+// 
+// 
 
 // TODO: write deleteStudent()
-
+// 
+// 
+// 
+// 
+// 
 
 /*----------------------*/
 /*------ Postures ------*/
@@ -141,6 +139,7 @@ const showAllPostures = () => {
         })
         .catch(onFailure)
 }
+// Not using this function yet
 // const showKnownPostures = (practiceId, sequence, isEditing) => {
 //     getKnownPostures()
 //         .then((res) => res.json())
@@ -194,15 +193,17 @@ const showBuiltPractices = () => {
     getBuiltPractices()
     .then((res) => res.json())
     .then((res) => {
-        // store.builtPractices = res.practices
         clearBody()
         onShowPracticesSuccess(res.practices, true)
     })
     .catch(onUnauthorized)
 }
-const showFavoritePractices = () => {
-
-}
+// TODO:
+// const showFavoritePractices = () => {
+// 
+// 
+// 
+// }
 const showPracticeDetails = (event) => {
     const id = event.target.getAttribute("data-id")
     if (!id) return
@@ -230,7 +231,6 @@ const showNewPractice = () => {
         createPractice(practiceData)
         .then((res) => res.json())
         .then((res) => {
-            // store.builtPractices.push(res.practice)
             showEditForm(res.practice._id)
         })
         .catch(onUnauthorized)
@@ -240,7 +240,6 @@ const showEditForm = (practiceId) => {
     getPracticeById(practiceId)
         .then(res => res.json())
         .then(res => {
-
             clearBody()
             // store the sequence for editing
             store.sequenceBuilderContainer = res.practice.sequence
@@ -253,8 +252,6 @@ const showEditForm = (practiceId) => {
 
             // passing along full posture info, not just the id
             showKnownPosturesList(store.knownPostures, true, res.practice._id)
-            // showPostureList(store.knownPostures, true, res.practice._id)
-
          })
         .catch(onFailure)
 }
@@ -286,7 +283,6 @@ mainNav.addEventListener("click", (event) => {
         showAllPostures()
     }
 })
-
 
 
 /*----- Sign In/Up -----*/
@@ -352,7 +348,15 @@ landingContainer.addEventListener("click", (event) => {
         signInAndUpContainer.classList.remove("hide")
     }
 })
-
+messageContainer.addEventListener("click", (event) => {
+    event.preventDefault()
+    const dataEvent = event.target.getAttribute("data-event")
+    
+    if (dataEvent === "sign-in-button"){
+        clearBody()
+        signInAndUpContainer.classList.remove("hide")
+    }
+})
 /*----- Page Title nav -----*/
 
 pageTitleContainer.addEventListener("click", (event) => {
@@ -363,8 +367,6 @@ pageTitleContainer.addEventListener("click", (event) => {
     }
     else if (buttonAction === "show-known-postures") {
         showKnownPosturesList(store.knownPostures, false, null)
-        // showPostureList(store.knownPostures)
-        // showKnownPostures()
     }
     else if (buttonAction === "show-all-practices") {
         showAllPractices()
@@ -372,6 +374,7 @@ pageTitleContainer.addEventListener("click", (event) => {
     else if (buttonAction === "show-built-practices") {
         showBuiltPractices()
     }
+    // TODO:
     // else if (buttonAction === "show-favorite-practices") {
     //     // 
     // }
@@ -386,7 +389,6 @@ posturesListContainer.addEventListener("click", (event) => {
     const postureData = {
         posture: postureId
     }
-
     
     if(buttonAction === "add-known") {
         messageContainer.innerHTML = ""
@@ -403,7 +405,6 @@ posturesListContainer.addEventListener("click", (event) => {
         store.knownPostures.splice(postureIndex, 1)
         removePostureFromKnown(postureData)
     }
-
     if(buttonAction === "show-details") {
         showPostureDetails(event)
     }
@@ -436,7 +437,6 @@ sequenceContainer.addEventListener("click", (event) => {
         messageContainer.innerHTML = "You have made unsaved changes to this sequence."
         messageContainer.classList.remove("hide")
     }
-
 })
 postureDetailsContainer.addEventListener("click", (event) => {
     const postureId = event.target.getAttribute("data-id")
@@ -446,9 +446,6 @@ postureDetailsContainer.addEventListener("click", (event) => {
         messageContainer.innerHTML = ""
         postureDetailsContainer.classList.add("hide")
         postureDetailsContainer.innerHTML = ""
-
-        posturesListContainer.classList.remove("hide")
-        practiceDetailsContainer.classList.remove("hide")
     }
 })
 
@@ -467,13 +464,11 @@ practicesListContainer.addEventListener("click", (event) => {
         showNewPractice()
     }
 })
-
 practiceDetailsContainer.addEventListener("change", (event) => {
     // Logic for "Unsaved Changes"
     practiceDetailsContainer.classList.add("unsaved-changes")
     messageContainer.innerHTML = "You have made unsaved changes to this sequence."
     messageContainer.classList.remove("hide")
-
 })
 practiceDetailsContainer.addEventListener("submit", (event) => {
     event.preventDefault()
@@ -495,8 +490,6 @@ practiceDetailsContainer.addEventListener("submit", (event) => {
             messageContainer.innerHTML = "Practice details successfully updated"
         })
         .catch(onFailure)
-
-
 })
 practiceDetailsContainer.addEventListener("click", (event) => {
     const practiceId = event.target.getAttribute("data-id")
@@ -507,6 +500,8 @@ practiceDetailsContainer.addEventListener("click", (event) => {
         practiceDetailsContainer.classList.add("hide")
         practiceDetailsContainer.innerHTML = ""
         practicesListContainer.classList.remove("hide")
+        sequenceContainer.classList.add("hide")
+        sequenceContainer.innerHTML = ""
     }
 
     if (buttonAction === "delete" && practiceId) {
