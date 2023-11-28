@@ -1,7 +1,6 @@
 import { store } from "./store.js"
 
-// const BASE_URL = "https://yoga-practice-builder-server.onrender.com/v2"
-const BASE_URL = "http://127.0.0.1:8000/v2"
+const BASE_URL = "https://yoga-practice-builder-server.onrender.com/v2"
 
 /*----------------------*/
 /*----- Sign In/Up -----*/
