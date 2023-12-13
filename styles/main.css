@@ -59,8 +59,6 @@ nav a:hover {
     color: rgb(93, 93, 217);
 }
 
-
-
 main {
     margin: 0 20px;
     display: grid;
@@ -143,10 +141,6 @@ main > * {
     grid-column: 2 / span 1;
 }
 
-
-
-
-
 form {
     margin: 10px auto;
     display: grid;
@@ -163,8 +157,6 @@ footer {
 .unsaved-changes {
     border: red 3px solid;
 }
-
-
 
 
 /* For screens under 700px wide */
