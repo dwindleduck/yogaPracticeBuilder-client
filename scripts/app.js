@@ -3,7 +3,7 @@ import {store} from "./store.js"
 import { 
     signUp,
     signIn,
-    getStudent,
+    // getStudent,
     getAllPostures,
     getPractices,
     getPostureById,
