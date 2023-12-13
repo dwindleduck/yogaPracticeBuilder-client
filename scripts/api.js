@@ -29,13 +29,13 @@ export const signIn = (data) => {
 /*----- Student -----*/
 /*-------------------*/
 // Currently Unsed
-export const getStudent = () => {
-    return fetch(BASE_URL + "/student", { 
-        headers: {
-            "Authorization": `Bearer ${store.userToken}`,
-        },
-    })
-}
+// export const getStudent = () => {
+//     return fetch(BASE_URL + "/student", { 
+//         headers: {
+//             "Authorization": `Bearer ${store.userToken}`,
+//         },
+//     })
+// }
 
 // TODO:
 // updateStudent
